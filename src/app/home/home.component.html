@@ -1,0 +1,36 @@
+
+<app-page-transition>
+
+
+
+  <div
+  motion
+  [initial]="{ height: '10px', opacity: 1, backgroundColor: 'black' }"
+  [animate]="{ height: '200px', opacity: 1, backgroundColor: 'blue' }"
+  [exit]="{ height: '10px', opacity: 1, backgroundColor: 'orange' }"
+  [duration]="'1s'"
+  [delay]="'0s'"
+  [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+  (animationComplete)="onAnimationComplete()"
+
+>
+<h1>HOME</h1>
+</div>
+
+
+<div
+motion
+[initial]="{left:'10px',top:'10px'}"
+[animate]="{left:'100px',top:'100px'}"
+[exit]="{ left:'10px',top:'10px',height: '10px', opacity: 1, backgroundColor: 'orange' }"
+[duration]="'1s'"
+[delay]="'0s'"
+[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+(animationComplete)="onAnimationComplete()"
+class="bg-red-400"
+style="position:absolute; width: 100px; height: 100px; background-color: aqua;"
+>
+
+</div>
+
+</app-page-transition>

@@ -1,0 +1,17 @@
+<app-page-transition>
+
+<article
+motion
+[initial]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
+[animate]="{ height: '200px', opacity: 1, backgroundColor: 'purple' }"
+[exit]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
+[duration]="'1s'"
+[delay]="'0s'"
+[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+(animationComplete)="onAnimationComplete()"
+class=""
+>
+<h1>WORK</h1>
+</article>
+
+</app-page-transition>
