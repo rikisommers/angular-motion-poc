@@ -34,10 +34,13 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Input() initial: any = {};
   @Input() animate: any = {};
   @Input() exit: any = {};
+  @Input() inView: any = {};
   @Input() duration = "0.3s";
   @Input() delay = "0s";
+  @Input() repeat = false;
   @Input() exitDelay = "0s"; // New exit delay input
   @Input() easing = "ease";
+  @Input() offset = '0px';
   @Input() whileHover: any = {};
   @Input() variant: string = '';
 
@@ -64,6 +67,9 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     // Initialize hover animations if defined
     if (Object.keys(this.whileHover).length > 0) { 
       this.setupHoverAnimations();
+    }
+    if (Object.keys(this.inView).length > 0) {
+      this.runInitAnimationsWhenInViewport(this, this.offset, this.repeat);
     }
 
     if (Object.keys(this.animate).length > 0) {
@@ -201,7 +207,12 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   }
   
 
-
+  runInViewAnimation() {
+    if (this.inView && this.animate) {
+   //   console.log('running enter deep')
+    this.playAnimation(this.initial, this.inView);
+    }
+  }
 
   runInitAnimation() {
     if (this.initial && this.animate) {
@@ -295,4 +306,19 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   //   }
   //   this.animationComplete.emit();
   // }
+
+  runInitAnimationsWhenInViewport(element: MotionDirective, offset: string = '0px', repeat: boolean ) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          console.log('in view')
+          element.runInViewAnimation();
+          if (repeat == false) {
+            observer.unobserve(entry.target);
+          }
+        }
+      });
+    }, { rootMargin: offset });
+    observer.observe(element.el.nativeElement);
+  }
 }

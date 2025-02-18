@@ -134,4 +134,6 @@ export class MotionService {
     return durations.length > 0 ? Math.max(...durations) : 0;
 
   }
+
+
 }

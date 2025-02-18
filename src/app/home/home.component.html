@@ -3,10 +3,11 @@
 
   <div
   motion
-  [initial]="{ height: '10px', opacity: 1, backgroundColor: 'black' }"
-  [animate]="{ height: '200px', opacity: 1, backgroundColor: 'blue' }"
-  [exit]="{ height: '10px', opacity: 1, backgroundColor: 'orange' }"
-  [duration]="'1s'"
+  style="height: 500px;"
+  [initial]="{ left:'10px', opacity: 1, backgroundColor: 'black', transform: 'translateX(0px)' }"
+  [animate]="{ left:'100px', opacity: 1, backgroundColor: 'purple', transform: 'translateX(100px)' }"
+  [exit]="{ left:'10px', opacity: 1, backgroundColor: 'orange', transform: 'translateX(0px)' }"
+  [duration]="'.4s'"
   [delay]="'0s'"
   [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
   (animationComplete)="onAnimationComplete()"
@@ -15,13 +16,42 @@
 <h1>HOME</h1>
 </div>
 
+<div
+motion
+style="height: 500px;"
+[initial]="{ left:'10px', opacity: 1, backgroundColor: 'orange' }"
+[animate]="{ left:'100px', opacity: 1, backgroundColor: 'blue' }"
+[exit]="{ left:'10px', opacity: 1, backgroundColor: 'orange' }"
+[duration]="'.4s'"
+[delay]="'0s'"
+[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+(animationComplete)="onAnimationComplete()"
+
+>
+<h1>HOME</h1>
+</div>
+
+<div
+motion
+style="height: 500px;"
+[initial]="{ left:'10px', opacity: 1, backgroundColor: 'black', transform: 'translateX(0px)' }"
+[animate]="{ left:'100px', opacity: 1, backgroundColor: 'purple', transform: 'translateX(100px)' }"
+[exit]="{ left:'10px', opacity: 1, backgroundColor: 'orange', transform: 'translateX(0px)' }"
+[duration]="'.4s'"
+[delay]="'0s'"
+[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+(animationComplete)="onAnimationComplete()"
+
+>
+<h1>HOME</h1>
+</div>
 
 <div
 motion
 [initial]="{left:'10px',top:'10px'}"
 [animate]="{left:'100px',top:'100px'}"
 [exit]="{ left:'10px',top:'10px' }"
-[duration]="'1s'"
+[duration]="'.4s'"
 [delay]="'0s'"
 [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
 (animationComplete)="onAnimationComplete()"
@@ -29,6 +59,23 @@ class="bg-red-400"
 style="position:absolute; width: 100px; height: 100px; background-color: aqua;"
 >
 
+</div>
+
+<div
+motion
+[repeat]="true"
+[offset]="'100px'"
+style="height: 500px;"
+[initial]="{ left:'10px', opacity: 1, backgroundColor: 'red', transform: 'translateX(0px)' }"
+[inView]="{ left:'100px', opacity: 1, backgroundColor: 'purple', transform: 'translateX(100px)' }"
+[exit]="{ left:'10px', opacity: 1, backgroundColor: 'orange', transform: 'translateX(0px)' }"
+[duration]="'.4s'"
+[delay]="'0s'"
+[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+(animationComplete)="onAnimationComplete()"
+
+>
+<h1>HOsssssME</h1>
 </div>
 
 </app-page-transition>
