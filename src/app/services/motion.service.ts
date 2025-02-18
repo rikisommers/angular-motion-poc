@@ -3,6 +3,7 @@ import { MotionDirective } from '../../directives/ngx-motion.directive';
 import { Subject, Observable, forkJoin, finalize, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,9 @@ export class MotionService {
 
   
   totalExitDuration: number = 0;
+  constructor(private router: Router) {
+  }
+
   registerMotionElement(element: MotionDirective) {
     this.motionElements.push(element);
     this.updateTotalExitDuration();
@@ -39,6 +43,11 @@ export class MotionService {
   }
 
 
+  getAllElementsByRoute(route: string): MotionDirective[] {
+    return this.motionElements;
+  }
+
+
   cancelAllAnimations() {
     this.motionElements.forEach((motion) => {
       motion.cancel();
@@ -51,7 +60,7 @@ export class MotionService {
   runAllEnterAnimations(): Observable<void> {
     const enterAnimations = this.motionElements.map((motion) => {
       motion.runInitAnimation();
-      return this.waitForAnimation(motion);
+      //return this.waitForAnimation(motion);
     });
 
     return forkJoin(enterAnimations).pipe(
@@ -65,45 +74,15 @@ export class MotionService {
   /**
    * Triggers all exit animations and returns an Observable that completes when all animations are done.
    */
-  runAllExitAnimations(): Observable<boolean> {
+  runAllExitAnimations(): void {
     
-    this.exitAnimationsComplete$.next(true);
-    // Check if the exit animations are already in progress
-    if (this.exitAnimationsInProgressSubject.value) {
-      console.log('Exit animations are already in progress, ignoring the call');
-      this.cancelAllAnimations();
-      return of(true);  // Return false immediately if the exit animations are already in progress
-    }
-
-    // Check if there are no motion elements
-    if (this.motionElements.length === 0) {
-      console.log('No motion elements found, returning true');
-      return of(true);  // Return true immediately if no motion elements
-    }
-
-    // Set the exitAnimationsInProgress flag to true
-    this.exitAnimationsInProgressSubject.next(true);
 
     // Proceed with the exit animations
-    const exitAnimations = this.motionElements.map((motion) => {
+    this.motionElements.map((motion) => {
       motion.runExitAnimation();
-      return this.waitForAnimation(motion);
     });
 
-    return forkJoin(exitAnimations).pipe(
-      map(() => {
-        
-        this.exitAnimationsComplete$.next(false);
-        console.log('All exit animations complete');
-        this.exitAnimationsInProgressSubject.next(false);  // Emit a new value to indicate that the exit animations are complete
-        return true;  // Ensures boolean return type
-      }),
-      catchError(() => {
-        console.error('Error during exit animations');
-        return of(false);  // In case of error, return false
-      }),
-      finalize(() => this.exitAnimationsInProgressSubject.next(false))  // Set the exitAnimationsInProgress flag to false when the animations are complete
-    );
+   
   }
   
 
@@ -137,5 +116,22 @@ export class MotionService {
   getLongestEnterDuration(): number {
     const durations = this.motionElements.map((motion) => motion.getDuration());
     return durations.length > 0 ? Math.max(...durations) : 0;
+  }
+
+  runAllEnterAnimationsForRoute(route: string): MotionDirective[] {
+    const enterAnimations = this.getAllElementsByRoute(route).map((motion) => {
+      motion.runInitAnimation();
+      return motion;
+    });
+    return enterAnimations;
+  }
+
+  getLongestDurationForRoute(): number {
+    const route = this.router.url;
+    const elements = this.getAllElementsByRoute(route);
+    const durations = elements.map((motion) => motion.getDuration());
+    console.log('durations', durations.length > 0 ? Math.max(...durations) : 0);
+    return durations.length > 0 ? Math.max(...durations) : 0;
+
   }
 }

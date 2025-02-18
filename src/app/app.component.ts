@@ -1,12 +1,12 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute, Router, NavigationEnd , NavigationStart} from '@angular/router';
 import {  MotionDirective } from '../directives/ngx-motion.directive';
-import { MotionHostDirective } from '../directives/ngx-motion-container.directive';
 import { MotionHostComponent } from './motion-host/motion-host.component';
 import { routeTransition } from '../directives/motion-transition';
 import { PageTransitionComponent } from './page-transition/page-transition.component';
 import { RouteAnimationService } from './services/route-animation.service';
 import { MotionService } from './services/motion.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-root',
   imports: [
@@ -14,7 +14,6 @@ import { MotionService } from './services/motion.service';
     RouterLink, 
     RouterLinkActive, 
     MotionDirective,
-     MotionHostDirective, 
      MotionHostComponent,
     PageTransitionComponent
     ],
@@ -32,33 +31,59 @@ export class AppComponent implements OnInit {
 
   isPanelOpen = true;
   animInProgress: boolean = false;
+  motionElements: MotionDirective[] = [];
+  maxDelay: string = '1s';
 
   constructor(
     protected route: ActivatedRoute,
+    private router: Router,
     private motionService: MotionService
     // private routeAnimService: RouteAnimationService
   ) {
 
   }
   ngOnInit() {
-    this.motionService.exitAnimationsComplete$.asObservable().subscribe((inProgress) => {
-      this.animInProgress = inProgress;
+ 
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        const currentRoute = event.url;
+        const nextRoute = this.router.url;
+        console.log('START',this.motionElements);
+
+        const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
+
+
+        this.motionService.runAllEnterAnimationsForRoute(currentRoute);
+
+
+        this.maxDelay = this.getLongestDuration(currentRouteElements);
+
+        console.log('maxDelay',this.maxDelay);
+        
+        // Do something with the current and next route elements
+        console.log('prevRouteElements',currentRouteElements);
+      }
     });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const currentRoute = event.url;
+        const nextRoute = this.router.url;
+
+        console.log('END',this.motionElements);
+      //  this.motionService.runAllExitAnimations;
+        const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
+        // Do something with the current and next route elements  
+        
+
+        console.log('newRouteElements',currentRouteElements);
+      }
+    });
+
+
   }
 
-  getRouteAnimationData() {
-    const exitDuration = this.motionService.getLongestExitDuration(); // in ms
-    const enterDuration = 1000; // Set as needed or also retrieve from MotionService
-    return {
-      value: '',
-      params: {
-        exitDuration: exitDuration,
-        enterDuration: exitDuration,
-        enterDelay: exitDuration,
-        exitDelay:exitDuration
-      }
-    };
-  }
 
   togglePanel() {
     this.isPanelOpen = !this.isPanelOpen;
@@ -66,10 +91,12 @@ export class AppComponent implements OnInit {
 
   }
 
-  onAnimationComplete() {
-    // Perform navigation or any other action after all exit animations are complete
 
-    console.log("complete");
+  getLongestDuration(elements: MotionDirective[]): string {
+    return elements.reduce((max, element) => {
+      const delay = element.getDuration();
+      return Math.max(max, delay);
+    }, 0).toString() + 's';
   }
-
+  
 }

@@ -1,22 +1,19 @@
-import { trigger, transition, query, style, animate, sequence, AnimationOptions } from '@angular/animations';
+import { trigger, transition, style, animate, query, group, animateChild } from '@angular/animations';
 
 export const routeTransition = trigger('routeTransition', [
   transition('* => *', [
-    sequence([
+    query(':enter, :leave', style({ transform: 'translateX(100%)' }), { optional: true }),
+    query(':enter', style({ transform: 'translateX(1%)' }), { optional: true }),
+    query(':leave', style({ transform: 'translateX(-1%)' }), { optional: true }),
+    group([
       query(':leave', [
-        animate('{{ exitDelay }}ms {{ exitDuration }}ms', style({ opacity: 0 }))
+        animate('{{maxDelay}} ease-in-out', style({ transform: 'translateX(-10%)' }))
       ], { optional: true }),
       query(':enter', [
-        style({ opacity: 0 }),
-        animate('{{ enterDelay }}ms {{ enterDuration }}ms', style({ opacity: 1 }))
+        animate('0s {{maxDelay}} ease-in-out', style({ transform: 'translateX(0%)' }))
       ], { optional: true })
-    ])
-  ], {
-    params: {
-      exitDuration: 1000, // default value
-      enterDuration: 1000, // default value
-      enterDelay: 1000 // default value
-      
-    }
-  })
+    ]),
+    query(':enter', animateChild(), { optional: true }),
+    query(':leave', animateChild(), { optional: true })
+  ],{params: {maxDelay: '1000ms'}})
 ]);

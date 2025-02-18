@@ -1,12 +1,11 @@
 <main class="main" style="z-index: 9999; display: block; position: relative;">
   <div class="content">
-
+    <h1 style="color: red;">{{ maxDelay }}</h1>
     APP
-    <h1>{{ animInProgress }}</h1>
+   
     <nav >
       <ul>
-        <li><a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">App</a></li>
-        <li><a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a></li>
+        <li><a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a></li>
         <li><a routerLink="/work" routerLinkActive="active" ariaCurrentWhenActive="page">Work</a></li>
         <li><a routerLink="/bio" routerLinkActive="active" ariaCurrentWhenActive="page">Bio</a></li>
   
@@ -17,36 +16,11 @@
 </main>
 
 <div style="padding: 20px;background-color: beige;">
-
-
-<!-- <div
-motion
-[initial]="{ height: '10px', opacity: 1, backgroundColor: 'red' }"
-[animate]="{ height: '200px', opacity: 1, backgroundColor: 'blue' }"
-[exit]="{ height: '300px', opacity: 1, backgroundColor: 'black' }"
-[variant]="this.isPanelOpen ? 'animate' : 'initial'"
-[duration]="'.4s'"
-[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-(animationComplete)="onAnimationComplete()"
-
->
-<p>This is the content inside the panel!</p>
+  <div style="position: fixed; width: 100%; height: 100%; width: 100%;" 
+  [@routeTransition]="{ value:route.snapshot.data, params: { maxDelay: maxDelay }}">
+    <router-outlet></router-outlet>
 </div>
 
-<button
-motion
-[initial]="{ scale: 1, backgroundColor: 'red' }"
-[whileHover]="{ scale: 1.1, backgroundColor: 'green' }"
-[delay]="'0s'"
-[duration]="'2s'"
-[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-(click)="togglePanel()"
->
-Toggle Panel
-</button> -->
-  <router-outlet #outlet="outlet"></router-outlet>
-  <!-- <div [@routeTransition]="getRouteAnimationData()" class="router-container">
-
-</div> -->
+<!-- <router-outlet #outlet="outlet"></router-outlet> -->
 
 </div>

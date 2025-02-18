@@ -22,7 +22,6 @@ import {
   transition,
   AnimationEvent
 } from "@angular/animations";
-import { MotionHostDirective } from "./ngx-motion-container.directive";
 import { MotionService } from '../app/services/motion.service';
 
 let uniqueIdCounter = 0; // Static counter for unique IDs
@@ -45,7 +44,6 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Output() animationComplete = new EventEmitter<void>();
 
   private player: AnimationPlayer | null = null;
-  private presence: MotionHostDirective | null = null;
   private elementId: string;
 
   constructor(
@@ -57,37 +55,69 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     this.elementId = `motion-${uniqueIdCounter++}`;
     this.el.nativeElement.setAttribute('id', this.elementId); // Set the ID on the element
     this.motionService.registerMotionElement(this);
+    this.applyInitialStyles();
   }
 
   ngOnInit() {
-    this.applyInitialStyles();
+
+
     // Initialize hover animations if defined
     if (Object.keys(this.whileHover).length > 0) { 
       this.setupHoverAnimations();
+    }
+
+    if (Object.keys(this.animate).length > 0) {
+      setTimeout(() => {
+        this.playAnimation(this.initial, this.animate);
+      },1000);
     }
   }
 
   ngAfterViewInit() {
     // Apply initial styles
-   // this.applyInitialStyles();
+
 
     // Check if the animate property is defined to trigger the animation
-    if (Object.keys(this.animate).length > 0) {
-      this.playAnimation(this.initial, this.animate);
-      // setTimeout(() => {
-      //   this.playAnimation(this.initial, this.animate);
-      // }, this.motionService.getLongestExitDuration());
-    }
+
   }
 
   ngOnDestroy() {
+    
     if (this.exit && Object.keys(this.exit).length > 0) {
-     // this.startExitAnimation();
-    } else {
-      this.motionService.unregisterMotionElement(this);
+      this.startExitAnimation();
     }
+    
   }
   
+
+  startEmterAnimation() {
+    console.log('Start Exiting...');
+  
+    if (this.player && this.player.hasStarted()) {
+      this.player.destroy();
+    }
+  
+    const delay = this.exitDelay || '0ms';
+    const duration = this.duration || '0.3s';
+    const easing = this.easing || 'ease';
+    const timing = `${delay} ${duration} ${easing}`;
+  
+    const animation: AnimationMetadata[] = [
+      style(this.initial), 
+      animate(timing, style(this.animate))
+    ];
+  
+    const animationBuilder = this.builder.build(animation);
+    this.player = animationBuilder.create(this.el.nativeElement);
+  
+    this.player.onDone(() => {
+      this.animationComplete.emit();
+    });
+  
+    this.player.play();
+  }
+
+
   startExitAnimation() {
     console.log('Start Exiting...');
   
@@ -200,10 +230,6 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     this.applyAnimateStyles();
   }
 
-
-  registerPresence(presence: MotionHostDirective) {
-    this.presence = presence;
-  }
 
   getDuration(): number {
     const durationSeconds = parseFloat(this.duration);
