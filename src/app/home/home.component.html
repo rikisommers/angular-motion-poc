@@ -1,5 +1,32 @@
-
 <app-page-transition>
+
+  <button (click)="changeStatus()">FOOD?</button>
+
+<h1 style="color: black; position: absolute; top: 0; right: 0; z-index: 900;">{{status}}</h1>
+  <div motion
+  [variants]="foodVariants"
+  [animate]="status"
+  style="height: 100px; width: 100px; background-color: red; position: absolute; top: 0;  left: 0; z-index: 100;"
+>
+ Hello
+</div>
+<!-- 
+@if(isPanelOpen) {
+
+  <div
+  motion
+  
+  [exit]="{ left:'10px',top:'10px', backgroundColor: 'red' }"
+  [duration]="'.4s'"
+  [delay]="'0s'"
+  [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+  
+  style="position:absolute; width: 100px; height: 100px; background-color: yellowgreen;"
+  >
+  
+  </div>
+  
+} -->
 
   <div
   motion
@@ -46,6 +73,8 @@ style="height: 500px;"
 <h1>HOME</h1>
 </div>
 
+
+
 <div
 motion
 [initial]="{left:'10px',top:'10px'}"
@@ -76,6 +105,6 @@ style="height: 500px;"
 
 >
 <h1>HOsssssME</h1>
-</div>
+</div> 
 
 </app-page-transition>

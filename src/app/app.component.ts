@@ -4,9 +4,7 @@ import {  MotionDirective } from '../directives/ngx-motion.directive';
 import { MotionHostComponent } from './motion-host/motion-host.component';
 import { routeTransition } from '../directives/motion-transition';
 import { PageTransitionComponent } from './page-transition/page-transition.component';
-import { RouteAnimationService } from './services/route-animation.service';
 import { MotionService } from './services/motion.service';
-import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-root',
   imports: [
@@ -53,9 +51,7 @@ export class AppComponent implements OnInit {
 
         const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
 
-
         this.motionService.runAllEnterAnimationsForRoute(currentRoute);
-
 
         this.maxDelay = this.getLongestDuration(currentRouteElements);
 
@@ -75,7 +71,6 @@ export class AppComponent implements OnInit {
       //  this.motionService.runAllExitAnimations;
         const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
         // Do something with the current and next route elements  
-        
 
         console.log('newRouteElements',currentRouteElements);
       }

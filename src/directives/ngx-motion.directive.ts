@@ -7,7 +7,8 @@ import {
   EventEmitter,
   AfterViewInit,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  HostListener
 } from "@angular/core";
 import {
   AnimationBuilder,
@@ -42,12 +43,18 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Input() easing = "ease";
   @Input() offset = '0px';
   @Input() whileHover: any = {};
-  @Input() variant: string = '';
+
+  @Input() whileTap: any = {};
+  @Input() whileFocus: any = {};
+  @Input() whileInView: any = {};
+
+  @Input() variants: any = {};
 
   @Output() animationComplete = new EventEmitter<void>();
 
   private player: AnimationPlayer | null = null;
   private elementId: string;
+  private hoverTimeout: any;
 
   constructor(
     private builder: AnimationBuilder,
@@ -65,18 +72,33 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
 
 
     // Initialize hover animations if defined
-    if (Object.keys(this.whileHover).length > 0) { 
-      this.setupHoverAnimations();
-    }
+    // if (Object.keys(this.whileHover).length > 0) { 
+    //   this.setupHoverAnimations();
+    // }
     if (Object.keys(this.inView).length > 0) {
       this.runInitAnimationsWhenInViewport(this, this.offset, this.repeat);
     }
 
-    if (Object.keys(this.animate).length > 0) {
-      setTimeout(() => {
+    // if (Object.keys(this.animate).length > 0 && this.variants) {
+    // //  console.log('animatedddd: ',this.animate, typeof this.animate );
+    //   if (typeof this.animate === 'string') {
+    // //    console.log(`Ini tvariant "${this.animate}" to:`, this.variants[this.animate]);
+    //     setTimeout(() => {
+
+    //       this.playAnimation(this.initial, this.variants[this.animate]);
+    //     },0);
+       
+    //    } else if (typeof animate === 'object') {
+    //     console.warn(`Init animate "${animate}"`);
+    //     setTimeout(() => {
+    //     this.playAnimation(this.initial, this.animate);
+    //   },0);
+    //  }
+   
+
+    // }
         this.playAnimation(this.initial, this.animate);
-      },1000);
-    }
+
   }
 
   ngAfterViewInit() {
@@ -87,18 +109,27 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
 
   }
 
+  
   ngOnDestroy() {
-    
     if (this.exit && Object.keys(this.exit).length > 0) {
-      this.startExitAnimation();
-    }
+      this.startExitAnimation(); 
+    } 
+
     
+    //TODO: Add options to select reset behaviour , e.g either reset tto inintial or allow anim to run
+    // this.resetPlayer(); // Ensure the animation is properly cleaned up
+    // this.reset();
+   
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
+  
   
 
   startEmterAnimation() {
-    console.log('Start Exiting...');
-  
+    //console.log('Start Exiting...');
+
     if (this.player && this.player.hasStarted()) {
       this.player.destroy();
     }
@@ -125,7 +156,7 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
 
 
   startExitAnimation() {
-    console.log('Start Exiting...');
+      //console.log('Start Exiting...');
   
     if (this.player && this.player.hasStarted()) {
       this.player.destroy();
@@ -159,6 +190,22 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
 
   }
 
+
+
+  private resetPlayer() {
+    if (this.player) {
+      this.player.finish(); // Ensures the animation completes properly
+      this.player.destroy();
+    }
+  }
+  
+
+  private reset() {
+    this.resetPlayer(); // Stop and destroy animation  
+    this.el.nativeElement.removeAttribute("style"); // Remove inline styles  
+  }
+
+
   private applyInitialStyles() {
     Object.assign(this.el.nativeElement.style, this.initial);
   }
@@ -167,45 +214,114 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     Object.assign(this.el.nativeElement.style, this.animate);
   }
 
-  private setupHoverAnimations() {
-    
-      this.el.nativeElement.addEventListener('mouseenter', () => {
-        this.playAnimation(this.initial, this.whileHover);
-      });
+@HostListener('mouseenter')
+onMouseEnter() {
+  if (Object.keys(this.whileHover).length > 0) {
+    clearTimeout(this.hoverTimeout);
+    this.playAnimation(this.initial, this.whileHover);
+  }
+}
 
-      this.el.nativeElement.addEventListener('mouseleave', () => {
-        this.playAnimation(this.whileHover, this.initial);
-      });
+@HostListener('mouseleave')
+onMouseLeave() {
+  if (Object.keys(this.whileHover).length > 0) {
+    this.hoverTimeout = setTimeout(() => {
+      this.playAnimation(this.whileHover, this.initial);
+    }, 100);
+  }
+}
+
+@HostListener('tap')
+onTap() {
+  if (Object.keys(this.whileTap).length > 0) {
+    this.playAnimation(this.initial, this.whileTap);
+  }
+}
+
+@HostListener('click')
+onClick() {
+  if (Object.keys(this.whileTap).length > 0) {
+    this.playAnimation(this.initial, this.whileTap);
+  }
+}
+
+@HostListener('focus')
+onFocus() {
+  if (Object.keys(this.whileFocus).length > 0) {
+    this.playAnimation(this.initial, this.whileFocus);
+  }
+}
+  private setupHoverAnimations() {
+    this.el.nativeElement.addEventListener('mouseenter', () => {
+      if (this.whileHover) {
+        clearTimeout(this.hoverTimeout);
+        this.playAnimation(this.initial, this.whileHover);
+      }
+    });
+  
+    this.el.nativeElement.addEventListener('mouseleave', () => {
+      if (this.whileHover) {
+        this.hoverTimeout = setTimeout(() => {
+          this.playAnimation(this.whileHover, this.initial);
+        }, 100);
+      }
+    });
+
+    this.el.nativeElement.addEventListener('tap', () => {
+      if (this.whileTap) {
+        this.playAnimation(this.initial, this.whileTap);
+      }
+    });
+
+    this.el.nativeElement.addEventListener('click', () => {
+      if (this.whileTap) {
+        this.playAnimation(this.initial, this.whileTap);
+      }
+    });
+
+    this.el.nativeElement.addEventListener('focus', () => {
+      if (this.whileFocus) {
+        this.playAnimation(this.initial, this.whileFocus);
+      }
+    });
   }
 
 
   private playAnimation(startState: any, targetState: any) {
-    const delay = this.delay || '0ms'; // Default to 0ms if no delay is provided
-    const duration = this.duration || '1s'; // Default duration
-    const easing = this.easing || 'ease'; // Default easing
   
-    const timing = `${duration} ${delay} ${easing}`; // Correct animation timing string
+    const delay = this.delay || '0ms';
+    const duration = this.duration || '1s';
+    const easing = this.easing || 'ease';
+    const timing = `${duration} ${delay} ${easing}`;
+    
+    if(typeof targetState === 'string') {
+      targetState = this.variants[targetState];
+    }
+
+    if(typeof startState === 'string') {
+      startState = this.variants[startState];
+    }
   
-   // console.log('Animation timing:', timing); // Debug output
-  
+
     const animation: AnimationMetadata[] = [
-      style(startState),
-      animate(timing, style(targetState))
+
+        style(startState),
+          animate(timing, style(targetState))
     ];
   
     const animationBuilder = this.builder.build(animation);
   
     if (this.player && this.player.hasStarted()) {
-      this.player.destroy(); // Destroy previous player if it exists
+        this.player.destroy();
     }
   
     this.player = animationBuilder.create(this.el.nativeElement);
     this.player.onDone(() => {
-      this.animationComplete.emit(); // Emit event on animation completion
+        this.animationComplete.emit();
     });
     this.player.play();
   }
-  
+
 
   runInViewAnimation() {
     if (this.inView && this.animate) {
@@ -249,39 +365,86 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     return (durationSeconds + delaySeconds) * 1000;
   }
 
+
+
+
+
+  
+
+  // ngOnChanges(changes: SimpleChanges) {
+  //   if (changes['animate']) {
+  //     const oldState = changes['animate'].previousValue;
+  //     const newState = changes['animate'].currentValue;
+  
+  //     console.log('animate changed:', oldState, '→', newState);
+  //     console.log('variants:', this.variants);
+  //     console.log('initial:', this.initial);
+  
+  //     this.playAnimation(oldState, newState);
+        
+  //     // if (this.variants) {
+
+  //     //   if (oldState !== undefined && this.variants[oldState]) {
+  //     //     console.log('Old state:', this.variants[oldState]);
+  //     //   } else {
+  //     //     console.log('Old state is undefined or not in variants');
+  //     //   }
+  
+  //     //   if (newState !== undefined && this.variants[newState]) {
+  //     //     console.log('New state:', this.variants[newState]);
+  //     //     this.playAnimation(this.initial, this.variants[newState]);
+  //     //   } else {
+  //     //     console.log('New state is undefined or not in variants');
+  //     //   }
+  //     // } else {
+  //     //   console.warn('Variants object is undefined');
+  //     // }
+  //   }
+  // }
+  getKeyByValue(object:any, key:any) {
+    return Object.keys(object).find(key =>
+        object[key] === key);
+}
+
+  
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['variant'] && !changes['variant'].firstChange) {
-        const previousVariant = changes['variant'].previousValue; // Get the previous variant
-        const currentVariant = this.variant; // Get the current variant
+    if (changes['animate']) {
+      const oldState = changes['animate'].previousValue;
+      let newState = changes['animate'].currentValue;
+  
+        // console.log('animate changed:', oldState, '→', newState);
+        // console.log('variants:', this.variants);
+        // console.log('initial:', this.initial);
+      
 
-        let startState: any;
-        let targetState: any;
+      if(this.variants) {
+      //  console.log(this.variants);
+        let newState = changes['animate'].currentValue;
+      //  console.log('variant string: ',newState);
 
-        // Determine the start and target states based on the previous and current variants
-        if (previousVariant === 'initial' && currentVariant === 'animate') {
-            startState = this.initial;
-            targetState = this.animate;
-        } else if (previousVariant === 'animate' && currentVariant === 'exit') {
-            startState = this.animate;
-            targetState = this.exit;
-        } else if (previousVariant === 'exit' && currentVariant === 'initial') {
-            startState = this.exit;
-            targetState = this.initial;
-        } else if (previousVariant === 'animate' && currentVariant === 'initial') {
-            startState = this.animate;
-            targetState = this.initial;
-        } else if (previousVariant === 'exit' && currentVariant === 'animate') {
-            startState = this.exit;
-            targetState = this.animate;
-        } else {
-            // If no valid transition, do nothing
-            return;
-        }
+        const keys = Object.keys(this.variants);
+        const currentValue = keys.indexOf(this.variants[newState]);
+       // console.log('currentValue: ',currentValue);
+       // console.log('keys: ',keys);
+      }else{
+       // console.warn('No variants found');
+      }
 
-        // Use the runAnimation method to handle the animation logic
-        this.playAnimation(startState, targetState);
+      // Check if `newState` is a key in `variants`
+      if (typeof newState === 'string' && this.variants?.[newState]) {
+       // console.log(`Resolved variant key "${newState}" to:`, this.variants[newState]);
+
+        newState = this.variants[newState]; // Assign the actual variant values
+        this.playAnimation(oldState, newState);
+      } else if (typeof newState === 'string') {
+//        console.warn(`Variant key "${newState}" not found in variants.`);
+        this.playAnimation(oldState, newState);
+      }
+  
     }
   }
+
+
 
   // animationStarted(event: AnimationEvent) {
   //   console.log('Animation started:', event);
@@ -307,18 +470,27 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   //   this.animationComplete.emit();
   // }
 
-  runInitAnimationsWhenInViewport(element: MotionDirective, offset: string = '0px', repeat: boolean ) {
-    const observer = new IntersectionObserver(entries => {
+  private observer?: IntersectionObserver;
+
+//TODO:Add logic for exiting elements
+  runInitAnimationsWhenInViewport(element: MotionDirective, offset: string = '0px', repeat: boolean) {
+    this.observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          console.log('in view')
+        if (entry.isIntersecting ) {
+          console.log('In view');
           element.runInViewAnimation();
-          if (repeat == false) {
-            observer.unobserve(entry.target);
+  
+          if (!repeat) {
+            this.observer?.unobserve(entry.target);
           }
+        } else if (!entry.isIntersecting && repeat) {
+          console.log('Leaving view');
+          
         }
       });
     }, { rootMargin: offset });
-    observer.observe(element.el.nativeElement);
+  
+    this.observer.observe(element.el.nativeElement);
   }
+  
 }
