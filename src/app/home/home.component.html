@@ -1,6 +1,67 @@
 <app-page-transition>
+<div style="display:flex; flex-direction:column; align-items:center; justify-content:center;margin:40px;">
 
-  <button (click)="changeStatus()">FOOD?</button>
+  <button
+  motion
+  [initial]="{ backgroundColor: '#333333',scale:0 }"
+  [animate]="{ backgroundColor: '#444444',scale:1 }"
+  [whileTap]="{ backgroundColor: '#555555',scale:1.8 }"
+    class="bg-red-400 "
+  [duration]="'.4s'"
+  [delay]="'0s'"
+  class="text-white transition-all duration-300 bg-red-400 focus-visible:ring-purple-500 focus-visible:ring-2 focus-visible:ring-offset-2"
+  style="background-color: chocolate; padding: 10px; border-radius: 10px; outline:none; border:none; cursor:pointer; display:block; margin:10px;"
+  (click)="changeStatus()">FOOD?HOVER
+
+</button>
+
+  <button
+  motion
+  [initial]="{ backgroundColor: '#333333',scale:0 }"
+  [animate]="{ backgroundColor: '#444444',scale:1 }"
+  [whileHover]="{ backgroundColor: '#555555',scale:1.3 }"
+    class="bg-red-400 "
+  [duration]="'.4s'"
+  [delay]="'0s'"
+  class="text-white transition-all duration-300 bg-red-400 focus-visible:ring-purple-500 focus-visible:ring-2 focus-visible:ring-offset-2"
+  style="background-color: chocolate; padding: 10px; border-radius: 10px; outline:none; border:none; cursor:pointer; display:block; margin:10px;"
+  (click)="changeStatus()">FOOD?HOVER
+
+</button>
+<button
+motion
+[initial]="{ backgroundColor: '#333333',scale:0 }"
+[animate]="{ backgroundColor: '#444444',scale:1 }"
+[whileFocus]="{ backgroundColor: 'hotpink',scale:1.1 }"
+
+[duration]="'.4s'"
+[delay]="'0s'"
+style="background-color: chocolate; padding: 10px; border-radius: 10px; outline:none; border:none; cursor:pointer; display:block; margin:10px;"
+(click)="changeStatus()">WHILE FOCUS
+
+</button>
+<button
+motion
+[initial]="{ backgroundColor: '#333333',scale:0 }"
+[animate]="{ backgroundColor: '#444444',scale:1 }"
+[whileTap]="{ backgroundColor: 'red',scale:1.1 }"
+
+[duration]="'.4s'"
+[delay]="'0s'"
+style="background-color: chocolate; padding: 10px; border-radius: 10px; outline:none; border:none; cursor:pointer; display:block; margin:10px;"
+(click)="changeStatus()">WHILE TAP
+
+</button>
+<button
+
+style="background-color: chocolate; padding: 10px; border-radius: 10px; outline:none; border:none; cursor:pointer; display:block; margin:10px;"
+>
+UnFOCUS
+</button>
+
+ </div>
+
+
 
 <h1 style="color: black; position: absolute; top: 0; right: 0; z-index: 900;">{{status}}</h1>
   <div motion

@@ -218,7 +218,11 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
 onMouseEnter() {
   if (Object.keys(this.whileHover).length > 0) {
     clearTimeout(this.hoverTimeout);
-    this.playAnimation(this.initial, this.whileHover);
+    if(Object.keys(this.animate).length > 0){
+      this.playAnimation(this.animate, this.whileHover);
+    }else{
+      this.playAnimation(this.initial, this.whileHover);
+    }
   }
 }
 
@@ -226,31 +230,86 @@ onMouseEnter() {
 onMouseLeave() {
   if (Object.keys(this.whileHover).length > 0) {
     this.hoverTimeout = setTimeout(() => {
-      this.playAnimation(this.whileHover, this.initial);
+      if(Object.keys(this.animate).length > 0){
+        this.playAnimation(this.whileHover, this.animate);
+      }else{
+        this.playAnimation(this.whileHover, this.initial);
+      }
     }, 100);
   }
 }
 
-@HostListener('tap')
-onTap() {
-  if (Object.keys(this.whileTap).length > 0) {
+// @HostListener('tap')
+// onTap() {
+//   if (Object.keys(this.whileTap).length > 0) {
+
+//     if(Object.keys(this.animate).length > 0){
+//       this.playAnimation(this.animate, this.whileTap);
+//     }else{
+//       this.playAnimation(this.initial, this.whileTap);
+//     }
+//   }
+// }
+
+// @HostListener('click')
+// onClick() {
+//   if (Object.keys(this.whileTap).length > 0) {
+//     this.playAnimation(this.initial, this.whileTap);
+//   }
+// }
+
+@HostListener('focus')
+@HostListener('mousedown', ['$event'])
+@HostListener('touchstart', ['$event'])
+onPress(event: Event) {
+
+  if(Object.keys(this.animate).length > 0){
+    this.playAnimation(this.animate, this.whileTap);
+  }else{
     this.playAnimation(this.initial, this.whileTap);
   }
+  const endEvent = event.type === 'mousedown' ? 'mouseup' : 'touchend';
+  const endListener = () => {
+    if (Object.keys(this.whileTap).length > 0) {
+      if(Object.keys(this.animate).length > 0){
+        this.playAnimation(this.whileTap, this.animate);
+      }else{
+        this.playAnimation(this.whileTap, this.initial);
+      }
+
+    }
+    window.removeEventListener(endEvent, endListener);
+  };
+
+  window.addEventListener(endEvent, endListener);
 }
 
-@HostListener('click')
-onClick() {
-  if (Object.keys(this.whileTap).length > 0) {
-    this.playAnimation(this.initial, this.whileTap);
-  }
-}
 
 @HostListener('focus')
 onFocus() {
   if (Object.keys(this.whileFocus).length > 0) {
-    this.playAnimation(this.initial, this.whileFocus);
+    if(Object.keys(this.animate).length > 0){
+      this.playAnimation(this.animate, this.whileFocus);
+    }else{
+      this.playAnimation(this.initial, this.whileFocus);
+    }
+  }
+
+
+}
+
+@HostListener('blur')
+onBlur() {
+  if (Object.keys(this.whileFocus).length > 0) {
+    if(Object.keys(this.animate).length > 0){
+      this.playAnimation(this.whileFocus, this.animate);
+    }else{
+      this.playAnimation(this.whileFocus, this.initial);
+    }
   }
 }
+
+
   private setupHoverAnimations() {
     this.el.nativeElement.addEventListener('mouseenter', () => {
       if (this.whileHover) {
@@ -288,7 +347,13 @@ onFocus() {
 
 
   private playAnimation(startState: any, targetState: any) {
-  
+    if(startState === undefined) {
+      startState = this.initial;
+    }
+
+    if(targetState === undefined) {
+      targetState = this.animate;
+    }
     const delay = this.delay || '0ms';
     const duration = this.duration || '1s';
     const easing = this.easing || 'ease';
