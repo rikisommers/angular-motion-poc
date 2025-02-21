@@ -9,11 +9,13 @@ import {
   OnChanges,
   SimpleChanges,
   HostListener
+  
 } from "@angular/core";
 import {
   AnimationBuilder,
   style,
   animate,
+  animateChild,
   AnimationPlayer,
   AnimationMetadata,
   AnimationOptions,
@@ -21,7 +23,9 @@ import {
   trigger,
   state,
   transition,
-  AnimationEvent
+  AnimationEvent,
+  stagger,
+  query
 } from "@angular/animations";
 import { MotionService } from '../app/services/motion.service';
 
@@ -43,7 +47,7 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Input() easing = "ease";
   @Input() offset = '0px';
   @Input() whileHover: any = {};
-
+  @Input() staggerChildren = "0s";
   @Input() whileTap: any = {};
   @Input() whileFocus: any = {};
   @Input() whileInView: any = {};
@@ -262,7 +266,7 @@ onMouseLeave() {
 @HostListener('mousedown', ['$event'])
 @HostListener('touchstart', ['$event'])
 onPress(event: Event) {
-
+  if (Object.keys(this.whileTap).length > 0) {
   if(Object.keys(this.animate).length > 0){
     this.playAnimation(this.animate, this.whileTap);
   }else{
@@ -270,18 +274,19 @@ onPress(event: Event) {
   }
   const endEvent = event.type === 'mousedown' ? 'mouseup' : 'touchend';
   const endListener = () => {
-    if (Object.keys(this.whileTap).length > 0) {
+
       if(Object.keys(this.animate).length > 0){
         this.playAnimation(this.whileTap, this.animate);
       }else{
         this.playAnimation(this.whileTap, this.initial);
       }
 
-    }
+
     window.removeEventListener(endEvent, endListener);
   };
 
   window.addEventListener(endEvent, endListener);
+}
 }
 
 
@@ -369,10 +374,16 @@ onBlur() {
   
 
     const animation: AnimationMetadata[] = [
+      style(startState),
+      animate(timing, style(targetState)),
+       animateChild(),
 
-        style(startState),
-          animate(timing, style(targetState))
+      query(':scope > [motion]', [
+        stagger(this.staggerChildren, [animateChild()])
+      ], { optional: true })
+      
     ];
+
   
     const animationBuilder = this.builder.build(animation);
   
