@@ -8,8 +8,9 @@ import {
   AfterViewInit,
   OnChanges,
   SimpleChanges,
-  HostListener
-  
+  HostListener,
+  Injector,
+  InjectFlags
 } from "@angular/core";
 import {
   AnimationBuilder,
@@ -47,7 +48,7 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Input() easing = "ease";
   @Input() offset = '0px';
   @Input() whileHover: any = {};
-  @Input() staggerChildren = "0s";
+  @Input() staggerChildren = '';
   @Input() whileTap: any = {};
   @Input() whileFocus: any = {};
   @Input() whileInView: any = {};
@@ -59,17 +60,20 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   private player: AnimationPlayer | null = null;
   private elementId: string;
   private hoverTimeout: any;
+  private injector: Injector;
 
   constructor(
     private builder: AnimationBuilder,
     private el: ElementRef, 
-    private motionService: MotionService
+    private motionService: MotionService,
+    injector: Injector
   ) {
     // Generate a unique ID for this instance
     this.elementId = `motion-${uniqueIdCounter++}`;
     this.el.nativeElement.setAttribute('id', this.elementId); // Set the ID on the element
     this.motionService.registerMotionElement(this);
     this.applyInitialStyles();
+    this.injector = injector;
   }
 
   ngOnInit() {
@@ -350,6 +354,36 @@ onBlur() {
     });
   }
 
+  /**
+ * Helper method to get all MotionDirective instances inside the parent element.
+ */
+private getMotionChildren(): MotionDirective[] {
+  return Array.from<Element>(this.el.nativeElement.querySelectorAll('[motion]'))
+    .map((child: Element) => this.getMotionInstance(child))
+    .filter((instance): instance is MotionDirective => instance !== null && instance.staggerChildren !== undefined);
+}
+
+/**
+* Gets the MotionDirective instance from an element.
+*/
+private getMotionInstance(element: Element): MotionDirective | null {
+  const injector = this.injector.get(Injector);
+  return injector.get(MotionDirective, null, InjectFlags.Optional);
+}
+
+
+// Helper method to get the index of the current element among its siblings
+private getChildIndex(): number | null {
+  const parent = this.el.nativeElement.parentElement; // Get the parent element
+  if (parent) {
+    const siblings = Array.from(parent.children); // Get all the children (siblings)
+    return siblings.indexOf(this.el.nativeElement); // Get the index of the current element
+  }
+  return null; // Return null if there is no parent
+}
+
+
+
 
   private playAnimation(startState: any, targetState: any) {
     if(startState === undefined) {
@@ -362,7 +396,7 @@ onBlur() {
     const delay = this.delay || '0ms';
     const duration = this.duration || '1s';
     const easing = this.easing || 'ease';
-    const timing = `${duration} ${delay} ${easing}`;
+
     
     if(typeof targetState === 'string') {
       targetState = this.variants[targetState];
@@ -372,20 +406,99 @@ onBlur() {
       startState = this.variants[startState];
     }
   
+    const motionChildren = this.getMotionChildren();
+    console.log('motionChildren: ',motionChildren);
+    
 
-    const animation: AnimationMetadata[] = [
-      style(startState),
-      animate(timing, style(targetState)),
-       animateChild(),
+    const staggerDelay = typeof this.staggerChildren === 'string' 
+    ? parseFloat(this.staggerChildren) * 1000 
+    : this.staggerChildren;
 
-      query(':scope > [motion]', [
-        stagger(this.staggerChildren, [animateChild()])
-      ], { optional: true })
+    let timing = '';
+    if(this.staggerChildren && motionChildren.length > 0){
+      const index = this.getChildIndex();
+      console.log('index: ',index ? index + 1 : 0);
+      timing = `${duration} ${(index ? index  + 1 : 0) * staggerDelay}ms ${easing}`;
+    }else{
+      timing = `${duration} ${delay} ${easing}`;
+    }
+
+
+
+
+
+        // Define parent animation
+        const parentAnimation: AnimationMetadata[] = [
+          style(startState),
+          animate(timing, style(targetState)),
+   
+      ];
+
+
+    // const staggerDelay = typeof this.staggerChildren === 'string' 
+    // ? parseFloat(this.staggerChildren) * 1000 
+    // : this.staggerChildren;
+
+
+                // animateChild({
+          //   delay: this.staggerChildren, // Apply stagger delay to child animations
+          // }),
+        //   query('[motion]', [
+        //     stagger(this.staggerChildren, [
+        //         style({ opacity: 0, transform: 'translateY(100px)' }),
+        //         animate(`${duration} ease-in-out`, style({ opacity: 1, transform: 'translateY(0px)' }))
+        //     ])
+        // ], { optional: true })
+      const animationBuilder = this.builder.build(parentAnimation);
+
+      // if(motionChildren.length > 0){
+
+      //   const staggerDelay = typeof this.staggerChildren === 'string' 
+      //   ? parseFloat(this.staggerChildren) * 1000 
+      //   : this.staggerChildren;
       
-    ];
+      //     motionChildren.forEach((child, index) => {
+      //       const childInitial = child.initial || {};
+      //       const childAnimate = child.animate || {};
+      //       const childDuration = child.duration || duration;
+      
+      //       console.log('childDuration: ',childDuration);
+      //       console.log('childAnimate: ',childAnimate);
+      //       console.log('childInitial: ',childInitial);
+      //       console.log('staggerDelay: ',`${index * staggerDelay}ms`);
+      
+      //       const childAnimation: AnimationMetadata[] = [
+      //           style(childInitial),
+      //           animate(`${childDuration} ${index * staggerDelay}ms ${easing}`, style(childAnimate))
+      //       ];
+      
+      //       const childAnimationBuilder = this.builder.build(childAnimation);
+      //       const childPlayer = childAnimationBuilder.create(child.el.nativeElement);
+      //       childPlayer.play();
+       
+      //     });
+      
+      // }
+
+
+    // const animation: AnimationMetadata[] = [
+    //   style(startState),
+    //   animate(timing, style(targetState)),
+
+      //stagger('1s', [animateChild()]),
+    //   query('[motion]', [
+    //     stagger(staggerDelay, [
+    //         style({ opacity: 0, transform: 'translateY(10px)' }),
+    //         animate(`${duration} ease-in-out`, style({ opacity: 1, transform: 'translateY(0px)' }))
+    //     ])
+    // ], { optional: true })
+       //query('@animate', stagger(staggerDelay, [animateChild()]), { optional: true })
+
+      
+    //s];
 
   
-    const animationBuilder = this.builder.build(animation);
+    //const animationBuilder = this.builder.build(animation);
   
     if (this.player && this.player.hasStarted()) {
         this.player.destroy();
@@ -396,6 +509,24 @@ onBlur() {
         this.animationComplete.emit();
     });
     this.player.play();
+
+
+
+  //   const motionChildren: HTMLElement[] = Array.from(this.el.nativeElement.querySelectorAll('[motion]'));
+  //   console.log('motionChildren: ',motionChildren);
+
+  //   motionChildren.forEach((child, index) => {
+  //     const childAnimation: AnimationMetadata[] = [
+  //         style(this.initial),
+  //         animate(`${duration} ${index * staggerDelay}ms ${easing}`, style(this.animate))
+  //     ];
+
+  //     const childAnimationBuilder = this.builder.build(childAnimation);
+  //     const childPlayer = childAnimationBuilder.create(child);
+  //     childPlayer.play();
+  // });
+
+
   }
 
 
