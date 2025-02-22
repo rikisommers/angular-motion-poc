@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {  MotionDirective } from '../../directives/ngx-motion.directive';
 import { PageTransitionComponent } from '../page-transition/page-transition.component';
-
+import { MotionService } from '../services/motion.service';
 type FoodVariants = Record<string, any>;
 
 @Component({
@@ -19,7 +19,12 @@ export class HomeComponent implements OnInit {
   foodVariants: FoodVariants;
   activeVariant:Record<string, any>;
 
-  constructor() {
+  get scrollProgress() {
+    return this.motionService.scrollYProgress();
+  }
+
+
+  constructor(private motionService: MotionService) {
     this.foodVariants = {
       hidden: { opacity: 0.5,transform: 'translateX(-100px)', backgroundColor: 'red' },
       egg: { opacity: 1, transform: 'translateX(0px)', backgroundColor: 'blue' },
@@ -29,6 +34,7 @@ export class HomeComponent implements OnInit {
     this.status = 'egg';
     this.activeVariant = this.foodVariants[Object.keys(this.foodVariants)[1]];
   }
+
 
 
 

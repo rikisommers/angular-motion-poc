@@ -1,25 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal , HostListener, computed ,effect, inject, OnDestroy, Inject} from '@angular/core';
+import{ DOCUMENT } from '@angular/common';
 import { MotionDirective } from '../../directives/ngx-motion.directive';
 import { Subject, Observable, forkJoin, finalize, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { fromEvent, of, Subscription } from 'rxjs';
+import { throttleTime, debounceTime } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MotionService {
+export class MotionService{
+  
+  private scrollSubscription: Subscription;
+
   private motionElements: MotionDirective[] = [];
   public exitAnimationsComplete$ = new BehaviorSubject<boolean>(false);
   private exitAnimationsInProgressSubject = new BehaviorSubject<boolean>(false);
   exitAnimationsInProgress = this.exitAnimationsInProgressSubject.asObservable();
 
-  
+  scrollYProgress = signal(0);
 
   
   totalExitDuration: number = 0;
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    this.setupScrollListener();
+    this.scrollSubscription = new Subscription();
   }
+
+
+
 
   registerMotionElement(element: MotionDirective) {
     this.motionElements.push(element);
@@ -135,5 +148,34 @@ export class MotionService {
 
   }
 
+  private setupScrollListener() {
+    if (typeof window !== 'undefined') {
+      this.scrollSubscription = fromEvent(window, 'scroll')
+        .pipe(
+          throttleTime(16), // Limit to about 60fps
+          debounceTime(1)  // Wait for scroll to settle
+        )
+        .subscribe(() => {
+          this.updateScrollProgress();
+        });
+
+      // Initial calculation
+      this.updateScrollProgress();
+    }
+  }
+
+  private updateScrollProgress() {
+    const doc = this.document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop;
+    const scrollHeight = doc.scrollHeight - doc.clientHeight;
+    const progress = scrollHeight > 0 ? Math.round((scrollTop / scrollHeight) * 100) : 0;
+    this.scrollYProgress.set(progress);
+  }
+
+  ngOnDestroy() {
+    if (this.scrollSubscription) {
+      this.scrollSubscription.unsubscribe();
+    }
+  }
 
 }

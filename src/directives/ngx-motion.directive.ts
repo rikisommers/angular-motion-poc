@@ -44,11 +44,11 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
   @Input() duration = "0.3s";
   @Input() delay = "0s";
   @Input() repeat = false;
-  @Input() exitDelay = "0s"; // New exit delay input
+  @Input() exitDelay = "0s"; 
   @Input() easing = "ease";
   @Input() offset = '0px';
   @Input() whileHover: any = {};
-  @Input() staggerChildren = '';
+  @Input() staggerChildren = '0s';
   @Input() whileTap: any = {};
   @Input() whileFocus: any = {};
   @Input() whileInView: any = {};
@@ -71,6 +71,7 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     // Generate a unique ID for this instance
     this.elementId = `motion-${uniqueIdCounter++}`;
     this.el.nativeElement.setAttribute('id', this.elementId); // Set the ID on the element
+
     this.motionService.registerMotionElement(this);
     this.applyInitialStyles();
     this.injector = injector;
@@ -382,7 +383,26 @@ private getChildIndex(): number | null {
   return null; // Return null if there is no parent
 }
 
+private parseAsNumber(value: any): number {
+  const parsedValue = typeof value === 'string' 
+    ? parseFloat(value) * 1000 
+    : value;
+  return isNaN(parsedValue) ? 0 : parsedValue;
+}
 
+
+  
+// const motionChildren = this.getMotionChildren();
+// console.log('motionChildren: ',motionChildren);
+
+// const motionInstance = this.getMotionInstance(this.el.nativeElement);
+// console.log('motionInstance: ',motionInstance?.elementId);
+
+// const isElementIdInMotionChildren = motionChildren.some(child => child.elementId === motionInstance?.elementId);
+// console.log('isElementIdInMotionChildren: ', isElementIdInMotionChildren);
+
+// const parentElement = this.el.nativeElement.parentElement.querySelector('[motion]');
+// const parentMotionInstance = this.getMotionInstance(parentElement);
 
 
   private playAnimation(startState: any, targetState: any) {
@@ -405,101 +425,18 @@ private getChildIndex(): number | null {
     if(typeof startState === 'string') {
       startState = this.variants[startState];
     }
-  
-    const motionChildren = this.getMotionChildren();
-    console.log('motionChildren: ',motionChildren);
-    
-
-    const staggerDelay = typeof this.staggerChildren === 'string' 
-    ? parseFloat(this.staggerChildren) * 1000 
-    : this.staggerChildren;
-
-    let timing = '';
-    if(this.staggerChildren && motionChildren.length > 0){
-      const index = this.getChildIndex();
-      console.log('index: ',index ? index + 1 : 0);
-      timing = `${duration} ${(index ? index  + 1 : 0) * staggerDelay}ms ${easing}`;
-    }else{
-      timing = `${duration} ${delay} ${easing}`;
-    }
 
 
+    const timing = `${duration} ${delay} ${easing}`;
 
-
-
-        // Define parent animation
-        const parentAnimation: AnimationMetadata[] = [
-          style(startState),
-          animate(timing, style(targetState)),
    
-      ];
+    const parentAnimation: AnimationMetadata[] = [
+      style(startState),
+      animate(timing, style(targetState)),
+    ];
 
-
-    // const staggerDelay = typeof this.staggerChildren === 'string' 
-    // ? parseFloat(this.staggerChildren) * 1000 
-    // : this.staggerChildren;
-
-
-                // animateChild({
-          //   delay: this.staggerChildren, // Apply stagger delay to child animations
-          // }),
-        //   query('[motion]', [
-        //     stagger(this.staggerChildren, [
-        //         style({ opacity: 0, transform: 'translateY(100px)' }),
-        //         animate(`${duration} ease-in-out`, style({ opacity: 1, transform: 'translateY(0px)' }))
-        //     ])
-        // ], { optional: true })
-      const animationBuilder = this.builder.build(parentAnimation);
-
-      // if(motionChildren.length > 0){
-
-      //   const staggerDelay = typeof this.staggerChildren === 'string' 
-      //   ? parseFloat(this.staggerChildren) * 1000 
-      //   : this.staggerChildren;
-      
-      //     motionChildren.forEach((child, index) => {
-      //       const childInitial = child.initial || {};
-      //       const childAnimate = child.animate || {};
-      //       const childDuration = child.duration || duration;
-      
-      //       console.log('childDuration: ',childDuration);
-      //       console.log('childAnimate: ',childAnimate);
-      //       console.log('childInitial: ',childInitial);
-      //       console.log('staggerDelay: ',`${index * staggerDelay}ms`);
-      
-      //       const childAnimation: AnimationMetadata[] = [
-      //           style(childInitial),
-      //           animate(`${childDuration} ${index * staggerDelay}ms ${easing}`, style(childAnimate))
-      //       ];
-      
-      //       const childAnimationBuilder = this.builder.build(childAnimation);
-      //       const childPlayer = childAnimationBuilder.create(child.el.nativeElement);
-      //       childPlayer.play();
-       
-      //     });
-      
-      // }
-
-
-    // const animation: AnimationMetadata[] = [
-    //   style(startState),
-    //   animate(timing, style(targetState)),
-
-      //stagger('1s', [animateChild()]),
-    //   query('[motion]', [
-    //     stagger(staggerDelay, [
-    //         style({ opacity: 0, transform: 'translateY(10px)' }),
-    //         animate(`${duration} ease-in-out`, style({ opacity: 1, transform: 'translateY(0px)' }))
-    //     ])
-    // ], { optional: true })
-       //query('@animate', stagger(staggerDelay, [animateChild()]), { optional: true })
-
-      
-    //s];
-
-  
-    //const animationBuilder = this.builder.build(animation);
-  
+    const animationBuilder = this.builder.build(parentAnimation);
+    
     if (this.player && this.player.hasStarted()) {
         this.player.destroy();
     }
@@ -510,25 +447,12 @@ private getChildIndex(): number | null {
     });
     this.player.play();
 
-
-
-  //   const motionChildren: HTMLElement[] = Array.from(this.el.nativeElement.querySelectorAll('[motion]'));
-  //   console.log('motionChildren: ',motionChildren);
-
-  //   motionChildren.forEach((child, index) => {
-  //     const childAnimation: AnimationMetadata[] = [
-  //         style(this.initial),
-  //         animate(`${duration} ${index * staggerDelay}ms ${easing}`, style(this.animate))
-  //     ];
-
-  //     const childAnimationBuilder = this.builder.build(childAnimation);
-  //     const childPlayer = childAnimationBuilder.create(child);
-  //     childPlayer.play();
-  // });
-
-
   }
 
+
+
+
+  
 
   runInViewAnimation() {
     if (this.inView && this.animate) {

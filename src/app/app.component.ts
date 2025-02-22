@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute, Router, NavigationEnd , NavigationStart} from '@angular/router';
 import {  MotionDirective } from '../directives/ngx-motion.directive';
 import { MotionHostComponent } from './motion-host/motion-host.component';
@@ -35,13 +35,20 @@ export class AppComponent implements OnInit {
   constructor(
     protected route: ActivatedRoute,
     private router: Router,
-    private motionService: MotionService
+    private motionService: MotionService,
+
     // private routeAnimService: RouteAnimationService
   ) {
 
   }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(e:Event):void {
+    console.log('window', e);
+  }
+
+
   ngOnInit() {
- 
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {

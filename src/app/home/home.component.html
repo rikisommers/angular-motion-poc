@@ -22,6 +22,25 @@
   
 } -->
 
+<div
+motion
+[initial]="{
+  backgroundColor: 'red',
+  scale: 1,
+  transform: 'translateX(0px)'
+}"
+[animate]="{
+  backgroundColor: 'hotpink',
+  scale: 1,
+  transform: 'translateX(100px)'
+}"
+[duration]="'.5s'"
+class="fixed top-0 left-0 w-[100px] h-[100px] z-50"
+>
+<p>{{ scrollProgress }}%</p>
+</div>
+
+
   <div
     motion
     style="height: 500px"
@@ -105,76 +124,8 @@
   </div>
   </div>
 
-  <div
-    class="flex flex-col items-center justify-center p-8"
-    motion
-    style="height: 500px"
-    [initial]="{ left: '10px', opacity: 1, backgroundColor: 'orange' }"
-    [animate]="{ left: '100px', opacity: 1, backgroundColor: 'blue' }"
-    [exit]="{ left: '10px', opacity: 1, backgroundColor: 'orange' }"
-    [duration]="'.4s'"
-    [delay]="'0s'"
-    [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-    (animationComplete)="onAnimationComplete()"
-  >
-    <h1 class="w-4 h-4">{{ status }}</h1>
-  </div>
 
-  <div
-    motion
-    class="flex flex-col items-center justify-center p-8"
-    style="height: 500px"
-    [initial]="{
-      left: '10px',
-      opacity: 1,
-      backgroundColor: 'black',
-      transform: 'translateX(0px)'
-    }"
-    [animate]="{
-      left: '100px',
-      opacity: 1,
-      backgroundColor: 'purple',
-      transform: 'translateX(100px)'
-    }"
-    [exit]="{
-      left: '10px',
-      opacity: 1,
-      backgroundColor: 'orange',
-      transform: 'translateX(0px)'
-    }"
-    [duration]="'.4s'"
-    [delay]="'0s'"
-    [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-    (animationComplete)="onAnimationComplete()"
-  >
-    <h1>HOME</h1>
-    <div
-      motion
-      [initial]="{ backgroundColor: 'red', scale: 1 }"
-      [animate]="{ backgroundColor: 'blue', scale: 1 }"
-      style="height: 100px; width: 100px; background-color: red"
-    >
-      Hello
-    </div>
-  </div>
 
-  <div
-    motion
-    [initial]="{ left: '10px', top: '10px' }"
-    [animate]="{ left: '100px', top: '100px' }"
-    [exit]="{ left: '10px', top: '10px' }"
-    [duration]="'.4s'"
-    [delay]="'0s'"
-    [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-    (animationComplete)="onAnimationComplete()"
-    class="bg-red-400"
-    style="
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      background-color: aqua;
-    "
-  ></div>
 
   <div
     motion
