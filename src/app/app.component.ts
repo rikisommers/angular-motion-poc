@@ -42,11 +42,6 @@ export class AppComponent implements OnInit {
 
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll(e:Event):void {
-    console.log('window', e);
-  }
-
 
   ngOnInit() {
 

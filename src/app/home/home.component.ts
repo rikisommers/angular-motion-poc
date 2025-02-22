@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges ,Signal, computed} from '@angular/core';
 import {  MotionDirective } from '../../directives/ngx-motion.directive';
 import { PageTransitionComponent } from '../page-transition/page-transition.component';
 import { MotionService } from '../services/motion.service';
@@ -18,6 +18,9 @@ export class HomeComponent implements OnInit {
 
   foodVariants: FoodVariants;
   activeVariant:Record<string, any>;
+  animatedStyle: Signal<any> = computed(() => ({
+    transform: `translateX(${this.scrollProgress}px)`
+  }));
 
   get scrollProgress() {
     return this.motionService.scrollYProgress();
@@ -38,10 +41,10 @@ export class HomeComponent implements OnInit {
 
 
 
-
   ngOnInit() {
     console.log('activeVariant',this.activeVariant);
     console.log('status',this.status);
+    console.log('animatedStyle',this.animatedStyle);
   }
 
   changeStatus() {

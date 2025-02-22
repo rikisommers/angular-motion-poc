@@ -1,9 +1,11 @@
 <!-- <app-page-transition> -->
 
   <h1 style="color: black; position: absolute; top: 0; right: 0; z-index: 900">
-    {{ status }}
+    {{ status }}{{animatedStyle()}}
   </h1>
 
+
+  <button class="fixed right-0 z-50 p-2 text-white bg-red-500 rounded-md top-6" (click)="changeStatus()">Change Status</button>
   <!-- 
 @if(isPanelOpen) {
 
@@ -21,7 +23,22 @@
   </div>
   
 } -->
-
+<!-- <div
+    motion
+    [variants]="foodVariants"
+    [animate]="status"
+    style="
+      height: 100px;
+      width: 100px;
+      background-color: red;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    "
+  >
+    Hello
+  </div>
 <div
 motion
 [initial]="{
@@ -38,8 +55,17 @@ motion
 class="fixed top-0 left-0 w-[100px] h-[100px] z-50"
 >
 <p>{{ scrollProgress }}%</p>
+</div> -->
+<div
+motion
+[animate]="{
+  transform:animatedStyle().transform
+}"
+[duration]="'.5s'"
+class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
+>
+<p>{{ scrollProgress }}% {{animatedStyle().transform}}</p>
 </div>
-
 
   <div
     motion

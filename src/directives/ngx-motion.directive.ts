@@ -10,7 +10,8 @@ import {
   SimpleChanges,
   HostListener,
   Injector,
-  InjectFlags
+  InjectFlags,
+  Renderer2
 } from "@angular/core";
 import {
   AnimationBuilder,
@@ -66,7 +67,8 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     private builder: AnimationBuilder,
     private el: ElementRef, 
     private motionService: MotionService,
-    injector: Injector
+    injector: Injector,
+    private renderer: Renderer2
   ) {
     // Generate a unique ID for this instance
     this.elementId = `motion-${uniqueIdCounter++}`;
@@ -77,37 +79,20 @@ export class MotionDirective implements OnDestroy, AfterViewInit, OnChanges {
     this.injector = injector;
   }
 
+  get scrollProgress() {
+    return this.motionService.scrollYProgress();
+  }
+  
   ngOnInit() {
 
 
-    // Initialize hover animations if defined
-    // if (Object.keys(this.whileHover).length > 0) { 
-    //   this.setupHoverAnimations();
-    // }
     if (Object.keys(this.inView).length > 0) {
       this.runInitAnimationsWhenInViewport(this, this.offset, this.repeat);
     }
 
-    // if (Object.keys(this.animate).length > 0 && this.variants) {
-    // //  console.log('animatedddd: ',this.animate, typeof this.animate );
-    //   if (typeof this.animate === 'string') {
-    // //    console.log(`Ini tvariant "${this.animate}" to:`, this.variants[this.animate]);
-    //     setTimeout(() => {
-
-    //       this.playAnimation(this.initial, this.variants[this.animate]);
-    //     },0);
-       
-    //    } else if (typeof animate === 'object') {
-    //     console.warn(`Init animate "${animate}"`);
-    //     setTimeout(() => {
-    //     this.playAnimation(this.initial, this.animate);
-    //   },0);
-    //  }
-   
-
-    // }
         this.playAnimation(this.initial, this.animate);
 
+ 
   }
 
   ngAfterViewInit() {
@@ -406,6 +391,9 @@ private parseAsNumber(value: any): number {
 
 
   private playAnimation(startState: any, targetState: any) {
+
+    if (!targetState) return;
+
     if(startState === undefined) {
       startState = this.initial;
     }
@@ -413,6 +401,7 @@ private parseAsNumber(value: any): number {
     if(targetState === undefined) {
       targetState = this.animate;
     }
+    
     const delay = this.delay || '0ms';
     const duration = this.duration || '1s';
     const easing = this.easing || 'ease';
@@ -431,7 +420,7 @@ private parseAsNumber(value: any): number {
 
    
     const parentAnimation: AnimationMetadata[] = [
-      style(startState),
+      style(startState || {}),
       animate(timing, style(targetState)),
     ];
 
@@ -538,42 +527,23 @@ private parseAsNumber(value: any): number {
 }
 
   
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['animate']) {
-      const oldState = changes['animate'].previousValue;
-      let newState = changes['animate'].currentValue;
-  
-        // console.log('animate changed:', oldState, '→', newState);
-        // console.log('variants:', this.variants);
-        // console.log('initial:', this.initial);
-      
+ngOnChanges(changes: SimpleChanges) {
+  if (changes['animate']) {
+    const oldState = changes['animate'].previousValue;
+    let newState = changes['animate'].currentValue;
 
-      if(this.variants) {
-      //  console.log(this.variants);
-        let newState = changes['animate'].currentValue;
-      //  console.log('variant string: ',newState);
-
-        const keys = Object.keys(this.variants);
-        const currentValue = keys.indexOf(this.variants[newState]);
-       // console.log('currentValue: ',currentValue);
-       // console.log('keys: ',keys);
-      }else{
-       // console.warn('No variants found');
-      }
-
-      // Check if `newState` is a key in `variants`
-      if (typeof newState === 'string' && this.variants?.[newState]) {
-       // console.log(`Resolved variant key "${newState}" to:`, this.variants[newState]);
-
-        newState = this.variants[newState]; // Assign the actual variant values
-        this.playAnimation(oldState, newState);
-      } else if (typeof newState === 'string') {
-//        console.warn(`Variant key "${newState}" not found in variants.`);
-        this.playAnimation(oldState, newState);
-      }
-  
+    if (typeof newState === 'object') {
+      // Animate based on updated properties
+      this.playAnimation(oldState, newState);
+    } else if (typeof newState === 'string' && this.variants?.[newState]) {
+      // Resolve variant keys
+      newState = this.variants[newState];
+      this.playAnimation(oldState, newState);
+    } else {
+      this.playAnimation(oldState, newState);
     }
   }
+}
 
 
 
