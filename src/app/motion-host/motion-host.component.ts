@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router,ActivatedRoute,NavigationStart, NavigationEnd } from '@angular/router';
 import { routeTransition } from '../../directives/motion-transition';
 import { MotionService } from '../services/motion.service';
@@ -6,7 +6,7 @@ import { MotionDirective } from '../../directives/ngx-motion.directive';
 
 
 @Component({
-  selector: 'app-motion-host',
+  selector: 'motion-host',
   templateUrl: './motion-host.component.html',
   standalone: true,
   animations: [
@@ -16,49 +16,36 @@ import { MotionDirective } from '../../directives/ngx-motion.directive';
 export class MotionHostComponent implements OnInit {
 
   exitDelay = 0;
+  maxDelay = '0ms';
   constructor(
     private router: Router, 
     private motionService: MotionService,
     protected route: ActivatedRoute,
   ) {
-    this.exitDelay = motionService.getLongestExitDuration();
 
   }
 
 
+  //TODO: Set longest duration based on current route elements
   ngOnInit() {
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
-        // Trigger exit animation
-        console.log('NAVV START')
-       // this.motionService.runAllEnterAnimations();
-      }
-      if (event instanceof NavigationEnd) {
-        // Trigger exit animation
-        console.log('NAVV END')
-       // this.motionService.runAllEnterAnimations();
+        const currentRoute = event.url;
+
+        this.maxDelay = this.motionService.getLongestExitDuration().toString();
       }
     });
 
-    // // Subscribe to exit animation completion
-    // this.animationService.exitAnimationComplete$.subscribe(() => {
-    //   // After exit animation completes, set the new state
-    //   this.currentAnimationState = 'animate'; // Set to the desired state for the new route
-    // });
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.motionService.runAllEnterAnimations();
+
+
+      }
+    });
+
   }
-  
-  private triggerExitAnimations() {
-    const motionElements = this.motionService.getMotionElements();
-    if (motionElements.length > 0) {
-      motionElements.forEach((motion: MotionDirective) => {
-        
-       // motion.runExitAnimation();
-        // motion.player.onDone(() => {
-        //   motion.variant = 'initial';
-        //   motion.run();
-        // });
-      });
-    }
-  }
+
   
 }

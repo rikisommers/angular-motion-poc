@@ -2,6 +2,8 @@ import { Component, OnInit, OnChanges, SimpleChanges ,Signal, computed} from '@a
 import {  MotionDirective } from '../../directives/ngx-motion.directive';
 import { PageTransitionComponent } from '../page-transition/page-transition.component';
 import { MotionService } from '../services/motion.service';
+import { gentleSpring1, gentleSpring2, gentleSpring3, gentleSpring4, moderateBounce1, moderateBounce2, moderateBounce3, moderateBounce4, strongBounce1, strongBounce2, strongBounce3, strongBounce4, elasticLike1, elasticLike2, elasticLike3, elasticLike4, overshoot1, overshoot2, overshoot3, overshoot4 } from '../../directives/spring-like-easings';
+
 type FoodVariants = Record<string, any>;
 
 @Component({
@@ -15,6 +17,8 @@ export class HomeComponent implements OnInit {
 
 
   status: string = "egg";
+
+  strongBounce1 = elasticLike4;
 
   foodVariants: FoodVariants;
   activeVariant:Record<string, any>;
@@ -42,9 +46,9 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('activeVariant',this.activeVariant);
-    console.log('status',this.status);
-    console.log('animatedStyle',this.animatedStyle);
+      // console.log('activeVariant',this.activeVariant);
+      // console.log('status',this.status);
+      // console.log('animatedStyle',this.animatedStyle);
   }
 
   changeStatus() {
@@ -52,7 +56,7 @@ export class HomeComponent implements OnInit {
     const currentIndex = keys.indexOf(this.status);
     const nextIndex = (currentIndex + 1) % keys.length;
     this.status = keys[nextIndex];
-    console.log('home status',this.status);
+    //console.log('home status',this.status);
   }
 
 

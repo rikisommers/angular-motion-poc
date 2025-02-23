@@ -1,4 +1,4 @@
-<!-- <app-page-transition> -->
+<app-page-transition>
 
   <h1 style="color: black; position: absolute; top: 0; right: 0; z-index: 900">
     {{ status }}{{animatedStyle()}}
@@ -59,9 +59,9 @@ class="fixed top-0 left-0 w-[100px] h-[100px] z-50"
 <div
 motion
 [animate]="{
+  translateY:animatedStyle().transform,
   transform:animatedStyle().transform
 }"
-[duration]="'.5s'"
 class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
 >
 <p>{{ scrollProgress }}% {{animatedStyle().transform}}</p>
@@ -88,8 +88,7 @@ class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
       backgroundColor: 'orange',
       transform: 'translateX(0px)'
     }"
-    [duration]="'0.5s'"
-
+    [duration]="'3s'"
     [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
     [staggerChildren]="'1s'"
     (animationComplete)="onAnimationComplete()"
@@ -151,7 +150,34 @@ class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
   </div>
 
 
+  <div
+    motion
+    style="height: 500px"
+    [initial]="{
+      left: '10px',
+      opacity: 1,
+      backgroundColor: 'black',
+      transform: 'translateX(0px)'
+    }"
+    [animate]="{
+      left: '100px',
+      opacity: 1,
+      backgroundColor: 'orange',
+      transform: 'translateX(200px)'
+    }"
+    [exit]="{
+      left: '10px',
+      opacity: 1,
+      backgroundColor: 'orange',
+      transform: 'translateX(0px)'
+    }"
+    [duration]="'3s'"
+    [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
+    [staggerChildren]="'1s'"
 
+  >
+    <h1>HOMsE222222</h1>
+    </div>
 
   <div
     motion
@@ -179,8 +205,8 @@ class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
     [duration]="'.4s'"
     [delay]="'0s'"
     [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-    (animationComplete)="onAnimationComplete()"
+
   >
     <h1>HOsssssME</h1>
   </div>
-<!-- </app-page-transition> -->
+</app-page-transition>

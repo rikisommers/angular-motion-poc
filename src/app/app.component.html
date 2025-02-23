@@ -15,10 +15,15 @@
   </div>
 </main>
 
-  <div  
+  <!-- <div  
   [@routeTransition]="{ value:route.snapshot.data, params: { maxDelay: maxDelay }}">
     <router-outlet></router-outlet>
-</div>
+</div> -->
+
+
+<motion-host>
+  <router-outlet></router-outlet>
+</motion-host>
 
 <!-- <router-outlet #outlet="outlet"></router-outlet> -->
 

@@ -26,11 +26,10 @@ export class AppComponent implements OnInit {
   @ViewChild(RouterOutlet, { static: true }) outlet!: RouterOutlet;
 
   title = 'angular';
-
   isPanelOpen = true;
   animInProgress: boolean = false;
   motionElements: MotionDirective[] = [];
-  maxDelay: string = '1s';
+  maxDelay: string = '0ms';
 
   constructor(
     protected route: ActivatedRoute,
@@ -45,38 +44,42 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        const currentRoute = event.url;
-        const nextRoute = this.router.url;
-        console.log('START',this.motionElements);
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationStart) {
+    //     const currentRoute = event.url;
+ 
+    //     //console.log('START',this.motionElements);
 
-        const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
+    //     const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
 
-        this.motionService.runAllEnterAnimationsForRoute(currentRoute);
+    //     //this.motionService.runAllEnterAnimationsForRoute(currentRoute);
+    //     //this.motionService.runAllExitAnimations;
+    //     // this.maxDelay = this.getLongestDuration(currentRouteElements);
+    //     this.maxDelay = this.getLongestDuration(currentRouteElements);
 
-        this.maxDelay = this.getLongestDuration(currentRouteElements);
+    //     // console.log('maxDelay',this.maxDelay);
+    //     this.motionService.runAllExitAnimations;
+    //     // Do something with the current and next route elements
+    //     //console.log('prevRouteElements',currentRouteElements);
+    //   }
+    // });
 
-        console.log('maxDelay',this.maxDelay);
-        
-        // Do something with the current and next route elements
-        console.log('prevRouteElements',currentRouteElements);
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const currentRoute = event.url;
+    //     const nextRoute = this.router.url;
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const currentRoute = event.url;
-        const nextRoute = this.router.url;
+    //     //console.log('END',this.motionElements);
+    //   //  this.motionService.runAllExitAnimations;
+    //     const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
 
-        console.log('END',this.motionElements);
-      //  this.motionService.runAllExitAnimations;
-        const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
-        // Do something with the current and next route elements  
-
-        console.log('newRouteElements',currentRouteElements);
-      }
-    });
+    //     //console.log('newRouteElements',currentRouteElements);
+    //   //  this.maxDelay = this.getLongestDuration(currentRouteElements);
+    //     setTimeout(() => {
+    //       this.motionService.runAllEnterAnimationsForRoute(currentRoute);
+    //     }, parseInt(this.maxDelay));
+    //   }
+    // });
 
 
   }
@@ -84,7 +87,6 @@ export class AppComponent implements OnInit {
 
   togglePanel() {
     this.isPanelOpen = !this.isPanelOpen;
-    console.log("toggle");
 
   }
 
@@ -93,7 +95,7 @@ export class AppComponent implements OnInit {
     return elements.reduce((max, element) => {
       const delay = element.getDuration();
       return Math.max(max, delay);
-    }, 0).toString() + 's';
+    }, 0).toString() + 'ms';
   }
   
 }
