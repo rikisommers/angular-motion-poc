@@ -14,16 +14,27 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
+<<<<<<< HEAD
   it(`should have the 'angular' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('angular');
+=======
+  it(`should have the 'fuckssr' title`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('fuckssr');
+>>>>>>> 5a871ec (initial commit)
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
+<<<<<<< HEAD
     expect(compiled.querySelector('h1')?.textContent).toContain('Hello, angular');
+=======
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, fuckssr');
+>>>>>>> 5a871ec (initial commit)
   });
 });

@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # Angular
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.6.
+=======
+# Fuckssr
+
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.5.
+>>>>>>> 5a871ec (initial commit)
 
 ## Development server
 

@@ -3,7 +3,11 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+<<<<<<< HEAD
     "angular": {
+=======
+    "fuckssr": {
+>>>>>>> 5a871ec (initial commit)
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +21,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+<<<<<<< HEAD
             "outputPath": "dist/angular",
+=======
+            "outputPath": "dist/fuckssr",
+>>>>>>> 5a871ec (initial commit)
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -36,7 +44,11 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
+<<<<<<< HEAD
             "outputMode": "server",
+=======
+            "prerender": true,
+>>>>>>> 5a871ec (initial commit)
             "ssr": {
               "entry": "src/server.ts"
             }
@@ -69,10 +81,17 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
+<<<<<<< HEAD
               "buildTarget": "angular:build:production"
             },
             "development": {
               "buildTarget": "angular:build:development"
+=======
+              "buildTarget": "fuckssr:build:production"
+            },
+            "development": {
+              "buildTarget": "fuckssr:build:development"
+>>>>>>> 5a871ec (initial commit)
             }
           },
           "defaultConfiguration": "development"
