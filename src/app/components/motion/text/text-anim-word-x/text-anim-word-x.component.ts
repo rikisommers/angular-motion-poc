@@ -74,8 +74,8 @@ import { spring } from 'motion';
               <span
               motionone
               [variants]="segmentVariants"
-              [initial]="'hidden'"
-              [animate]="'visible'"
+                [initial]="'hidden'"
+                  [animate]="'visible'"
               >
                 <app-highlighted-segment
                   [segment]="segment"
@@ -104,12 +104,12 @@ export class TextAnimWordXComponent implements OnInit {
       transition: {
         duration: 1,
         ease: {
-          type: 'spring',
+          type: 'spring' as const,
           stiffness: 100,
           damping: 10
         },
-        delay:0.6,
-        staggerChildren: 0.2,
+        delay:0.3,
+        staggerChildren: 0.3,
       },
 
     },
@@ -117,25 +117,25 @@ export class TextAnimWordXComponent implements OnInit {
 
 
   segmentVariants = {
-    hidden: { opacity: 0, x: 20, y: 100 },
+    hidden: { 
+      opacity: 0, 
+      x: -100, 
+      y:10
+    },
     visible: {
       opacity: 1,
-      x: 0,
-      y: 0,
+      x:0,
+      y:0,
       transition: {
-        delay: 0.6,
-        duration: 1,
-        transition: {
-          delay: 0.2,
-          duration: 1,
-          ease: {
-            type: 'spring',
-            stiffness: 100,
-            damping: 10
-          }
-        },
-    },
-    },
+        delay: 0.3,
+        duration: 0.6,
+        ease: {
+          type: 'spring' as const,
+          stiffness: 100,
+          damping: 10
+        }
+      }
+    }
   };
 
   // TextAnimFigma = ({ 
