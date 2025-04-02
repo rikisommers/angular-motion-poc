@@ -441,21 +441,60 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
   // Apply transform properties to the result object
   private applyTransformProperty(result: Record<string, any>, key: string, value: any): void {
-    result['transform'] = result['transform'] || '';
-    
-    if (key === 'x') {
-      result['transform'] += `translateX(${value}px) `;
-    } else if (key === 'y') {
-      result['transform'] += `translateY(${value}px) `;
-    } else if (key === 'rotate') {
-      result['transform'] += `rotate(${value}deg) `;
-    } else if (key === 'scale') {
-      result['transform'] += `scale(${value}) `;
-    } else if (key === 'scaleX') {
-      result['transform'] += `scaleX(${value}) `;
-    } else if (key === 'scaleY') {
-      result['transform'] += `scaleY(${value}) `;
+    // Initialize transform matrix if it doesn't exist
+    if (!result['transform']) {
+      result['transform'] = 'matrix(1, 0, 0, 1, 0, 0)';
     }
+
+    // Parse current matrix
+    const currentMatrix = result['transform'].match(/matrix\((.*)\)/)[1].split(',').map(Number);
+    
+    // Create new matrix based on the transform type
+    let newMatrix: number[];
+    
+    switch (key) {
+      case 'x':
+        newMatrix = [1, 0, 0, 1, value, 0];
+        break;
+      case 'y':
+        newMatrix = [1, 0, 0, 1, 0, value];
+        break;
+      case 'rotate':
+        const rad = (value * Math.PI) / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        newMatrix = [cos, -sin, sin, cos, 0, 0];
+        break;
+      case 'scale':
+        newMatrix = [value, 0, 0, value, 0, 0];
+        break;
+      case 'scaleX':
+        newMatrix = [value, 0, 0, 1, 0, 0];
+        break;
+      case 'scaleY':
+        newMatrix = [1, 0, 0, value, 0, 0];
+        break;
+      default:
+        return;
+    }
+
+    // Multiply matrices
+    const finalMatrix = this.multiplyMatrices(currentMatrix, newMatrix);
+    
+    // Apply the new matrix
+    result['transform'] = `matrix(${finalMatrix.join(',')})`;
+  }
+
+  // Helper function to multiply two 2D matrices
+  private multiplyMatrices(a: number[], b: number[]): number[] {
+    return [
+      a[0] * b[0] + a[2] * b[1],  // a
+      a[1] * b[0] + a[3] * b[1],  // b
+      a[0] * b[2] + a[2] * b[3],  // c
+      a[1] * b[2] + a[3] * b[3],  // d
+      a[0] * b[4] + a[2] * b[5] + a[4],  // e
+      a[1] * b[4] + a[3] * b[5] + a[5]   // f
+    ];
   }
 
   // Apply regular style properties to the result object
