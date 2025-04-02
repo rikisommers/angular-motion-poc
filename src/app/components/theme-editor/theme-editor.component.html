@@ -1,0 +1,152 @@
+<div class="">
+<div>
+    <label for="bodyBackgroundColor">Body Background Color:</label>
+    <input id="bodyBackgroundColor" type="color" [(ngModel)]="themeData.bodyBackgroundColor" (input)="updateTheme('primaryColor', themeData.primaryColor)" />
+  </div>
+
+<div>
+    <label for="primaryColor">Primary Color:</label>
+    <input id="primaryColor" type="color" [(ngModel)]="themeData.primaryColor" (input)="updateTheme('primaryColor', themeData.primaryColor)" />
+  </div>
+  
+  <div>
+    <label for="secondaryColor">Secondary Color:</label>
+    <input id="secondaryColor" type="color" [(ngModel)]="themeData.secondaryColor" (input)="updateTheme('secondaryColor', themeData.secondaryColor)" />
+  </div>
+  
+  <div>
+    <label for="accentColor">Accent Color:</label>
+    <input id="accentColor" type="color" [(ngModel)]="themeData.accentColor" (input)="updateTheme('accentColor', themeData.accentColor)" />
+  </div>
+  
+  <div>
+    <label for="backgroundColor">Background Color:</label>
+    <input id="backgroundColor" type="color" [(ngModel)]="themeData.backgroundColor" (input)="updateTheme('backgroundColor', themeData.backgroundColor)" />
+  </div>
+  
+  <div>
+    <label for="textColor">Text Color:</label>
+    <input id="textColor" type="color" [(ngModel)]="themeData.textColor" (input)="updateTheme('textColor', themeData.textColor)" />
+  </div>
+
+<div>
+    <label for="surface1">Surface 1 Color:</label>
+    <input id="surface1" type="color" [(ngModel)]="themeData.surface1" (input)="updateTheme('surface1', themeData.surface1)" />
+</div>
+
+<div>
+    <label for="surface2">Surface 2 Color:</label>
+    <input id="surface2" type="color" [(ngModel)]="themeData.surface2" (input)="updateTheme('surface2', themeData.surface2)" />
+</div>
+
+<div>
+    <label for="surface3">Surface 3 Color:</label>
+    <input id="surface3" type="color" [(ngModel)]="themeData.surface3" (input)="updateTheme('surface3', themeData.surface3)" />
+</div>
+
+<div>
+    <label for="backgroundColorInv">Inverse Background Color:</label>
+    <input id="backgroundColorInv" type="color" [(ngModel)]="themeData.backgroundColorInv" (input)="updateTheme('backgroundColorInv', themeData.backgroundColorInv)" />
+</div>
+
+<div>
+    <label for="headingColor">Heading Color:</label>
+    <input id="headingColor" type="color" [(ngModel)]="themeData.headingColor" (input)="updateTheme('headingColor', themeData.headingColor)" />
+</div>
+
+<div>
+    <label for="subtextColor">Subtext Color:</label>
+    <input id="subtextColor" type="color" [(ngModel)]="themeData.subtextColor" (input)="updateTheme('subtextColor', themeData.subtextColor)" />
+</div>
+
+<div>
+    <label for="navBg">Navigation Background Color:</label>
+    <input id="navBg" type="color" [(ngModel)]="themeData.navBg" (input)="updateTheme('navBg', themeData.navBg)" />
+</div>
+
+<div>
+    <label for="accentPri">Primary Accent Color:</label>
+    <input id="accentPri" type="color" [(ngModel)]="themeData.accentPri" (input)="updateTheme('accentPri', themeData.accentPri)" />
+</div>
+
+<div>
+    <label for="accentSec">Secondary Accent Color:</label>
+    <input id="accentSec" type="color" [(ngModel)]="themeData.accentSec" (input)="updateTheme('accentSec', themeData.accentSec)" />
+</div>
+
+<div>
+    <label for="gradStart">Gradient Start Color:</label>
+    <input id="gradStart" type="color" [(ngModel)]="themeData.gradStart" (input)="updateTheme('gradStart', themeData.gradStart)" />
+</div>
+
+<div>
+    <label for="gradStop">Gradient Stop Color:</label>
+    <input id="gradStop" type="color" [(ngModel)]="themeData.gradStop" (input)="updateTheme('gradStop', themeData.gradStop)" />
+</div>
+
+<div>
+    <label for="textAccent">Text Accent Color:</label>
+    <input id="textAccent" type="color" [(ngModel)]="themeData.textAccent" (input)="updateTheme('textAccent', themeData.textAccent)" />
+</div>
+
+<div>
+    <label for="stateSuccessBackground">State Success Background Color:</label>
+    <input id="stateSuccessBackground" type="color" [(ngModel)]="themeData.stateSuccessBackground" (input)="updateTheme('stateSuccessBackground', themeData.stateSuccessBackground)" />
+</div>
+
+<div>
+    <label for="textHighlight">Text Highlight:</label>
+    <select id="textHighlight" [(ngModel)]="themeData.textHighlight" (change)="updateTheme('textHighlight', themeData.textHighlight)">
+        <option *ngFor="let highlight of textHighlightOptions" [value]="highlight">{{ highlight }}</option>
+    </select>
+</div>
+
+<div>
+    <label for="textAnimation">Text Animation:</label>
+    <select id="textAnimation" [(ngModel)]="themeData.textAnimation" (change)="updateTheme('textAnimation', themeData.textAnimation)">
+        <option *ngFor="let animation of texAnmationOptions" [value]="animation">{{ animation }}</option>
+    </select>
+</div>
+
+<div>
+    <label for="textAnimationSec">Secondary Text Animation:</label>
+    <select id="textAnimationSec" [(ngModel)]="themeData.textAnimationSec" (change)="updateTheme('textAnimationSec', themeData.textAnimationSec)">
+        <option *ngFor="let animationSec of textAnimationSecOptions" [value]="animationSec">{{ animationSec }}</option>
+    </select>
+</div>
+
+<div>
+    <label for="heroBackground">heroBackground:</label>
+    <select id="heroBackground" [(ngModel)]="themeData.heroBackground" (change)="updateTheme('textAnimationSec', themeData.textAnimationSec)">
+        <option *ngFor="let heroBackground of heroBackgroundOptions" [value]="heroBackground">{{ heroBackground }}</option>
+    </select>
+</div>
+
+
+<div>
+    <label for="heroBackground">CSS grad type:</label>
+    <select id="heroBackground" [(ngModel)]="themeData.heroCssGradient" (change)="updateTheme('heroCssGradient', themeData.heroCssGradient)">
+        <option *ngFor="let heroCssGradient of heroCSSGradientOptions" [value]="heroCssGradient">{{ heroCssGradient }}</option>
+    </select>
+</div>
+
+<div>
+    <label for="heroCssGradientAngle">Hero CSS Gradient Angle:</label>
+    <input id="heroCssGradientAngle" type="number" [(ngModel)]="themeData.heroCssGradientAngle" (input)="updateTheme('heroCssGradientAngle', themeData.heroCssGradientAngle)" />
+</div>
+
+<div>
+    <label for="heroCssGradientRadialPosition">Hero CSS Gradient Radial Position:</label>
+    <select id="heroCssGradientRadialPosition" [(ngModel)]="themeData.heroCssGradientRadialPosition" (change)="updateTheme('heroCssGradientRadialPosition', themeData.heroCssGradientRadialPosition)">
+        <option *ngFor="let option of heroCSSGradientRadialPositionOptions" 
+        [value]="option">{{ option }}</option>
+    </select>
+</div>
+
+<div>
+    <label for="heroGradMidPoint">Hero Gradient Mid Point:</label>
+    <input id="heroGradMidPoint" type="number" step="0.01" min="0" max="1" [(ngModel)]="themeData.heroGradMidPoint" (input)="updateTheme('heroGradMidPoint', themeData.heroGradMidPoint)" />
+</div>
+
+<h1>dss</h1>
+</div>

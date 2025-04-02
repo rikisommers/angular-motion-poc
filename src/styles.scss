@@ -1,1 +1,143 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
+
+:root {
+  --bodyBackgroundColor: #fafafa;
+  --backgroundColor: #f4f4f5;
+  --surface1: #c1c1c1;
+  --surface2: #6f6f6f;
+  --surface3: #C0C6C9;
+  --backgroundColorInv: #6b7280;
+  --headingColor: #52525b;
+  --textColor: #09090b;
+  --subtextColor: #52525b;
+  --textColorInv: #fafafa;
+  --navBg: #C0C6C9;
+  --accentPri: #EF7801;
+  --accentSec: #FCD00A;
+  --gradStart: #EF7801;
+  --gradStop: #f4f4f5;
+  --textAccent: #d946ef;
+  --stateSuccessBackground: #d946ef;
+}
+
+body {
+  background-color: var(--bodyBackgroundColor);
+  color: var(--textColor);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--headingColor);
+}
+
+/* Add more global styles that use these variables */
+
+@keyframes rotate-out {
+    to {
+   //   transform: rotate(90deg);
+      transform:scale(0.8);
+    }
+  }
+  
+  @keyframes rotate-in {
+    from {
+      transform:scale(0.6);
+    }
+  }
+  
+  
+  @keyframes tranny {
+    to {
+   //   transform: rotate(90deg);
+      transform:translateX(-100%);
+    }
+  }
+  
+  @keyframes rotate-in {
+    from {
+      transform:scale(100%);
+    }
+  }
+  
+  
+  ::view-transition-old(count),
+  ::view-transition-new(count) {
+    animation-duration: 2000ms;
+  }
+  
+  //-ua-view-transition-fade-in,
+  ::view-transition-old(count) {
+    animation-name: rotate-out;
+  }
+  
+  ::view-transition-new(count) {
+    animation-name: rotate-in;
+    animation-delay: 0ms;
+  }
+  
+  
+  ::view-transition-old(test),
+  ::view-transition-new(test) {
+    animation-duration: 2000ms;
+  }
+  
+  //-ua-view-transition-fade-in,
+  ::view-transition-old(test) {
+    animation-name: tranny;
+  }
+  
+  ::view-transition-new(test) {
+    animation-name: tranny;
+    animation-delay: 0ms;
+  }
+  
+  
+  /* Named View Transitions */
+  .count {
+    font-family: sans-serif;
+    text-align: center;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    inset: 50% 0 auto;
+    transform: translateY(-50%);
+    view-transition-name: count;
+  }
+  
+  /* Full-screen overlay */
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  
+  /* View transition states */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1s; /* Sync with overlay */
+  }
+  
+  /* Keyframes for overlay animations */
+  @keyframes overlay-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes overlay-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+
+  body {
+    background-color: var(--bodyBackgroundColor);
+  }
+  

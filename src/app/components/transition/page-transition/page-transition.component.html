@@ -1,0 +1,198 @@
+<div
+  class="absolute top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen bg-slate-600"
+>
+  <div
+    class="absolute circle circle-lg bg-slate-500"
+    motionone
+    [initial]="{
+      opacity: 0,
+
+      transform: 'scale(0.5)'
+    }"
+    [exit]="{
+      opacity: 0,
+
+      transform: 'scale(0.5)'
+    }"
+    [animate]="{
+          opacity: 1,
+          scale:1,
+
+          transform: 'scale(1.2)',
+          transition:{
+            duration: 1,
+            ease: {
+              type: 'spring',
+              stiffness: 100,
+              damping: 10
+            },
+            delay:0,
+          }
+        }"
+  ></div>
+
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+    [exit]="{
+      opacity: 0,
+
+      transform: 'scale(0.5)'
+    }"
+    [animate]="{
+      opacity: 1,
+      transform: 'scale(1)',
+
+      transition:{
+        duration: 1,
+        ease: {
+          type: 'spring',
+          stiffness: 100,
+          damping: 10
+        },
+        delay:0.3,
+      }
+    }"
+    class="absolute square square-lg bg-slate-400"
+  ></div>
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+    [exit]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+    [animate]="{
+      opacity: 1,
+      transform: 'scale(1)',
+      transition:{
+        duration: 1,
+        ease: {
+          type: 'spring',
+          stiffness: 100,
+          damping: 10
+        },
+        delay:0.6,
+      }
+    }"
+    class="absolute rotate-45 square square-sm bg-slate-300"
+  ></div>
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+        [exit]="{
+          opacity: 0,
+          transform: 'scale(0.5)'
+        }"
+    [animate]="{
+      opacity: 1,
+      transform: 'scale(1)',
+  
+      transition:{
+        duration: 1,
+        ease: {
+          type: 'spring',
+          stiffness: 100,
+          damping: 10
+        },
+        delay:0.9,
+      }
+    }"
+    class="absolute triangle bg-slate-200"
+  ></div>
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+    [exit]="{
+      opacity: 0,
+
+      transform: 'scale(0.5)'
+    }"
+    [animate]="{
+      opacity: 1,
+      transform: 'scale(1)',
+
+      transition:{
+        duration: 1,
+        ease: {
+          type: 'spring',
+          stiffness: 100,
+          damping: 10
+        },
+        delay:1.5,
+      }
+    }"
+    class="absolute circle circle-sm bg-slate-100"
+  ></div>
+</div>
+
+<!-- <div
+motionone
+[initial]="{
+  backgroundColor:'blue',
+
+}"
+[animate]="{
+      backgroundColor:'red',
+
+}"
+[exit]="{
+    backgroundColor:'pink',
+
+}"
+[duration]="1"
+class="circle z-10 rounded-full w-[8vw] h-[8vw] bg-white absolute"
+> -->
+
+<!-- <div 
+    motionone
+    [initial]="{
+        backgroundColor:'red',
+        transform:'scale(1)',
+
+    }"
+    [animate]="{
+
+      backgroundColor:'blue',
+      transform:'scale(0.5)',
+
+    }"
+    [exit]="{
+        backgroundColor:'pink',
+        transform:'scale(1)',
+
+    }"
+    class="square aspect-square rounded-2xl bg-black rotate-45 absolute z-20 w-[60vw] h-[60vw]">
+
+    </div>
+    <div 
+    motionone
+    [initial]="{
+        backgroundColor:'blue',
+        transform:'scale(1)',
+  
+      }"
+      [animate]="{
+            backgroundColor:'red',
+            transform:'scale(0.5)',
+  
+      }"
+      [exit]="{
+        backgroundColor:'pink',
+        transform:'scale(1)',
+      }"
+    class="square rounded-xl z-40 bg-white absolute w-[40vw] h-[40vw]">
+
+    </div> -->
