@@ -1,0 +1,78 @@
+
+:host{
+display: contents;
+width:100vw;
+height: 100vh;
+position: fixed;
+
+
+::ng-deep ::-webkit-color-swatch-wrapper {
+    padding: 0!important;
+    border:none;
+    border-radius:4px;
+    width:24px;
+    height:24px;
+}
+
+
+
+::backdrop {
+    background-image: linear-gradient(
+      45deg,
+      magenta,
+      rebeccapurple,
+      dodgerblue,
+      green
+    );
+    opacity: 0.75;
+  }
+
+
+}
+
+    dialog {
+     //display:none;
+        margin:0;
+        width:40px;
+        height:40px;
+        background-color: beige;
+        border: 2px solid burlywood;
+        position: fixed;
+        overflow-y: auto;
+        border-radius: 100%;
+        padding: 20px;
+        max-width: 90%; /* Responsive width */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index:9999;
+    //  opacity:0;
+
+        transition: all 300ms ease-in-out;
+        left:calc(100vw - 40px);
+
+      @starting-style {
+        opacity:0;
+      } 
+      
+      
+      &[open]{
+        border-radius: 6px;
+        display: block;
+        opacity:1;
+        right: 0;
+        width:400px;
+        height: 100vh;
+        width: 300px; /* Adjust width as needed */
+        left:calc(100vw - 300px);
+      }
+    }
+    .close {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      position: absolute;
+      z-index:9999;
+      top: 10px;
+      right: 10px;
+    }
+    

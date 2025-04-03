@@ -77,6 +77,7 @@ import { spring } from 'motion';
                 [initial]="'hidden'"
                   [animate]="'visible'"
               >
+              
                 <app-highlighted-segment
                   [segment]="segment"
                   [highlight]="highlight"
@@ -102,14 +103,9 @@ export class TextAnimWordXComponent implements OnInit {
     hidden: {},
     visible: {
       transition: {
-        duration: 1,
-        ease: {
-          type: 'spring' as const,
-          stiffness: 100,
-          damping: 10
-        },
+        duration: 0.6,
         delay:0.3,
-        staggerChildren: 0.3,
+        staggerChildren: 0.4,
       },
 
     },
@@ -119,13 +115,11 @@ export class TextAnimWordXComponent implements OnInit {
   segmentVariants = {
     hidden: { 
       opacity: 0, 
-      x: -100, 
-      y:10
+      x: 30, 
     },
     visible: {
       opacity: 1,
       x:0,
-      y:0,
       transition: {
         delay: 0.3,
         duration: 0.6,
