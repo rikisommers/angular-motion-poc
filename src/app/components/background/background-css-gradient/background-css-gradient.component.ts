@@ -30,25 +30,25 @@ export class BackgroundCssGradComponent implements OnInit {
     switch (gradientType) {
       case 'linear':
         this.backgroundStyle = {
-          background: `linear-gradient(${gradientAngle}, ${this.currentTheme.data.gradStart}, ${this.currentTheme.data.gradStop})`,
+          background: `linear-gradient(${gradientAngle}, var(--gradStart), var(--gradStop))`,
         };
         break;
 
       case 'radial':
         this.backgroundStyle = {
-          background: `radial-gradient(circle, ${this.currentTheme.data.gradStart}, ${this.currentTheme.data.gradStop})`,
+          background: `radial-gradient(circle, var(--gradStart), var(--gradStop))`,
         };
         break;
 
       case 'conic':
         this.backgroundStyle = {
-          background: `conic-gradient(from ${gradientAngle}, ${this.currentTheme.data.gradStart}, ${this.currentTheme.data.gradStop})`,
+          background: `conic-gradient(from ${gradientAngle}, var(--gradStart), var(--gradStop))`,
         };
         break;
 
       default:
         this.backgroundStyle = {
-          background: `linear-gradient(${gradientAngle}, ${this.currentTheme.data.gradStart}, ${this.currentTheme.data.gradStop})`,
+          background: `linear-gradient(${gradientAngle}, var(--gradStart), var(--gradStop))`,
         };
     }
   }
