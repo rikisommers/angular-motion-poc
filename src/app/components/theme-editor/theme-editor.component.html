@@ -79,9 +79,9 @@
     <input id="gradStart" type="color" [(ngModel)]="themeData.gradStart" (input)="updateTheme('gradStart', themeData.gradStart)" />
 </div>
 
-<div>
+<div class="flex gap-4 text-xs items-center">
     <label for="gradStop">Gradient Stop Color:</label>
-    <input id="gradStop" type="color" [(ngModel)]="themeData.gradStop" (input)="updateTheme('gradStop', themeData.gradStop)" />
+    <input class="rounded-sm outline-0 w-8 h-8 border-0" id="gradStop" type="color" [(ngModel)]="themeData.gradStop" (input)="updateTheme('gradStop', themeData.gradStop)" />
 </div>
 
 <div>

@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { themes } from '../../../../../utils/theme';
 import { processItalicText, isItalic } from "../text-formatting.util";
 import { ThemeService } from '../../../../../services/theme.service';
 import { textHighlightThemes } from '../../../../../utils/theme';
 import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-highlighted-segment',
   standalone: true,
@@ -17,7 +18,7 @@ import { Subscription } from 'rxjs';
      {{highlight}}
     </span>`
 })
-export class HighlightedSegment implements OnInit {
+export class HighlightedSegment implements OnInit, OnChanges {
   @Input() segment?: string;
   @Input() highlight?: string;
   
@@ -27,6 +28,7 @@ export class HighlightedSegment implements OnInit {
   currentTheme: any;
 
   constructor(private themeService: ThemeService) {
+    // listen to changes in the highlight input and update 
   }
 
   ngOnInit() {
@@ -38,6 +40,16 @@ export class HighlightedSegment implements OnInit {
       this.processedSegment = result.processed;
     }
     
+    this.updateStyles();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['highlight']) {
+      this.updateStyles();
+    }
+  }
+
+  private updateStyles() {
     // Get colors from theme
     const surface1 = this.currentTheme?.data?.surface1;
     const surface2 = this.currentTheme?.data?.surface2;
@@ -63,7 +75,7 @@ export class HighlightedSegment implements OnInit {
       'default': 'background-color: var(--surface1);'
     };
 
-    return styleMap['figma']
-
+    // Use the highlight input value to determine the style, fallback to 'default' if not found
+    return styleMap[this.highlight as keyof typeof styleMap] || styleMap['default'];
   }
 }

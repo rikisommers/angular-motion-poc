@@ -3,37 +3,16 @@ import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, Output, Eve
 @Component({
   selector: 'app-modal',
   standalone:true,
+  styleUrl:'./modal.component.scss',
   template: `
-    <dialog #modalDialog [open]="isOpen" class="relative flex flex-col">
+    <dialog #modalDialog [open]="isOpen" class="relative flex flex-col h-vh100]">
       <button class="p-8 bg-red-500 close" (click)="onClose()">X</button>
       <div class="modal-content">
         <ng-content></ng-content>
       </div>
     </dialog>
   `,
-  styles: [`
-    dialog {
-      background-color: beige;
-      border: 2px solid burlywood;
-      
-      border-radius: 5px;
-      padding: 20px;
-      width: 300px; /* Adjust width as needed */
-      max-width: 90%; /* Responsive width */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .close {
-      background: transparent;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      position: absolute;
-      z-index:9999;
-      top: 10px;
-      right: 10px;
-    }
-    
-  `],
+  
 })
 export class ModalComponent implements OnInit, OnDestroy {
   @Input() isOpen: boolean = false;
