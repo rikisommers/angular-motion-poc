@@ -15,7 +15,7 @@ import { spring } from 'motion';
       [initial]="containerVariants.hidden"
       [animate]="containerVariants.visible"
     >
-    <span class="grid gap-4 relative overflow-hidden">
+    <span class="grid gap-4 relative">
 
       <ng-container
         *ngFor="
@@ -77,7 +77,7 @@ import { spring } from 'motion';
                 [initial]="'hidden'"
                   [animate]="'visible'"
               >
-              
+
                 <app-highlighted-segment
                   [segment]="segment"
                   [highlight]="highlight"
