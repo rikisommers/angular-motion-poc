@@ -1,7 +1,123 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 =======
 /* You can add global styles to this file, and also import other style files */
 >>>>>>> 5a871ec (initial commit)
+=======
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
+
+:root {
+  --bodyBackgroundColor: #fafafa;
+  --backgroundColor: #f4f4f5;
+  --surface1: #c1c1c1;
+  --surface2: #6f6f6f;
+  --surface3: #C0C6C9;
+  --backgroundColorInv: #6b7280;
+  --headingColor: #52525b;
+  --textColor: #09090b;
+  --subtextColor: #52525b;
+  --textColorInv: #fafafa;
+  --navBg: #C0C6C9;
+  --accentPri: #EF7801;
+  --accentSec: #FCD00A;
+  --gradStart: #EF7801;
+  --gradStop: #f4f4f5;
+  --textAccent: #d946ef;
+  --stateSuccessBackground: #d946ef;
+}
+
+body {
+  background-color: var(--bodyBackgroundColor);
+  color: var(--textColor);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--headingColor);
+}
+
+/* Add more global styles that use these variables */
+
+
+
+:root {
+  view-transition-name: none;
+}
+
+//:active-view-transition-type(forwards) 
+html{
+  &::view-transition-old(content) {
+    animation-name: slide-out-to-left;
+  }
+  &::view-transition-new(content) {
+    animation-name: slide-in-from-right;
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    translate: -100vw 0;
+  }
+}
+@keyframes slide-in-from-right {
+  from {
+    translate: 100vw 0;
+  }
+}
+@keyframes slide-out-to-left {
+  to {
+    translate: -100vw 0;
+  }
+}
+@keyframes slide-out-to-right {
+  to {
+    translate: 100vw 0;
+  }
+}
+
+
+.test2{
+  border:10px solid;
+  width: 90vw;
+  height:90vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  view-transition-name: content;
+}
+
+
+/* Named View Transitions */
+.count {
+  font-family: sans-serif;
+  text-align: center;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  inset: 50% 0 auto;
+  transform: translateY(-50%);
+  view-transition-name: count;
+}
+
+/* Full-screen overlay */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+body {
+  background-color: var(--bodyBackgroundColor);
+}
+  
+>>>>>>> final

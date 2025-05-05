@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+<<<<<<< HEAD
 import { HomeComponent } from './home/home.component'; // Adjust the path as necessary
 import { WorkComponent } from './work/work.component'; // Adjust the path as necessary
 import { BioComponent } from './bio/bio.component'; // Adjust the path as necessary
@@ -17,3 +18,28 @@ export const routes: Routes = [
 // { path: 'bio', component: BioComponent,canDeactivate: [MotionGuard2], }, // Route for Bio
 // ];
 
+=======
+import { WorkComponent } from './work/work.component';
+import { BlogComponent } from './blog/blog.component';
+import { AppComponent } from './app.component';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: AppComponent
+  },
+  {
+    path: 'work',
+    component: WorkComponent
+  },
+  {
+    path: 'blog',
+    component: BlogComponent
+  },
+  // Wildcard route to catch all routes
+  {
+    path: '**',
+    redirectTo: ''
+  }
+];
+>>>>>>> final
