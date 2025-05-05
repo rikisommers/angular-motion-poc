@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute, Router, NavigationEnd , NavigationStart} from '@angular/router';
 import {  MotionDirective } from '../directives/ngx-motion.directive';
@@ -38,10 +37,7 @@ export class AppComponent implements OnInit {
     private motionService: MotionService,
 
     // private routeAnimService: RouteAnimationService
-  ) {
-
-  }
-
+  )  {}
 
   ngOnInit() {
 
@@ -99,17 +95,4 @@ export class AppComponent implements OnInit {
     }, 0).toString() + 'ms';
   }
   
-=======
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
-})
-export class AppComponent {
-  title = 'fuckssr';
->>>>>>> 5a871ec (initial commit)
 }
