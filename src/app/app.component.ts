@@ -5,9 +5,10 @@ import { ThemeService } from './services/theme.service';
 import { themes } from './utils/theme';
 import { ThemeEditorComponent } from './components/theme-editor/theme-editor.component';
 import { ModalComponent } from "./components/base/modal/modal.component";
+import { LogoComponent } from "./components/motion/logo/logo.component";
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent],
+  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent, LogoComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
