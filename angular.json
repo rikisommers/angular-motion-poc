@@ -101,7 +101,7 @@
           "builder": "angular-cli-ghpages:deploy",
           "options": {
             "baseHref": "/angular-motion-poc/",
-            "outputPath": "dist/angular-motion-poc"
+            "outputPath": "dist/angular-motion-poc/browser"
           }
         }
       }
