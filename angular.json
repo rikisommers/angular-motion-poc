@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "fuckssr:build:production"
+              "buildTarget": "ng-motion-poc:build:production"
             },
             "development": {
-              "buildTarget": "fuckssr:build:development"
+              "buildTarget": "ng-motion-poc:build:development"
             }
           },
           "defaultConfiguration": "development"
