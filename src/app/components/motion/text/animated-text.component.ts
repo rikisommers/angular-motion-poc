@@ -3,6 +3,7 @@ import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { themes } from '../../../utils/theme';
 import { TextAnimLineUpComponent } from './text-anim-line-up/text-line-up.component';
 import { TextAnimWordXComponent } from './text-anim-word-x/text-anim-word-x.component';
+import { TextAnimNavigatorsComponent } from './text-anim-navigators/text-anim-navigators.component';
 import { ThemeService } from '../../../services/theme.service';
 import { textAnimationThemes } from '../../../utils/theme';
 
@@ -36,11 +37,22 @@ import { textAnimationThemes } from '../../../utils/theme';
     NgSwitchDefault,
     TextAnimLineUpComponent,
     TextAnimWordXComponent,
+    TextAnimNavigatorsComponent
   ],
   template: `
   <!-- <h1>HL: {{highlight}}</h1> -->
     <ng-container *ngIf="content">
-      
+           <!-- <app-text-anim-word-x
+          [content]="content"
+          [delay]="delay || 0"
+          [highlight]="highlight"
+        ></app-text-anim-word-x> -->
+        <app-text-anim-navigators
+          [content]="content"
+          [delay]="2"
+          [highlight]="highlight"
+        ></app-text-anim-navigators>
+
       <ng-container [ngSwitch]="type">
         <!-- <app-text-anim-figma *ngSwitchCase="AnimStyle.FIGMA" [content]="content" [highlight]="highlight2"></app-text-anim-figma>
         <app-text-anim-none *ngSwitchCase="AnimStyle.NONE" [content]="content" [highlight]="highlight2"></app-text-anim-none>
@@ -50,12 +62,19 @@ import { textAnimationThemes } from '../../../utils/theme';
         <app-text-anim-blur *ngSwitchCase="AnimStyle.CHARBLUR" [content]="content" [delay]="delay" [highlight]="highlight2"></app-text-anim-blur>
         <app-text-anim-random *ngSwitchCase="AnimStyle.CHARRANDOM" [content]="content"></app-text-anim-random>
         <app-text-anim-code *ngSwitchCase="AnimStyle.CHARCODE" [content]="content"></app-text-anim-code> -->
-        <app-text-anim-word-x
+        <!-- <app-text-anim-word-x
           *ngSwitchCase="textAnimationOptions.wordx"
           [content]="content"
           [delay]="delay || 0"
           [highlight]="highlight"
-        ></app-text-anim-word-x>
+        ></app-text-anim-word-x> -->
+
+        <!-- <app-text-anim-navigators
+          *ngSwitchCase="textAnimationOptions.navigators"
+          [content]="content"
+          [delay]="delay || 0"
+          [highlight]="highlight"
+        ></app-text-anim-navigators>
 
         <app-text-anim-line-up
           *ngSwitchCase="textAnimationOptions.linesup"
@@ -69,7 +88,7 @@ import { textAnimationThemes } from '../../../utils/theme';
           [content]="content"
           [delay]="delay || 0"
           [highlight]="highlight"
-        ></app-text-anim-line-up>
+        ></app-text-anim-line-up> -->
       </ng-container>
       <!-- <app-text-anim-line-up  
         [content]="content || 'ddsadasd'" 

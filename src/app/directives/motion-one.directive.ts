@@ -40,6 +40,7 @@ export interface TransitionOptions {
 export interface VariantWithTransition {
   [key: string]: any;
   transition?: TransitionOptions;
+  at?: number; // Add 'at' property to define when variant should be triggered
 }
 
 let uniqueIdCounter = 0; 
@@ -57,6 +58,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   @Input() inView: VariantWithTransition = {};
   @Input() duration = 0.3; // Changed to number for Motion One
   @Input() delay = 0; // Changed to number for Motion One
+  @Input() delayChildren = 0; // Add new input for delaying children
   @Input() repeat = false;
   @Input() exitDelay = 0; // Changed to number for Motion One
   @Input() easing = 'ease';
@@ -189,9 +191,8 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     // Get stagger configuration
     const staggerValue = this.getStaggerValue();
     const staggerDirection = this.getStaggerDirection();
-    const delayChildren = this.getDelayChildren();
-    
-    //  console.log(`Parent ${this.elementId} applying stagger: value=${staggerValue}, direction=${staggerDirection}, delayChildren=${delayChildren}`);
+    const delayChildren = this.delayChildren; // Use the new delayChildren input
+    const parentDelay = this.transition?.delay || 0;
     
     // Get all child directives (excluding self)
     const childDirectives = this.childMotionDirectives.filter(child => child !== this);
@@ -207,8 +208,6 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     // Animate each child with appropriate stagger delay
     childDirectives.forEach((childDirective, index) => {
       // Calculate the stagger delay based on index and direction
-      // If staggerDirection is positive, start from first child
-      // If staggerDirection is negative, start from last child
       let staggerIndex;
       if (staggerDirection >= 0) {
         staggerIndex = index;
@@ -216,12 +215,13 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
         staggerIndex = this.childrenCount - 1 - index;
       }
       
-      const staggerDelay = delayChildren + (staggerIndex * staggerValue);
+      // Combine parent delay, delayChildren, and stagger delay
+      const totalDelay = parentDelay + delayChildren + (staggerIndex * staggerValue);
       
-      this.logDebug(`Child ${childDirective.elementId} index=${index}, staggerIndex=${staggerIndex}, delay=${staggerDelay}`);
+      this.logDebug(`Child ${childDirective.elementId} index=${index}, staggerIndex=${staggerIndex}, totalDelay=${totalDelay}`);
       
       // Force override the child's delay
-      childDirective.overrideDelay(staggerDelay);
+      childDirective.overrideDelay(totalDelay);
       
       // Trigger the child's animation
       childDirective.runInitAnimation();
@@ -229,7 +229,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     
     // Animate parent after children if specified
     if (when === 'afterChildren') {
-      const totalChildrenDuration = delayChildren + (this.childrenCount * staggerValue);
+      const totalChildrenDuration = parentDelay + delayChildren + (this.childrenCount * staggerValue);
       this.overrideDelay(totalChildrenDuration);
       this.runSelfAnimation();
     }
@@ -624,16 +624,6 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     return transitionObj.staggerDirection ?? this.staggerDirection;
   }
 
-  private getDelayChildren(): number {
-    // Priority: 1. State-specific transition, 2. Global transition, 3. Default (0)
-    const stateTransition = this.getVariant(this.animate)?.transition;
-    const globalTransition = this.transition;
-    
-    const transitionObj = stateTransition || globalTransition || {};
-    
-    return transitionObj.delayChildren ?? 0;
-  }
-
   private getWhen(): 'beforeChildren' | 'afterChildren' | 'together' {
     // Priority: 1. State-specific transition, 2. Global transition, 3. Default ('together')
     const stateTransition = this.getVariant(this.animate)?.transition;
@@ -667,44 +657,58 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       resolvedTargetState = targetState;
     }
 
-    // Stop any existing animation
-    if (this.controls) {
-      this.controls.stop();
+    console.log('Playing animation with target state:', resolvedTargetState);
+
+    // Check if target state has an 'at' property
+    if (resolvedTargetState.at !== undefined) {
+      console.log(`Scheduling animation to start in ${resolvedTargetState.at} seconds`);
+      // Schedule the animation to start at the specified time
+      setTimeout(() => {
+        console.log('Executing delayed animation');
+        this.continueAnimation(resolvedTargetState, false);
+      }, resolvedTargetState.at * 1000); // Convert seconds to milliseconds
+      return;
     }
-    
-    // Stop any existing children animations
-    this.childrenControls.forEach(control => {
-      if (control) control.stop();
-    });
-    this.childrenControls = [];
 
-    // Check if this is the initial animation to the animate state
-    const isInitialAnimation = 
-      (targetState === this.animate || 
-       (typeof targetState === 'string' && this.variants?.[targetState] === this.animate));
 
-    // Apply start state immediately (excluding transition property)
-    if (resolvedStartState) {
-      const styles = this.extractStyleProperties(resolvedStartState);
+
+
+    // // Stop any existing children animations
+    // this.childrenControls.forEach(control => {
+    //   if (control) control.stop();
+    // });
+    // this.childrenControls = [];
+
+    // // Check if this is the initial animation to the animate state
+    // const isInitialAnimation = 
+    //   (targetState === this.animate || 
+    //    (typeof targetState === 'string' && this.variants?.[targetState] === this.animate));
+
+    // // Apply start state immediately (excluding transition property)
+    // if (resolvedStartState) {
+    //   const styles = this.extractStyleProperties(resolvedStartState);
       
-      // Apply initial styles immediately to prevent flash
-      if (styles && Object.keys(styles).length > 0) {
-        // Use requestAnimationFrame to ensure styles are applied before animation starts
-        requestAnimationFrame(() => {
-          Object.assign(this.el.nativeElement.style, styles);
+    //   // Apply initial styles immediately to prevent flash
+    //   if (styles && Object.keys(styles).length > 0) {
+    //     // Use requestAnimationFrame to ensure styles are applied before animation starts
+    //     requestAnimationFrame(() => {
+    //       Object.assign(this.el.nativeElement.style, styles);
           
-          // Use another requestAnimationFrame to ensure the next frame has the styles applied
-          requestAnimationFrame(() => {
-            // Continue with animation after styles are applied
-            this.continueAnimation(resolvedTargetState, isInitialAnimation);
-          });
-        });
-        return; // Exit early, animation will continue in the callback
-      }
-    }
+    //       // Use another requestAnimationFrame to ensure the next frame has the styles applied
+    //       requestAnimationFrame(() => {
+    //         // Continue with animation after styles are applied
+    //         this.continueAnimation(resolvedTargetState, isInitialAnimation);
+    //       });
+    //     });
+    //     return; // Exit early, animation will continue in the callback
+    //   }
+    // }
     
-    // If no start state or no styles to apply, continue immediately
-    this.continueAnimation(resolvedTargetState, isInitialAnimation);
+    // // If no start state or no styles to apply, continue immediately
+    // this.continueAnimation(resolvedTargetState, isInitialAnimation);
+
+    // Continue with normal animation if no 'at' property
+    this.continueAnimation(resolvedTargetState, false);
   }
 
   private continueAnimation(resolvedTargetState: VariantWithTransition, isInitialAnimation: boolean) {

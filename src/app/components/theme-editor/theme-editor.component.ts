@@ -28,11 +28,11 @@ export class ThemeEditorComponent implements OnInit {
   constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
-    this.themeData = this.themeService.getThemeData();
+    this.themeData = this.themeService.currentTheme;
     this.colorKeys = Object.keys(this.themeData || {});
   }
 
   updateTheme(property: string, value: any) {
-    this.themeService.updateThemeVariable(property, value);
+    this.themeService.updateTheme({ [property]: value });
   }
 }

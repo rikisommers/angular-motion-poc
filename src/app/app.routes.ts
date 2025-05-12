@@ -12,11 +12,17 @@ export const routes: Routes = [
     path: 'work',
     component: WorkComponent
   },
-  {
-    path: 'blog',
-    component: BlogComponent
-  },
-  // Wildcard route to catch all routes
+    {
+      path: 'blog',
+      component: BlogComponent
+    },
+
+    {
+      path: 'flashcards',
+      component: AppComponent
+    },
+    
+    // Wildcard route to catch all routes
   {
     path: '**',
     redirectTo: ''

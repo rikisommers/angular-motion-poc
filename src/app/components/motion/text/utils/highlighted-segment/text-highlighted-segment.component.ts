@@ -32,7 +32,7 @@ export class HighlightedSegment implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.currentTheme = this.themeService.getThemeData();
+    this.currentTheme = this.themeService.currentTheme;
 
     if (this.segment) {
       this.hasItalic = isItalic(this.segment);

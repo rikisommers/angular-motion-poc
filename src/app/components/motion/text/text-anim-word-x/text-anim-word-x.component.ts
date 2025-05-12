@@ -16,7 +16,6 @@ import { spring } from 'motion';
       [animate]="containerVariants.visible"
     >
     <span class="grid gap-4 relative">
-
       <ng-container
         *ngFor="
           let line of (content || '').split(

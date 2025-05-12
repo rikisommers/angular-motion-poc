@@ -5,10 +5,11 @@ import { ThemeService } from './services/theme.service';
 import { themes } from './utils/theme';
 import { ThemeEditorComponent } from './components/theme-editor/theme-editor.component';
 import { ModalComponent } from "./components/base/modal/modal.component";
-import { LogoComponent } from "./components/motion/logo/logo.component";
+import { NavbarComponent } from "./components/navigation/navbar.component";
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent, LogoComponent],
+  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -24,7 +25,7 @@ export class AppComponent implements OnInit {
   setTheme(themeKey: string) {
     const theme = themes.akc12;
     if (theme) {
-      this.themeService.setBodyDataAttributes(theme);
+      this.themeService.updateTheme(theme.data);
     } else {
       console.error(`Theme not found: ${themeKey}`);
     }

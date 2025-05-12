@@ -1,0 +1,33 @@
+<div 
+  #containerRef
+  class="flex flex-wrap"
+  motionone
+  [staggerChildren]="0.1"
+  [initial]="{ opacity: 1 }"
+  [animate]="{ opacity: 1 }"
+  [transition]="{ duration: 0.3, delay: 2, staggerChildren: 0.1 }"
+  [style.color]="'var(--heading-color)'"
+>
+  <div 
+    *ngFor="let word of getProcessedWords(); let wordIndex = index"
+    class="relative inline-block mr-2"
+  >
+    <!-- Preview element animates first -->
+    <span 
+      class="absolute left-0 inline-flex items-center justify-center w-full h-[80%] top-[10%] px-2 rounded-xl bg-red-600/40 preview-element"
+      motionone
+      [initial]="{ opacity: 0 }"
+      [animate]="{ opacity: 1 }"
+      [transition]="{ duration: 0.3 }"
+      (animationComplete)="onPreviewComplete($event)"
+    >
+    </span>
+    <!-- Text element starts hidden and will be animated after all previews complete -->
+    <span 
+      class="relative z-10 inline-block text-element"
+      [style.opacity]="0"
+    >
+      {{ word }}
+    </span>
+  </div>
+</div>

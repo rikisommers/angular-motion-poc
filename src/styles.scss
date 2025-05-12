@@ -1,10 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --bodyBackgroundColor: #fafafa;
@@ -76,11 +74,11 @@ html{
 
 
 .test2{
-  border:10px solid;
-  width: 90vw;
-  height:90vh;
+  width: 100vw;
+  height:100vh;
   overflow: hidden;
   box-sizing: border-box;
+  border:1px solid hotpink;
   view-transition-name: content;
 }
 
