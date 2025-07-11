@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { MotionOneService } from '../services/motion-one.service';
 import { MotionAnimationService } from '../services/motion-animation.service';
-import type { NativeAnimationControls, AnimationOptions, Target } from 'motion';
+import type { AnimationOptions, Target } from 'motion';
 import { animate, easeIn, easeOut, easeInOut, stagger } from '../services/motion-browser-safe';
 
 // Define interface for transition object similar to Framer Motion

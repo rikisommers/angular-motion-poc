@@ -1,4 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
+@import '@alliedtelesis-labs-nz/atui-components-stencil/styles.css';
+@import '@alliedtelesis-labs-nz/atui-typography';
 
 @tailwind base;
 @tailwind components;
@@ -109,3 +110,52 @@ body {
   background-color: var(--bodyBackgroundColor);
 }
   
+
+
+
+.table-auto,
+.table-fixed {
+  min-width: 100%;
+  overflow-x: auto;
+
+  th {
+    font-weight: var(--token-font-weight-med);
+    border-bottom: none;
+  }
+
+  tr {
+    will-change: background-color;
+    transition: var(--token-transition-fast);
+    border-bottom: 1px solid var(--token-border-light);
+
+    &:hover {
+      background-color: var(--token-surface-0);
+    }
+  }
+
+  thead {
+  text-align:left;
+
+    th {
+      font-size: var(--token-font-size-sm);
+      font-weight: var(--token-font-weight-med);
+      color: var(--token-text-med);
+      border-bottom: 1px solid var(--token-border-light);
+    }
+  }
+
+  th,
+  td {
+    padding: 8px;
+  }
+
+  &.truncated {
+    th,
+    td {
+      max-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
