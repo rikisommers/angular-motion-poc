@@ -34,6 +34,7 @@ export interface TransitionOptions {
   staggerDirection?: number;
   when?: 'beforeChildren' | 'afterChildren' | 'together';
   delayChildren?: number;
+  times?: number[]; // keyframe times 0..1
 }
 
 // Define interface for variants that can include transition properties
@@ -41,6 +42,18 @@ export interface VariantWithTransition {
   [key: string]: any;
   transition?: TransitionOptions;
   at?: number; // Add 'at' property to define when variant should be triggered
+}
+
+// Optional timeline support for orchestrated per-property steps
+export interface TimelineStep {
+  prop: string;
+  keyframes?: any[] | any;
+  to?: any;
+  duration: number;
+  delay?: number;
+  ease?: string | number[] | { type: 'spring'; stiffness?: number; damping?: number };
+  atTime?: number; // absolute start (s) relative to element start
+  times?: number[];
 }
 
 let uniqueIdCounter = 0; 
@@ -70,7 +83,8 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   @Input() whileFocus: VariantWithTransition = {};
   @Input() whileInView: VariantWithTransition = {};
   @Input() variants: { [key: string]: VariantWithTransition } = {};
-  @Input() transition: TransitionOptions = {};
+  @Input() transition: TransitionOptions | Record<string, TransitionOptions> = {};  
+  @Input() timeline: TimelineStep[] | undefined;
   @Output() animationComplete = new EventEmitter<void>();
 
   // Query for child motionone directives
@@ -191,8 +205,8 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     // Get stagger configuration
     const staggerValue = this.getStaggerValue();
     const staggerDirection = this.getStaggerDirection();
-    const delayChildren = this.delayChildren; // Use the new delayChildren input
-    const parentDelay = this.transition?.delay || 0;
+    const delayChildren = this.delayChildren; // number
+    const parentDelay = (((this.transition as TransitionOptions)?.delay) ?? 0) as number;
     
     // Get all child directives (excluding self)
     const childDirectives = this.childMotionDirectives.filter(child => child !== this);
@@ -216,7 +230,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       }
       
       // Combine parent delay, delayChildren, and stagger delay
-      const totalDelay = parentDelay + delayChildren + (staggerIndex * staggerValue);
+      const totalDelay = (parentDelay as number) + delayChildren + (staggerIndex * staggerValue);
       
       this.logDebug(`Child ${childDirective.elementId} index=${index}, staggerIndex=${staggerIndex}, totalDelay=${totalDelay}`);
       
@@ -229,7 +243,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     
     // Animate parent after children if specified
     if (when === 'afterChildren') {
-      const totalChildrenDuration = parentDelay + delayChildren + (this.childrenCount * staggerValue);
+      const totalChildrenDuration = (parentDelay as number) + delayChildren + (this.childrenCount * staggerValue);
       this.overrideDelay(totalChildrenDuration);
       this.runSelfAnimation();
     }
@@ -422,6 +436,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     const result: Record<string, any> = {};
     
     for (const key in variant) {
+      // Allow raw transform strings or keyframe arrays to pass through untouched
+      if (key === 'transform') {
+        (result as any)['transform'] = (variant as any)[key];
+        continue;
+      }
       if (this.isTransformProperty(key)) {
         this.applyTransformProperty(result, key, variant[key]);
       } else if (key !== 'transition') {
@@ -441,6 +460,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
   // Apply transform properties to the result object
   private applyTransformProperty(result: Record<string, any>, key: string, value: any): void {
+    // If keyframe array is provided, let Motion One handle it directly
+    if (Array.isArray(value)) {
+      (result as any)[key] = value;
+      return;
+    }
     // Initialize transform matrix if it doesn't exist
     if (!result['transform']) {
       result['transform'] = 'matrix(1, 0, 0, 1, 0, 0)';
@@ -500,7 +524,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   // Apply regular style properties to the result object
   private applyStyleProperty(result: Record<string, any>, key: string, value: any): void {
     if (this.isColorProperty(key)) {
-      result[key] = this.normalizeColor(value);
+      if (Array.isArray(value)) {
+        result[key] = value.map(v => this.normalizeColor(v));
+      } else {
+        result[key] = this.normalizeColor(value);
+      }
     } else {
       result[key] = value;
     }
@@ -519,75 +547,60 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   private getEasing(easingString: string | number[] | { type: 'spring'; stiffness?: number; damping?: number } | undefined) {
-    if (!easingString) {
-      return this.motionAnimation.easeInOut;
-    }
-
-    // Handle cubic bezier array
-    if (Array.isArray(easingString)) {
-      return easingString;
-    }
-
-    // Handle spring configuration object
+    if (!easingString) return this.motionAnimation.easeInOut;
+    if (Array.isArray(easingString)) return easingString;
     if (typeof easingString === 'object' && 'type' in easingString && easingString.type === 'spring') {
-      return {
-        type: 'spring',
+      return this.motionAnimation.spring({
         stiffness: easingString.stiffness || 100,
-        damping: easingString.damping || 10,
-        restSpeed: 2,
-        restDelta: 0.01
-      };
+        damping: easingString.damping || 10
+      });
     }
-
-    // Handle string-based easings
-    const easingMap: Record<string, any> = {
-      'ease-in': this.motionAnimation.easeIn,
-      'ease-out': this.motionAnimation.easeOut,
-      'ease-in-out': this.motionAnimation.easeInOut,
-      'ease': this.motionAnimation.easeInOut,
-      'spring': {
-        type: 'spring',
-        stiffness: 100,
-        damping: 10,
-        restSpeed: 2,
-        restDelta: 0.01
-      }
-    };
-    
-    return typeof easingString === 'string' ? easingMap[easingString] || this.motionAnimation.easeInOut : this.motionAnimation.easeInOut;
+    if (typeof easingString === 'string') {
+      if (easingString === 'ease-in') return this.motionAnimation.easeIn;
+      if (easingString === 'ease-out') return this.motionAnimation.easeOut;
+      if (easingString === 'ease-in-out' || easingString === 'ease') return this.motionAnimation.easeInOut;
+      if (easingString === 'spring') return this.motionAnimation.spring();
+    }
+    return this.motionAnimation.easeInOut;
   }
 
   private getAnimationOptions(targetState?: VariantWithTransition): AnimationOptions {
     // Priority: 1. Stagger delay, 2. State-specific transition, 3. Global transition, 4. Individual properties
-    const stateTransition = targetState?.transition ?? this.getVariant(this.animate)?.transition;
-    const globalTransition = this.transition;
+    const stateTransition = (targetState?.transition as TransitionOptions) ?? (this.getVariant(this.animate)?.transition as TransitionOptions);
+    const globalTransition = (this.transition as TransitionOptions);
     
-    const transitionObj = stateTransition || globalTransition || {};
+    const transitionObj: TransitionOptions = stateTransition || globalTransition || {};
     
     // Always prioritize stagger delay over any other delay settings
     const delay = this.staggerDelay > 0 ? this.staggerDelay : (transitionObj.delay ?? this.delay);
     
-    const ease = this.getEasing(transitionObj.ease ?? this.easing);
-    
-    // If ease is a spring configuration, we need to handle it differently
-    if (typeof ease === 'object' && 'type' in ease && ease.type === 'spring') {
-      return {
-        ...ease,
+    const easeInput = transitionObj.ease ?? this.easing;
+    // If ease is a spring configuration, prefer native spring options (no fixed duration)
+    if (easeInput && typeof easeInput === 'object' && 'type' in (easeInput as any) && (easeInput as any).type === 'spring') {
+      const springOptions: any = {
+        type: 'spring',
+        stiffness: (easeInput as any).stiffness ?? 100,
+        damping: (easeInput as any).damping ?? 10,
         delay,
         repeat: this.getRepeatValue(transitionObj),
         repeatDelay: transitionObj.repeatDelay,
         onComplete: () => this.animationComplete.emit()
       };
+      return springOptions as AnimationOptions;
     }
-    
-    return {
+
+    const ease = this.getEasing(easeInput as any);
+
+    const options: any = {
       duration: transitionObj.duration ?? this.duration,
       delay,
-      ease,
       repeat: this.getRepeatValue(transitionObj),
       repeatDelay: transitionObj.repeatDelay,
       onComplete: () => this.animationComplete.emit()
     };
+    options.easing = ease; // Motion 11+
+    (options as any).ease = ease; // Back-compat
+    return options as AnimationOptions;
   }
 
   private getRepeatValue(transitionObj: TransitionOptions): number {
@@ -605,10 +618,10 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
   private getStaggerValue(): number {
     // Priority: 1. State-specific transition, 2. Global transition, 3. Individual properties
-    const stateTransition = this.getVariant(this.animate)?.transition;
-    const globalTransition = this.transition;
+    const stateTransition = this.getVariant(this.animate)?.transition as TransitionOptions;
+    const globalTransition = this.transition as TransitionOptions;
     
-    const transitionObj = stateTransition || globalTransition || {};
+    const transitionObj: TransitionOptions = stateTransition || globalTransition || {};
     
     // Get stagger value from transition object or fallback to directive input
     return transitionObj.staggerChildren ?? this.staggerChildren;
@@ -616,22 +629,22 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
   private getStaggerDirection(): number {
     // Priority: 1. State-specific transition, 2. Global transition, 3. Input property
-    const stateTransition = this.getVariant(this.animate)?.transition;
-    const globalTransition = this.transition;
+    const stateTransition = this.getVariant(this.animate)?.transition as TransitionOptions;
+    const globalTransition = this.transition as TransitionOptions;
     
-    const transitionObj = stateTransition || globalTransition || {};
+    const transitionObj: TransitionOptions = stateTransition || globalTransition || {};
     
     return transitionObj.staggerDirection ?? this.staggerDirection;
   }
 
   private getWhen(): 'beforeChildren' | 'afterChildren' | 'together' {
     // Priority: 1. State-specific transition, 2. Global transition, 3. Default ('together')
-    const stateTransition = this.getVariant(this.animate)?.transition;
-    const globalTransition = this.transition;
+    const stateTransition = this.getVariant(this.animate)?.transition as TransitionOptions;
+    const globalTransition = this.transition as TransitionOptions;
     
-    const transitionObj = stateTransition || globalTransition || {};
+    const transitionObj: TransitionOptions = stateTransition || globalTransition || {};
     
-    return transitionObj.when ?? 'together';
+    return (transitionObj.when ?? 'together') as 'beforeChildren' | 'afterChildren' | 'together';
   }
 
   private playAnimation(startState: VariantWithTransition | string, targetState: VariantWithTransition | string) {
@@ -712,6 +725,19 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   private continueAnimation(resolvedTargetState: VariantWithTransition, isInitialAnimation: boolean) {
+    // Timeline takes precedence
+    if (this.timeline && this.timeline.length > 0) {
+      this.runTimeline(resolvedTargetState);
+      return;
+    }
+
+    // Detect per-property transition map on the state
+    const t: any = resolvedTargetState.transition;
+    const isPerPropMap = t && typeof t === 'object' && t.duration === undefined && t.delay === undefined && t.ease === undefined;
+    if (isPerPropMap) {
+      this.runPerPropertyAnimations(resolvedTargetState);
+      return;
+    }
     // Check if this is the initial animation to the animate state
     if (isInitialAnimation && !this.initialAnimationPlayed) {
       const staggerValue = this.getStaggerValue();
@@ -770,6 +796,81 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
         this.childrenControls.push(childControl);
       });
     }
+  }
+
+  private runPerPropertyAnimations(resolvedTargetState: VariantWithTransition) {
+    const baseDelay = this.staggerDelay > 0 ? this.staggerDelay : (((resolvedTargetState.transition as TransitionOptions)?.delay) ?? this.delay);
+    const transitionMap = resolvedTargetState.transition as Record<string, TransitionOptions>;
+    const props = Object.keys(resolvedTargetState).filter(k => k !== 'transition' && k !== 'at');
+
+    let maxEnd = 0;
+    props.forEach((prop) => {
+      const value = (resolvedTargetState as any)[prop];
+      const conf = (transitionMap?.[prop] || {}) as TransitionOptions;
+      const delay = baseDelay + (conf.delay ?? 0);
+      const ease = this.getEasing(conf.ease ?? this.easing);
+      const duration = conf.duration ?? this.duration;
+      const options: any = { duration, delay, easing: ease, repeat: this.getRepeatValue(conf), repeatDelay: conf.repeatDelay };
+      (options as any).ease = ease;
+      const times = (conf as any).times as number[] | undefined;
+      if (times && Array.isArray(times)) options.offset = this.normalizeTimes(times, duration);
+
+      const end = delay + duration;
+      if (end > maxEnd) maxEnd = end;
+
+      let finalValue = value;
+      if (this.isColorProperty(prop)) {
+        if (Array.isArray(value)) finalValue = value.map(v => this.normalizeColor(v));
+        else finalValue = this.normalizeColor(value);
+      }
+      const target = { [prop]: finalValue } as any;
+      const control = this.motionAnimation.animate(this.el.nativeElement as Target, target, options);
+      this.childrenControls.push(control);
+    });
+
+    setTimeout(() => this.animationComplete.emit(), maxEnd * 1000);
+  }
+
+  private runTimeline(resolvedTargetState: VariantWithTransition) {
+    const baseDelay = this.staggerDelay > 0 ? this.staggerDelay : (((resolvedTargetState.transition as TransitionOptions)?.delay) ?? this.delay);
+    let maxEnd = 0;
+    // Also animate any non-timeline props from the target state (e.g., opacity)
+    const timelinePropsSet = new Set((this.timeline || []).map(s => s.prop));
+    const nonTimelineTarget: any = {};
+    Object.keys(resolvedTargetState).forEach(k => {
+      if (k === 'transition' || k === 'at') return;
+      if (!timelinePropsSet.has(k)) nonTimelineTarget[k] = (resolvedTargetState as any)[k];
+    });
+    if (Object.keys(nonTimelineTarget).length > 0) {
+      const opt = this.getAnimationOptions(resolvedTargetState) as any;
+      const ctl = this.motionAnimation.animate(this.el.nativeElement as Target, nonTimelineTarget, opt);
+      this.childrenControls.push(ctl);
+      const nonEnd = (opt.delay ?? 0) + (opt.duration ?? this.duration);
+      if (nonEnd > maxEnd) maxEnd = nonEnd;
+    }
+    this.timeline!.forEach(step => {
+      const start = baseDelay + (step.atTime ?? 0) + (step.delay ?? 0);
+      const duration = step.duration;
+      const value = step.keyframes !== undefined ? step.keyframes : step.to;
+      const ease = this.getEasing(step.ease ?? this.easing);
+      const options: any = { duration, delay: start, easing: ease };
+      (options as any).ease = ease;
+      if (step.times) options.offset = this.normalizeTimes(step.times, duration);
+
+      const end = start + duration;
+      if (end > maxEnd) maxEnd = end;
+
+      let v = value;
+      if (this.isColorProperty(step.prop)) {
+        if (Array.isArray(v)) v = v.map((c: any) => this.normalizeColor(c));
+        else v = this.normalizeColor(v);
+      }
+      const target = { [step.prop]: v } as any;
+      const control = this.motionAnimation.animate(this.el.nativeElement as Target, target, options);
+      this.childrenControls.push(control);
+    });
+
+    setTimeout(() => this.animationComplete.emit(), maxEnd * 1000);
   }
 
   // private setupInViewAnimation() {
@@ -855,20 +956,22 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     console.log(`[${this.elementId}] Running exit animation`);
     
     // Use exit-specific transition if available, otherwise use global transition
-    const exitTransition = this.getVariant(this.exit).transition || this.transition || {};
+    const exitTransition = (this.getVariant(this.exit).transition as TransitionOptions) || (this.transition as TransitionOptions) || {} as TransitionOptions;
     
     // Create a promise that resolves when the exit animation completes
     return new Promise<void>((resolve) => {
-      const exitOptions: AnimationOptions = {
-        duration: exitTransition.duration ?? this.duration,
-        delay: exitTransition.delay ?? this.exitDelay,
-        ease: this.getEasing(exitTransition.ease ?? this.easing),
+      const exitOptions: any = {
+        duration: (exitTransition.duration ?? this.duration) as number,
+        delay: (exitTransition.delay ?? this.exitDelay) as number,
         onComplete: () => {
      //     console.log(`[${this.elementId}] Exit animation completed`);
           this.animationComplete.emit();
           resolve();
         }
       };
+      const ease = this.getEasing(exitTransition.ease ?? this.easing);
+      exitOptions.easing = ease;
+      (exitOptions as any).ease = ease;
       
       // Stop any existing animation
       if (this.controls) {
@@ -921,10 +1024,10 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     try {
       // Consider state-specific transition if available
       // Check transitions in order of priority: exit, animate, then default transition
-      const animateTransition = this.getVariant(this.exit)?.transition  || this.transition || {};
-      const duration = animateTransition.duration ?? this.duration;
-      const delay = animateTransition.delay ?? this.delay;
-      return (duration + delay) * 1000;
+      const animateTransition = (this.getVariant(this.exit)?.transition as TransitionOptions) || (this.transition as TransitionOptions) || {} as TransitionOptions;
+      const duration = (animateTransition.duration ?? this.duration) as number;
+      const delay = (animateTransition.delay ?? this.delay) as number;
+      return (Number(duration) + Number(delay)) * 1000;
     } catch (error) {
       console.error('Error calculating duration:', error);
       return 0;
@@ -968,18 +1071,12 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   // Helper to normalize color values to a consistent format
-  private normalizeColor(color: string | undefined | null): string {
-    // Handle undefined or null values
-    if (!color) {
-      return '';
+  private normalizeColor(color: any): string {
+    if (color == null) return '';
+    if (typeof color !== 'string') {
+      try { return String(color); } catch { return ''; }
     }
-    
-    // If it's already in rgb/rgba format, return as is
-    if (color.startsWith('rgb')) {
-      return color;
-    }
-    
-    // For named colors, convert to hex
+    if (color.startsWith('rgb') || color.startsWith('#')) return color;
     if (color === 'aqua') return '#00ffff';
     if (color === 'red') return '#ff0000';
     if (color === 'blue') return '#0000ff';
@@ -989,9 +1086,18 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     if (color === 'orange') return '#ffa500';
     if (color === 'black') return '#000000';
     if (color === 'white') return '#ffffff';
-    
-    // Return original if no conversion needed
     return color;
+  }
+
+  private normalizeTimes(times: number[] | undefined, duration: number): number[] | undefined {
+    if (!times || times.length === 0) return undefined;
+    const hasSeconds = times.some(t => t > 1);
+    if (!hasSeconds) return times;
+    const safeDuration = Math.max(duration, 0.000001);
+    return times.map(t => {
+      const v = t / safeDuration;
+      return v < 0 ? 0 : v > 1 ? 1 : v;
+    });
   }
 
   // Add a method to manually trigger exit animation from outside

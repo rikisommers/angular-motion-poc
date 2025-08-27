@@ -9,7 +9,7 @@ import { ThemeService } from '../../../services/theme.service';
   standalone: true,
   imports: [NgIf, AnimatedTextComponent],
   template: `
-    <div class="z-10 grid items-start justify-end w-full flex-grow gap-1 relative">
+    <div class="grid relative z-10 flex-grow gap-1 justify-end items-start w-full">
 
       <div class="flex flex-col items-start justify-center w-[600px]">
 
@@ -17,12 +17,12 @@ import { ThemeService } from '../../../services/theme.service';
           <!-- <ng-container *ngIf="tag">
         </ng-container> -->
         <ng-container *ngIf="title">
-          <h1 class="text-4xl leading-normal text-balance">
+          <h1 class="text-8xl leading-normal text-balance">
             <app-animated-text
               [content]="title"
               [type]="currentTheme?.textAnimation"
               [highlight]="currentTheme?.textHighlight"
-              [delay]="4"
+              [delay]="10"
             ></app-animated-text>
           </h1>
         </ng-container>
@@ -34,7 +34,7 @@ import { ThemeService } from '../../../services/theme.service';
           >
             {{ tag }}
           </div>
-          <h4 class="text-sm font-normal" style="color: var(--subtext-color);">
+          <h4 class="text-xl font-normal" style="color: var(--subtext-color);">
             <ng-container *ngIf="content">
               <app-animated-text
                 [type]="currentTheme?.textAnimationSec"
