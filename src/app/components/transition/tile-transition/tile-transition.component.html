@@ -31,58 +31,11 @@
   motionone
   [initial]="{ opacity: 0 }"
   [animate]="{ opacity: 1 }"
-  [delayChildren]="1"
-  [staggerChildren]="0.2"
+  [delayChildren]="0"
+  [staggerChildren]="0.4"
 >
-<div 
-class="w-1/6 h-full bg-black rotate-45"
-motionone
-[initial]="{
-    backgroundColor:'red',
-    transform:'scale(1)',
 
-}"
-[animate]="{
 
-  backgroundColor:'blue',
-  transform:'scale(0.5)',
-  ease: {
-          type: 'spring',
-          stiffness: 100,
-          damping: 10
-        },
-}"
-[exit]="{
-    backgroundColor:'pink',
-    transform:'scale(1)',
-
-}"
-></div>
-
-<div 
-class="w-1/6 h-full bg-black rotate-45"
-motionone
-[initial]="{
-    backgroundColor:'red',
-    transform:'scale(1)',
-
-}"
-[animate]="{
-
-  backgroundColor:'blue',
-  transform:'scale(0.5)',
-  ease: {
-          type: 'spring',
-          stiffness: 100,
-          damping: 10
-        },
-}"
-[exit]="{
-    backgroundColor:'pink',
-    transform:'scale(1)',
-
-}"
-></div>
   @for(item of items; track item) {
     <div
       class="w-1/6 h-full bg-black rotate-45"
@@ -91,7 +44,7 @@ motionone
       [animate]="{
         backgroundColor:'blue',
         transform:'scale(0.5)',
-        transition:{ duration: 1, ease:{ type:'spring', stiffness:100, damping:10 } }
+        transition:{ duration: 1, repeat: true, repeatType: 'forwards', repeatDelay: 0.8, ease: 'ease-in-out' }
       }"
       [exit]="{ backgroundColor:'pink', transform:'scale(1)' }"
     ></div>  }

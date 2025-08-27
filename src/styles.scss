@@ -37,19 +37,32 @@ h1, h2, h3, h4, h5, h6 {
 /* Add more global styles that use these variables */
 
 
-
 :root {
-  view-transition-name: none;
+  --vt-duration: 1600ms;
+  --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-//:active-view-transition-type(forwards) 
 html{
   &::view-transition-old(content) {
     animation-name: slide-out-to-left;
+    animation-duration: var(--vt-duration, 600ms);
+    animation-timing-function: var(--vt-easing, cubic-bezier(0.22, 1, 0.36, 1));
   }
   &::view-transition-new(content) {
     animation-name: slide-in-from-right;
+    animation-duration: var(--vt-duration, 600ms);
+    animation-timing-function: var(--vt-easing, cubic-bezier(0.22, 1, 0.36, 1));
   }
+  &::view-transition-group(content) {
+    animation-duration: var(--vt-duration, 600ms);
+    animation-timing-function: var(--vt-easing, cubic-bezier(0.22, 1, 0.36, 1));
+  }
+}
+
+/* Global defaults and easy overrides */
+:root {
+  --vt-duration: 600ms;
+  --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes slide-in-from-left {
@@ -81,6 +94,9 @@ html{
   box-sizing: border-box;
   border:1px solid hotpink;
   view-transition-name: content;
+  transition: all 2s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 

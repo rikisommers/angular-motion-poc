@@ -6,10 +6,9 @@ import { themes } from './utils/theme';
 import { ThemeEditorComponent } from './components/theme-editor/theme-editor.component';
 import { ModalComponent } from "./components/base/modal/modal.component";
 import { NavbarComponent } from "./components/navigation/navbar.component";
-import { AtuiButton } from '@alliedtelesis-labs-nz/atui-components-angular';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent, NavbarComponent, AtuiButton],
+  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

@@ -28,7 +28,7 @@ export interface TransitionOptions {
   delay?: number;
   ease?: string | number[] | { type: 'spring'; stiffness?: number; damping?: number };
   repeat?: number | boolean;
-  repeatType?: 'loop' | 'mirror' | 'reverse';
+  repeatType?: 'loop' | 'mirror' | 'reverse' | 'forwards' | 'pingPong';
   repeatDelay?: number;
   staggerChildren?: number;
   staggerDirection?: number;
@@ -598,6 +598,9 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       repeatDelay: transitionObj.repeatDelay,
       onComplete: () => this.animationComplete.emit()
     };
+    const direction = this.mapRepeatTypeToDirection(transitionObj.repeatType);
+    if (direction) options.direction = direction;
+    if (transitionObj.repeatType) options.repeatType = transitionObj.repeatType;
     options.easing = ease; // Motion 11+
     (options as any).ease = ease; // Back-compat
     return options as AnimationOptions;
@@ -614,6 +617,18 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     }
     
     return this.repeat ? Infinity : 0;
+  }
+
+  private mapRepeatTypeToDirection(
+    repeatType: TransitionOptions['repeatType'] | undefined
+  ): 'normal' | 'reverse' | 'alternate' | undefined {
+    if (!repeatType) return undefined;
+    // Aliases
+    if (repeatType === 'forwards' || repeatType === 'loop') return 'normal';
+    if (repeatType === 'reverse') return 'reverse';
+    if (repeatType === 'pingPong' || repeatType === 'mirror') return 'alternate';
+    // Default
+    return 'normal';
   }
 
   private getStaggerValue(): number {
@@ -812,6 +827,9 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       const duration = conf.duration ?? this.duration;
       const options: any = { duration, delay, easing: ease, repeat: this.getRepeatValue(conf), repeatDelay: conf.repeatDelay };
       (options as any).ease = ease;
+      const dir = this.mapRepeatTypeToDirection(conf.repeatType);
+      if (dir) options.direction = dir;
+      if (conf.repeatType) options.repeatType = conf.repeatType;
       const times = (conf as any).times as number[] | undefined;
       if (times && Array.isArray(times)) options.offset = this.normalizeTimes(times, duration);
 
