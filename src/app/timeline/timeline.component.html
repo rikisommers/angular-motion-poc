@@ -1,0 +1,26 @@
+<div class="p-6 space-y-10">
+    <!-- Option 3: timeline -->
+    <h2 class="text-xl font-semibold">Timeline</h2>
+    <div class="flex gap-6 items-center h-24">
+      <div class="h-12 bg-blue-600" style="width:40px"
+           motionone
+           [timeline]="[
+             { prop: 'width',          
+                keyframes: ['40px','160px','80px'], 
+                duration: 1.2, atTime: 0.0, ease: 'ease-out', 
+                times: [0,.7,1] },
+             { prop: 'backgroundColor',
+               keyframes: ['#f00','#0f0','#00f'], 
+               duration: 5.0, atTime: 0.5, ease: 'ease-in',  
+               times: [0,.4,1] },
+             { prop: 'transform',         
+                keyframes: ['scaleY(0.5)','scaleY(1)','scaleY(10)'],           
+                 duration: 6.0, 
+                 atTime: 0, 
+                 ease: { type:'spring', stiffness:100, damping:10 },  
+                 times: [0,4,5]  }
+           ]"
+>
+      </div>
+    </div>
+  </div>

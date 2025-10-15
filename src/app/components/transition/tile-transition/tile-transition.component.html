@@ -1,0 +1,57 @@
+
+
+<ng-template #line let-item>
+    <div 
+    class="w-1/6 h-full bg-black rotate-45"
+    motionone
+    [initial]="{
+        backgroundColor:'red',
+        transform:'scale(1)',
+    
+    }"
+    [animate]="{
+    
+      backgroundColor:'blue',
+      transform:'scale(0.5)',
+      ease: {
+              type: 'spring',
+              stiffness: 100,
+              damping: 10
+            },
+    }"
+    [exit]="{
+        backgroundColor:'pink',
+        transform:'scale(1)',
+    
+    }"
+    ></div>
+</ng-template>
+<div
+  class="absolute overflow-hidden top-0 left-0 z-[99] w-screen h-screen bg-purple-300 grid grid-cols-6 grid-rows-1"
+  motionone
+  [initial]="{ opacity: 0 }"
+  [animate]="{ opacity: 1 }"
+  [delayChildren]="0"
+  [staggerChildren]="0.4"
+>
+
+
+  @for(item of items; track item) {
+    <div
+      class="w-1/6 h-full bg-black rotate-45"
+      motionone
+      [initial]="{ backgroundColor:'red', transform:'scale(1)' }"
+      [animate]="{
+        backgroundColor:'blue',
+        transform:'scale(0.5)',
+        transition:{ duration: 1, repeat: true, repeatType: 'reverse', repeatDelay: 0.8, 
+        ease: {
+              type: 'spring',
+              stiffness: 100,
+              damping: 10
+            }
+      }
+      }"
+      [exit]="{ backgroundColor:'pink', transform:'scale(1)' }"
+    ></div>  }
+</div>

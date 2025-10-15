@@ -1,19 +1,38 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component'; // Adjust the path as necessary
-import { WorkComponent } from './work/work.component'; // Adjust the path as necessary
-import { BioComponent } from './bio/bio.component'; // Adjust the path as necessary
+import { WorkComponent } from './work/work.component';
+import { BlogComponent } from './blog/blog.component';
 import { AppComponent } from './app.component';
-
+import { TimelineComponent } from './timeline/timeline.component';
+import { PunchComponent } from './punch/punch.component';
 export const routes: Routes = [
-  { path: '', component: HomeComponent}, // Default route for Home
-  { path: 'work', component: WorkComponent}, // Route for Work
-  { path: 'bio', component: BioComponent}, // Route for Bio
+  {
+    path: '',
+    component: AppComponent
+  },
+  {
+    path: 'work',
+    component: WorkComponent
+  },
+    {
+      path: 'blog',
+      component: BlogComponent
+    },
+
+    {
+      path: 'flashcards',
+      component: AppComponent
+    },
+    {
+      path: 'timeline',
+      component: TimelineComponent
+    },
+    {
+      path: 'punch',
+      component: PunchComponent
+    },
+    // Wildcard route to catch all routes
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];
-
-// export const routes: Routes = [
-//   { path: '', component: AppComponent,canDeactivate: [MotionGuard2], }, // Default route for Home
-// { path: 'home', component: HomeComponent,canDeactivate: [MotionGuard2],   }, // Default route for Home
-// { path: 'work', component: WorkComponent,canDeactivate: [MotionGuard2], }, // Route for Work
-// { path: 'bio', component: BioComponent,canDeactivate: [MotionGuard2], }, // Route for Bio
-// ];
-

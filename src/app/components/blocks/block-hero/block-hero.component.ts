@@ -9,7 +9,7 @@ import { PostIntroComponent } from '../../post/post-intro/post-intro.component';
   standalone:true,
   template: `
       <div [class]="getHeightClass(currentTheme.data.heroHeight)" 
-           class="relative flex flex-col justify-end left-0 top-0 z-50 w-full gap-8 px-16 py-16">
+           class="relative flex flex-col items-start justify-end left-0 top-0 z-50 w-full h-full gap-8 px-16 py-16">
           <app-background></app-background>
           <app-post-intro [title]="title" [content]="content" [tag]="tag"></app-post-intro>
       </div>

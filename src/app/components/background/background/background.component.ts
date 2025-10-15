@@ -33,6 +33,6 @@ export class BackgroundComponent implements OnInit {
   constructor(private themeService: ThemeService) {}
 
   ngOnInit(): void {
-    this.currentTheme = this.themeService.getThemeData();
+    this.currentTheme = this.themeService.currentTheme;
   }
 }

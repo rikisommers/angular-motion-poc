@@ -1036,6 +1036,7 @@ const colorThemes = {
     charrandom: "charrandom",
     charcode: "charcode",
     wordx: "wordx",
+    navigators: "navigators"
   };
   
   export const textHighlightThemes = {

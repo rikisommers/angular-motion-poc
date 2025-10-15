@@ -1,50 +1,49 @@
 // src/app/components/post/post-intro/post-intro.component.ts
 import { Component, Input, OnInit} from '@angular/core';
-import { NgIf, NgStyle } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { AnimatedTextComponent } from '../../motion/text/animated-text.component';
 import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-post-intro',
   standalone: true,
-  imports: [NgIf, NgStyle, AnimatedTextComponent],
+  imports: [NgIf, AnimatedTextComponent],
   template: `
-    <div class="z-10 grid items-end content-end w-full grid-cols-12 gap-6 relative">
+    <div class="grid relative z-10 flex-grow gap-1 justify-end items-start w-full">
 
-      <div class="col-span-12 md:col-span-8 lg:col-span-8">
-      <h1>Hightlt:{{currentTheme?.textHighlight}}</h1>
-      <h1>Adnim:{{currentTheme?.textAnimation}}</h1>
+      <div class="flex flex-col items-start justify-center w-[600px]">
 
-          <div *ngIf="tag"
-            class="inline-flex px-2 py-1 mb-8 ml-2 text-xs font-medium uppercase rounded-full"
-            style="color: var(--textAccent); background-color: var(--bodyBackgroundColor);"
-          >
-            {{ tag }}
-          </div>
+     
           <!-- <ng-container *ngIf="tag">
         </ng-container> -->
         <ng-container *ngIf="title">
-          <h1 class="text-4xl leading-normal text-balance">
+          <h1 class="text-8xl leading-normal text-balance">
             <app-animated-text
               [content]="title"
               [type]="currentTheme?.textAnimation"
               [highlight]="currentTheme?.textHighlight"
-              [delay]="1"
+              [delay]="10"
             ></app-animated-text>
           </h1>
         </ng-container>
       </div>
-      <div class="col-span-12 text-left md:col-span-8 lg:col-span-4 text-balance">
-        <h4 class="text-sm font-normal" style="color: var(--subtext-color);">
-          <ng-container *ngIf="content">
-            <app-animated-text
-              [type]="currentTheme?.textAnimationSec"
-              [content]="content"
-              [highlight]="currentTheme?.textHighlight"
-              [delay]="3"
-            ></app-animated-text>
-          </ng-container>
-        </h4>
+      <div class="text-balance flex items-center gap-1 w-[600px]">
+        <div *ngIf="tag"
+            class="inline-flex px-2 py-1 text-xs font-medium uppercase rounded-full"
+            style="color: var(--textAccent); background-color: var(--bodyBackgroundColor);"
+          >
+            {{ tag }}
+          </div>
+          <h4 class="text-xl font-normal" style="color: var(--subtext-color);">
+            <ng-container *ngIf="content">
+              <app-animated-text
+                [type]="currentTheme?.textAnimationSec"
+                [content]="content"
+                [highlight]="currentTheme?.textHighlight"
+                [delay]="4"
+              ></app-animated-text>
+            </ng-container>
+          </h4>
       </div>
     </div>
   `,
@@ -58,7 +57,7 @@ export class PostIntroComponent implements OnInit {
   constructor(private themeService: ThemeService) {}
 
   ngOnInit(): void {
-    this.currentTheme = this.themeService.getThemeData();
+    this.currentTheme = this.themeService.currentTheme;
     
     // Log the entire currentTheme object
     console.log('Current Theme:', this.currentTheme);

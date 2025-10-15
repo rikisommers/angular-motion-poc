@@ -1,0 +1,116 @@
+<div 
+
+class="relative top-8 z-[9999] left-8">
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: ' translateX(0px) rotate(-90deg)'
+    }"
+    [exit]="{
+      opacity: 0,
+      transform: ''
+    }"
+    [animate]="{
+      opacity: 0.4,
+      transform: 'translateX(30px) rotate(0deg)',
+
+    }"
+    [transition]="{
+                duration: 1,
+                ease: 'cubic-bezier(0.65, 0, 0.35, 1)',
+                delay:0.9,
+              }"
+    class="absolute top-0 left-0 z-[999] triangle bg-pink-500/40"
+  ></div>
+
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'translateX(0px) rotate(-90deg)'
+    }"
+    [exit]="{
+      opacity: 0,
+      transform: 'translateX(0px)'
+    }"
+    [animate]="{
+      opacity: 0.6,
+      transform: 'translateX(30px)  rotate(0deg)',
+    }"
+    [transition]="{
+                duration: 1,
+                ease: 'cubic-bezier(0.65, 0, 0.35, 1)',
+                delay:0.6,
+              }"
+    class="absolute z-[999] top-0 left-0 triangle bg-pink-500/60"
+  ></div>
+
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'translateX(0px) rotate(-90deg)'
+    }"
+    [exit]="{
+      opacity: 0,
+      transform: 'translateX(0px)'
+    }"
+    [animate]="{
+      opacity: 1,
+      transform: 'translateX(30px) rotate(0deg)',
+    }"
+    [transition]="{
+    duration: 1,
+    ease: 'cubic-bezier(0.65, 0, 0.35, 1)',
+    delay:0.3,
+    }"
+    class="absolute z-[999] top-0 left-0 triangle bg-pink-500/80"
+  ></div>
+
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+
+      transform: 'translateX(0px) rotate(-90deg)'
+    }"
+    [exit]="{
+        opacity: 0,
+      }"
+    [animate]="{
+        opacity: 1,
+        transform: ' translateX(30px) rotate(-0deg)',
+      }"
+    [transition]="{
+                    duration: 1,
+                    ease: 'cubic-bezier(0.65, 0, 0.35, 1)',
+                    delay:0,
+                  }"
+    class="absolute z-[999] top-0 left-0 triangle bg-pink-500 mix-blend-color"
+  ></div>
+
+  <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'translateX(30px)'
+    }"
+    [exit]="{
+      opacity: 0,
+     
+    }"
+    [animate]="{
+      opacity: 1,
+      transform: 'translateX(50px)',
+
+    }"
+    [transition]="{
+                duration: 1,
+                ease: 'cubic-bezier(0.65, 0, 0.35, 1)',
+                delay:0.9,
+              }"
+    class="absolute z-[999] top-0 left-0 triangle bg-indigo-600 mix-blend-difference"
+  ></div>
+
+</div>

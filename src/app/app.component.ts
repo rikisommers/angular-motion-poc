@@ -1,98 +1,43 @@
-import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute, Router, NavigationEnd , NavigationStart} from '@angular/router';
-import {  MotionDirective } from '../directives/ngx-motion.directive';
-import { MotionHostComponent } from './motion-host/motion-host.component';
-import { routeTransition } from '../directives/motion-transition';
-import { PageTransitionComponent } from './page-transition/page-transition.component';
-import { MotionService } from './services/motion.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { RouterOutlet,RouterLink } from '@angular/router';
+import { MotionOneDirective } from './directives/motion-one.directive';
+import { ThemeService } from './services/theme.service';
+import { themes } from './utils/theme';
+import { ThemeEditorComponent } from './components/theme-editor/theme-editor.component';
+import { ModalComponent } from "./components/base/modal/modal.component";
+import { NavbarComponent } from "./components/navigation/navbar.component";
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet, 
-    RouterLink, 
-    RouterLinkActive, 
-    MotionDirective,
-     MotionHostComponent,
-    PageTransitionComponent
-    ],
+  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent, NavbarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
-  animations: [
-    routeTransition
-  ]
+  styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  @ViewChild(ModalComponent) modalComponent!: ModalComponent;
 
-  @ViewChild(RouterOutlet, { static: true }) outlet!: RouterOutlet;
-
-  title = 'angular';
-  isPanelOpen = true;
-  animInProgress: boolean = false;
-  motionElements: MotionDirective[] = [];
-  maxDelay: string = '0ms';
-
-  constructor(
-    protected route: ActivatedRoute,
-    private router: Router,
-    private motionService: MotionService,
-
-    // private routeAnimService: RouteAnimationService
-  )  {}
+  constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
-
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationStart) {
-    //     const currentRoute = event.url;
- 
-    //     //console.log('START',this.motionElements);
-
-    //     const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
-
-    //     //this.motionService.runAllEnterAnimationsForRoute(currentRoute);
-    //     //this.motionService.runAllExitAnimations;
-    //     // this.maxDelay = this.getLongestDuration(currentRouteElements);
-    //     this.maxDelay = this.getLongestDuration(currentRouteElements);
-
-    //     // console.log('maxDelay',this.maxDelay);
-    //     this.motionService.runAllExitAnimations;
-    //     // Do something with the current and next route elements
-    //     //console.log('prevRouteElements',currentRouteElements);
-    //   }
-    // });
-
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const currentRoute = event.url;
-    //     const nextRoute = this.router.url;
-
-    //     //console.log('END',this.motionElements);
-    //   //  this.motionService.runAllExitAnimations;
-    //     const currentRouteElements = this.motionService.getAllElementsByRoute(currentRoute);
-
-    //     //console.log('newRouteElements',currentRouteElements);
-    //   //  this.maxDelay = this.getLongestDuration(currentRouteElements);
-    //     setTimeout(() => {
-    //       this.motionService.runAllEnterAnimationsForRoute(currentRoute);
-    //     }, parseInt(this.maxDelay));
-    //   }
-    // });
-
-
+    this.setTheme('light');
   }
 
-
-  togglePanel() {
-    this.isPanelOpen = !this.isPanelOpen;
-
+  setTheme(themeKey: string) {
+    const theme = themes.akc12;
+    if (theme) {
+      this.themeService.updateTheme(theme.data);
+    } else {
+      console.error(`Theme not found: ${themeKey}`);
+    }
   }
 
-
-  getLongestDuration(elements: MotionDirective[]): string {
-    return elements.reduce((max, element) => {
-      const delay = element.getDuration();
-      return Math.max(max, delay);
-    }, 0).toString() + 'ms';
+  openModal() {
+    this.modalComponent.openModal();
   }
-  
+
+  test(){
+    console.log('test');
+  }
+  onModalStateChange(isOpen: boolean) {
+    console.log(`Modal is now ${isOpen ? 'open' : 'closed'}`);
+  }
 }

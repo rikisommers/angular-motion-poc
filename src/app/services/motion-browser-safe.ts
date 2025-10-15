@@ -52,7 +52,6 @@ export const stagger = (...args: any[]) => {
 
 // Re-export types
 export type { 
-  NativeAnimationControls, 
   AnimationOptions, 
   Target 
 } from 'motion';

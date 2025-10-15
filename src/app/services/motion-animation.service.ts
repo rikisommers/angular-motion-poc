@@ -11,7 +11,7 @@ export class MotionAnimationService {
 
   // Mock implementations for server environment
   private mockAnimate = () => ({ stop: () => {} });
-  private mockEasing = { ease: [0, 0, 1, 1] };
+  private mockEasing = (t: number) => t;
   private mockStagger = () => 0;
   private mockSpring = () => motion.easeInOut;
 
@@ -31,15 +31,15 @@ export class MotionAnimationService {
 
   // Wrapper for easing functions
   get easeIn() {
-    return isPlatformBrowser(this.platformId) ? motion.easeIn : this.mockEasing;
+    return isPlatformBrowser(this.platformId) ? (motion as any).easeIn : this.mockEasing;
   }
 
   get easeOut() {
-    return isPlatformBrowser(this.platformId) ? motion.easeOut : this.mockEasing;
+    return isPlatformBrowser(this.platformId) ? (motion as any).easeOut : this.mockEasing;
   }
 
   get easeInOut() {
-    return isPlatformBrowser(this.platformId) ? motion.easeInOut : this.mockEasing;
+    return isPlatformBrowser(this.platformId) ? (motion as any).easeInOut : this.mockEasing;
   }
 
   // Wrapper for stagger function
@@ -61,14 +61,26 @@ export class MotionAnimationService {
       return this.mockSpring;
     }
     
-    return (options: { keyframes: number[]; stiffness?: number; damping?: number }) => {
-      return {
-        type: 'spring',
-        stiffness: options.stiffness || 100,
-        damping: options.damping || 10,
-        restSpeed: 2,
-        restDelta: 0.01
-      };
+    return (options?: { stiffness?: number; damping?: number }) => {
+      const m: any = motion as any;
+      try {
+        // Prefer Motion One spring factory if available
+        if (typeof m.spring === 'function') {
+          return m.spring({
+            stiffness: options?.stiffness ?? 100,
+            damping: options?.damping ?? 10
+          });
+        }
+        // Motion 10 shim: use m.createGenerator?.spring
+        if (m?.createGenerator?.spring) {
+          return m.createGenerator.spring({
+            stiffness: options?.stiffness ?? 100,
+            damping: options?.damping ?? 10
+          });
+        }
+      } catch {}
+      // Fallback to an ease function if no spring present
+      return (m?.easeInOut as any) ?? ((t: number) => t);
     };
   }
 } 

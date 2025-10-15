@@ -22,7 +22,7 @@
 }
 
 .triangle {
-  --r: 2.4vh;
+  --r: 4.4vh;
   width: 25vh;
   aspect-ratio: 1 / 0.8660254038;
   --_g: calc(tan(60deg)* var(--r)) bottom var(--r), #000 98%, #0000 101%;

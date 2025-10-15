@@ -1,7 +1,183 @@
-<<<<<<< HEAD
+@import '@alliedtelesis-labs-nz/atui-components-stencil/styles.css';
+@import '@alliedtelesis-labs-nz/atui-typography';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-=======
-/* You can add global styles to this file, and also import other style files */
->>>>>>> 5a871ec (initial commit)
+
+:root {
+  --bodyBackgroundColor: #fafafa;
+  --backgroundColor: #f4f4f5;
+  --surface1: #c1c1c1;
+  --surface2: #6f6f6f;
+  --surface3: #C0C6C9;
+  --backgroundColorInv: #6b7280;
+  --headingColor: #52525b;
+  --textColor: #09090b;
+  --subtextColor: #52525b;
+  --textColorInv: #fafafa;
+  --navBg: #C0C6C9;
+  --accentPri: #EF7801;
+  --accentSec: #FCD00A;
+  --gradStart: #EF7801;
+  --gradStop: #f4f4f5;
+  --textAccent: #d946ef;
+  --stateSuccessBackground: #d946ef;
+}
+
+body {
+  background-color: var(--bodyBackgroundColor);
+  color: var(--textColor);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--headingColor);
+}
+
+/* Add more global styles that use these variables */
+
+
+:root {
+  --vt-duration: 1600ms;
+  --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html{
+  &::view-transition-old(content) {
+    animation-name: slide-out-to-left;
+    animation-duration: var(--vt-duration, 600ms);
+    animation-timing-function: var(--vt-easing, cubic-bezier(0.22, 1, 0.36, 1));
+  }
+  &::view-transition-new(content) {
+    animation-name: slide-in-from-right;
+    animation-duration: var(--vt-duration, 600ms);
+    animation-timing-function: var(--vt-easing, cubic-bezier(0.22, 1, 0.36, 1));
+  }
+  &::view-transition-group(content) {
+    animation-duration: var(--vt-duration, 600ms);
+    animation-timing-function: var(--vt-easing, cubic-bezier(0.22, 1, 0.36, 1));
+  }
+}
+
+/* Global defaults and easy overrides */
+:root {
+  --vt-duration: 600ms;
+  --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slide-in-from-left {
+  from {
+    translate: -100vw 0;
+  }
+}
+@keyframes slide-in-from-right {
+  from {
+    translate: 100vw 0;
+  }
+}
+@keyframes slide-out-to-left {
+  to {
+    translate: -100vw 0;
+  }
+}
+@keyframes slide-out-to-right {
+  to {
+    translate: 100vw 0;
+  }
+}
+
+
+.test2{
+  width: 100vw;
+  height:100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  border:1px solid hotpink;
+  view-transition-name: content;
+  transition: all 2s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* Named View Transitions */
+.count {
+  font-family: sans-serif;
+  text-align: center;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  inset: 50% 0 auto;
+  transform: translateY(-50%);
+  view-transition-name: count;
+}
+
+/* Full-screen overlay */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+body {
+  background-color: var(--bodyBackgroundColor);
+}
+  
+
+
+
+.table-auto,
+.table-fixed {
+  min-width: 100%;
+  overflow-x: auto;
+
+  th {
+    font-weight: var(--token-font-weight-med);
+    border-bottom: none;
+  }
+
+  tr {
+    will-change: background-color;
+    transition: var(--token-transition-fast);
+    border-bottom: 1px solid var(--token-border-light);
+
+    &:hover {
+      background-color: var(--token-surface-0);
+    }
+  }
+
+  thead {
+  text-align:left;
+
+    th {
+      font-size: var(--token-font-size-sm);
+      font-weight: var(--token-font-weight-med);
+      color: var(--token-text-med);
+      border-bottom: 1px solid var(--token-border-light);
+    }
+  }
+
+  th,
+  td {
+    padding: 8px;
+  }
+
+  &.truncated {
+    th,
+    td {
+      max-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+
+.goo{
+  -webkit-filter: url("#goo");
+  filter: url("#goo");
+}

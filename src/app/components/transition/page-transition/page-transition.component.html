@@ -1,63 +1,66 @@
+
+
+
 <div
-  class="absolute top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen bg-slate-600"
+  class="absolute overflow-hidden top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen bg-purple-100"
+  motionone
+  [initial]="{ opacity: 0 }"
+  [animate]="{ opacity: 1 }"
+  [delayChildren]="1"
+  [staggerChildren]="0.2"
 >
-  <div
-    class="absolute circle circle-lg bg-slate-500"
-    motionone
-    [initial]="{
-      opacity: 0,
-
-      transform: 'scale(0.5)'
-    }"
-    [exit]="{
-      opacity: 0,
-
-      transform: 'scale(0.5)'
-    }"
-    [animate]="{
-          opacity: 1,
-          scale:1,
-
-          transform: 'scale(1.2)',
-          transition:{
-            duration: 1,
-            ease: {
-              type: 'spring',
-              stiffness: 100,
-              damping: 10
-            },
-            delay:0,
-          }
-        }"
-  ></div>
 
   <div
-    motionone
-    [initial]="{
-      opacity: 0,
-      transform: 'scale(0.5)'
-    }"
-    [exit]="{
-      opacity: 0,
+  motionone
+  [initial]="{
+    opacity: 0,
+    transform: 'scale(0.5)'
+  }"
+  [exit]="{
+    opacity: 0,
 
-      transform: 'scale(0.5)'
-    }"
-    [animate]="{
-      opacity: 1,
-      transform: 'scale(1)',
+    transform: 'scale(0.5)'
+  }"
+  [animate]="{
+    opacity: 1,
+    transform: 'scale(2) rotate(45deg)',
 
-      transition:{
-        duration: 1,
-        ease: {
-          type: 'spring',
-          stiffness: 100,
-          damping: 10
-        },
-        delay:0.3,
-      }
-    }"
-    class="absolute square square-lg bg-slate-400"
-  ></div>
+    transition:{
+      duration: 1,
+      ease: { type: 'spring', stiffness: 180, damping: 12 },
+
+      delay:0.2,
+    }
+  }"
+  class="absolute z-[11] square square-lg bg-slate-100"
+></div>
+
+
+  <div
+  motionone
+  [initial]="{
+    opacity: 0,
+    transform: 'scale(0.5)'
+  }"
+  [exit]="{
+    opacity: 0,
+
+    transform: 'scale(0.5)'
+  }"
+  [animate]="{
+    opacity: 1,
+    transform: 'scale(1.6) rotate(45deg)',
+
+    transition:{
+      duration: 1,
+      ease: { type: 'spring', stiffness: 180, damping: 12 },
+
+      delay:0.4,
+    }
+  }"
+  class="absolute z-[12] square square-lg bg-slate-200"
+></div>
+
   <div
     motionone
     [initial]="{
@@ -66,49 +69,48 @@
     }"
     [exit]="{
       opacity: 0,
+
       transform: 'scale(0.5)'
     }"
     [animate]="{
       opacity: 1,
-      transform: 'scale(1)',
+      transform: 'scale(1.2) rotate(45deg)',
+
       transition:{
         duration: 1,
-        ease: {
-          type: 'spring',
-          stiffness: 100,
-          damping: 10
-        },
+        ease: { type: 'spring', stiffness: 180, damping: 12 },
+
         delay:0.6,
       }
     }"
-    class="absolute rotate-45 square square-sm bg-slate-300"
+    class="absolute z-[13] square square-lg bg-slate-300"
   ></div>
+
   <div
-    motionone
-    [initial]="{
-      opacity: 0,
-      transform: 'scale(0.5)'
-    }"
-        [exit]="{
-          opacity: 0,
-          transform: 'scale(0.5)'
-        }"
-    [animate]="{
-      opacity: 1,
-      transform: 'scale(1)',
-  
-      transition:{
-        duration: 1,
-        ease: {
-          type: 'spring',
-          stiffness: 100,
-          damping: 10
-        },
-        delay:0.9,
-      }
-    }"
-    class="absolute triangle bg-slate-200"
-  ></div>
+  motionone
+  [initial]="{
+    opacity: 0,
+    transform: 'scale(0.5)'
+  }"
+  [exit]="{
+    opacity: 0,
+
+    transform: 'scale(0.5)'
+  }"
+  [animate]="{
+    opacity: 1,
+    transform: 'scale(0.8) rotate(45deg)',
+
+    transition:{
+      duration: 1,
+      ease: { type: 'spring', stiffness: 180, damping: 12 },
+
+      delay:0.8,
+    }
+  }"
+  class="absolute z-[14] square square-lg bg-slate-400"
+></div>
+
   <div
     motionone
     [initial]="{
@@ -117,13 +119,11 @@
     }"
     [exit]="{
       opacity: 0,
-
       transform: 'scale(0.5)'
     }"
     [animate]="{
       opacity: 1,
-      transform: 'scale(1)',
-
+      transform: 'scale(0.8)',
       transition:{
         duration: 1,
         ease: {
@@ -131,11 +131,77 @@
           stiffness: 100,
           damping: 10
         },
-        delay:1.5,
+        delay:1,
       }
     }"
-    class="absolute circle circle-sm bg-slate-100"
+    class="absolute z-[15] rotate-45 square square-sm bg-slate-300"
   ></div>
+
+  <div
+    motionone
+    [initial]="{
+      opacity: 1,
+      transform: 'scale(0.5)'
+    }"
+    [exit]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+    [animate]="animate"
+    [variants]="{
+      initial: {
+        opacity: 1,
+        transform: 'scale(0.5)',
+        backgroundColor: 'pink',
+      },
+      animate: {
+        opacity: 1,
+        backgroundColor: 'yellow',
+        transform: 'scale(5)',
+        transition: {
+          duration: 1,
+          ease: 'easeOut',
+          delay: 1.5
+        }
+      },
+      onEnd: {
+        opacity: 1,
+        transform: 'scale(4)',
+        backgroundColor: 'red',
+        at: 2.5,
+        transition: {
+          duration: 0.8,
+          ease: 'easeOut'
+        }
+      }
+    }"
+    class="absolute z-[20] rotate-45 square square-sm bg-slate-400"
+  ></div>
+
+  <!-- <div
+    motionone
+    [initial]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+    [exit]="{
+      opacity: 0,
+      transform: 'scale(0.5)'
+    }"
+    [animate]="{
+      opacity: 1,
+      transform: 'scale(4)',
+      transition:{
+        duration: 1,
+        ease: {
+          type: 'spring',
+          stiffness: 100,
+          damping: 10
+      }},
+      
+    }"
+    class="absolute z-[999] circle circle-lg bg-slate-500"
+  ></div> -->
 </div>
 
 <!-- <div

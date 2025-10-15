@@ -1,46 +1,11 @@
-<app-page-transition>
+<app-logo></app-logo>
+<app-block-hero 
 
-    
-<article
-motion
-[initial]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
-[animate]="{ height: '200px', opacity: 1, backgroundColor: 'purple' }"
-[exit]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
-[duration]="'1s'"
-[delay]="'0s'"
-[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-(animationComplete)="onAnimationComplete()"
-class=""
->
-<h1>1</h1>
-</article>
+tag="Blog"
+title="Tips, __tools__ ![logo](//images.ctfassets.net/4v0tb3n9jpvc/wsC8KQ6aNnu16eiHY37Uc/4ca8fe7f81ce8a6670039e76976e6492/star.svg) 
+__rants__ ![logo](//images.ctfassets.net/4v0tb3n9jpvc/wsC8KQ6aNnu16eiHY37Uc/4ca8fe7f81ce8a6670039e76976e6492/star.svg)& __rambles__"
+content="sds asdasd asd asda ">
+</app-block-hero>
 
-<article
-motion
-[initial]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
-[animate]="{ height: '200px', opacity: 1, backgroundColor: 'purple' }"
-[exit]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
-[duration]="'1s'"
-[delay]="'0s'"
-[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-(animationComplete)="onAnimationComplete()"
-class=""
->
-<h1>2</h1>
-</article>
+<app-page-transition class="absolute top-0 left-0 z-40 w-full h-full"></app-page-transition>
 
-<article
-motion
-[initial]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
-[animate]="{ height: '200px', opacity: 1, backgroundColor: 'purple' }"
-[exit]="{ height: '10px', opacity: 1, backgroundColor: 'hotpink' }"
-[duration]="'1s'"
-[delay]="'0s'"
-[easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-(animationComplete)="onAnimationComplete()"
-class=""
->
-<h1>3</h1>
-</article>
-
-</app-page-transition>
