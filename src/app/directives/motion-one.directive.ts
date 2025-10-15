@@ -54,6 +54,9 @@ export interface TimelineStep {
   ease?: string | number[] | { type: 'spring'; stiffness?: number; damping?: number };
   atTime?: number; // absolute start (s) relative to element start
   times?: number[];
+  repeat?: number | boolean;
+  repeatType?: 'loop' | 'mirror' | 'reverse' | 'forwards' | 'pingPong';
+  repeatDelay?: number;
 }
 
 let uniqueIdCounter = 0; 
@@ -74,7 +77,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   @Input() delayChildren = 0; // Add new input for delaying children
   @Input() repeat = false;
   @Input() exitDelay = 0; // Changed to number for Motion One
-  @Input() easing = 'ease';
+  @Input() easing: string | number[] | { type: 'spring'; stiffness?: number; damping?: number } = 'ease';
   @Input() offset = '0px';
   @Input() whileHover: VariantWithTransition = {};
   @Input() staggerChildren = 1; // Changed to number for Motion One
@@ -436,6 +439,8 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     const result: Record<string, any> = {};
     
     for (const key in variant) {
+      // skip meta keys
+      if (key === 'transition' || key === 'at') continue;
       // Allow raw transform strings or keyframe arrays to pass through untouched
       if (key === 'transform') {
         (result as any)['transform'] = (variant as any)[key];
@@ -443,7 +448,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       }
       if (this.isTransformProperty(key)) {
         this.applyTransformProperty(result, key, variant[key]);
-      } else if (key !== 'transition') {
+      } else {
         this.applyStyleProperty(result, key, variant[key]);
       }
     }
@@ -575,8 +580,17 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     const delay = this.staggerDelay > 0 ? this.staggerDelay : (transitionObj.delay ?? this.delay);
     
     const easeInput = transitionObj.ease ?? this.easing;
-    // If ease is a spring configuration, prefer native spring options (no fixed duration)
-    if (easeInput && typeof easeInput === 'object' && 'type' in (easeInput as any) && (easeInput as any).type === 'spring') {
+    // Detect if target contains keyframe arrays (avoid native spring in that case)
+    let targetHasKeyframeArrays = false;
+    if (targetState) {
+      for (const k of Object.keys(targetState)) {
+        if (k === 'transition' || k === 'at') continue;
+        const v: any = (targetState as any)[k];
+        if (Array.isArray(v)) { targetHasKeyframeArrays = true; break; }
+      }
+    }
+    // If spring config and no keyframe arrays, prefer native spring options (no fixed duration)
+    if (easeInput && typeof easeInput === 'object' && 'type' in (easeInput as any) && (easeInput as any).type === 'spring' && !targetHasKeyframeArrays) {
       const springOptions: any = {
         type: 'spring',
         stiffness: (easeInput as any).stiffness ?? 100,
@@ -586,9 +600,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
         repeatDelay: transitionObj.repeatDelay,
         onComplete: () => this.animationComplete.emit()
       };
+      const direction = this.mapRepeatTypeToDirection(transitionObj.repeatType);
+      if (direction) springOptions.direction = direction;
+      if (transitionObj.repeatType) springOptions.repeatType = transitionObj.repeatType;
       return springOptions as AnimationOptions;
     }
-
     const ease = this.getEasing(easeInput as any);
 
     const options: any = {
@@ -870,9 +886,24 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       const start = baseDelay + (step.atTime ?? 0) + (step.delay ?? 0);
       const duration = step.duration;
       const value = step.keyframes !== undefined ? step.keyframes : step.to;
-      const ease = this.getEasing(step.ease ?? this.easing);
-      const options: any = { duration, delay: start, easing: ease };
-      (options as any).ease = ease;
+      const easeInput = step.ease ?? this.easing;
+
+      // Build options with repeat and direction
+      // Prefer function easing always in timeline to preserve keyframe interpolation
+      const ease = this.getEasing(easeInput as any);
+      const options: any = { duration, delay: start, easing: ease } as any;
+      (options as any).ease = ease; // Back-compat
+
+      // Apply repeat controls if provided
+      if (step.repeat !== undefined) {
+        options.repeat = step.repeat === true ? Infinity : step.repeat;
+      }
+      if (step.repeatDelay !== undefined) {
+        options.repeatDelay = step.repeatDelay;
+      }
+      const dir = this.mapRepeatTypeToDirection(step.repeatType);
+      if (dir) options.direction = dir;
+      if (step.repeatType) options.repeatType = step.repeatType;
       if (step.times) options.offset = this.normalizeTimes(step.times, duration);
 
       const end = start + duration;
@@ -1109,11 +1140,13 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
   private normalizeTimes(times: number[] | undefined, duration: number): number[] | undefined {
     if (!times || times.length === 0) return undefined;
-    const hasSeconds = times.some(t => t > 1);
-    if (!hasSeconds) return times;
+    const hasValuesAboveOne = times.some(t => t > 1);
+    if (!hasValuesAboveOne) return times;
+    const maxT = Math.max(...times);
     const safeDuration = Math.max(duration, 0.000001);
+    const divisor = maxT > safeDuration * 1.001 ? maxT : safeDuration;
     return times.map(t => {
-      const v = t / safeDuration;
+      const v = t / divisor;
       return v < 0 ? 0 : v > 1 ? 1 : v;
     });
   }

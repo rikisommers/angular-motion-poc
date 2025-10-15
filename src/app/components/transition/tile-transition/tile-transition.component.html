@@ -44,7 +44,13 @@
       [animate]="{
         backgroundColor:'blue',
         transform:'scale(0.5)',
-        transition:{ duration: 1, repeat: true, repeatType: 'forwards', repeatDelay: 0.8, ease: 'ease-in-out' }
+        transition:{ duration: 1, repeat: true, repeatType: 'reverse', repeatDelay: 0.8, 
+        ease: {
+              type: 'spring',
+              stiffness: 100,
+              damping: 10
+            }
+      }
       }"
       [exit]="{ backgroundColor:'pink', transform:'scale(1)' }"
     ></div>  }
