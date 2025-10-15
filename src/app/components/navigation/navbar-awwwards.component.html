@@ -1,0 +1,49 @@
+<div class="z-50 flex self-center gap-1 pointer-events-auto backdrop-blur-xl rounded-xl">
+  <ng-container *ngFor="let page of pages">
+    <a
+      [routerLink]="page.url"
+      (click)="onNavClick(page.id)"
+      class="relative flex items-center text-sm no-underline uppercase transition-all duration-300 rounded-lg"
+      [style.color]="activePage === page.id ? 'var(--text-color-inv)' : 'var(--text-color)'"
+    >
+      <div
+        *ngIf="activePage === page.id"
+        motionone
+        [initial]="indicatorVariants.initial"
+        [animate]="indicatorVariants.animate"
+        [exit]="indicatorVariants.exit"
+        [transition]="{ duration: 300, ease: 'ease-out' }"
+        class="absolute top-0 left-0 flex w-full h-full bg-opacity-50 rounded-xl transition-all duration-300 ease-out"
+        [style.background-color]="currentTheme.data.navStyle === 'solid' ? currentTheme.data.accentPri : 'transparent'"
+      ></div>
+
+      <div
+        class="relative flex items-center px-3 py-3 text-xs uppercase rounded-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-white/10"
+        [class.writing-mode-vertical-rl]="currentTheme.data.navPosition === 'leftCenter' || currentTheme.data.navPosition === 'rightCenter'"
+        [class.writing-mode-horizontal-tb]="currentTheme.data.navPosition !== 'leftCenter' && currentTheme.data.navPosition !== 'rightCenter'"
+      >
+        <ng-container [ngSwitch]="currentTheme.data.navLabelDisplay">
+          <span *ngSwitchCase="'text'" class="font-medium">{{ page.title }}</span>
+          <span *ngSwitchCase="'icons'" class="flex items-center justify-center">
+            {{ renderDynamicIcon(page.icon, 20) }}
+          </span>
+          <div *ngSwitchCase="'textAndIcons'" class="flex items-center gap-2">
+            <span class="flex items-center justify-center">
+              {{ renderDynamicIcon(page.icon, 20) }}
+            </span>
+            <span class="font-medium">{{ page.title }}</span>
+          </div>
+        </ng-container>
+      </div>
+    </a>
+  </ng-container>
+
+  <div
+    class="relative flex items-center px-3 py-3 text-xs uppercase rounded-lg cursor-pointer transition-all duration-300 ease-in-out hover:bg-white/10"
+    [style.color]="'var(--text-color)'"
+    [class.writing-mode-vertical-rl]="currentTheme.data.navPosition === 'leftCenter' || currentTheme.data.navPosition === 'rightCenter'"
+    [class.writing-mode-horizontal-tb]="currentTheme.data.navPosition !== 'leftCenter' && currentTheme.data.navPosition !== 'rightCenter'"
+  >
+    <span class="font-medium">Contact</span>
+  </div>
+</div> 

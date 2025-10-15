@@ -1,0 +1,61 @@
+<div class="w-full h-full">
+
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <mask id="notchMask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox" x="0" y="0" width="1" height="1" mask-type="alpha">
+        <rect x="0" y="0" width="1" height="1" fill="white"/>
+        <rect x="0.8" y="0.8" width="0.2" height="0.2" rx="0.2" ry="0.2" fill="black"/>
+      </mask>
+      <clipPath id="notchClip" clipPathUnits="objectBoundingBox">
+        <path clip-rule="evenodd" d="M0 0 H1 V1 H0 Z M1 1 V0.8 H0.85 A0.05 0.05 0 0 0 0.8 0.85 V1 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+    <div class="isolate relative w-screen h-screen goo">
+        <!-- <div class="bg-blue-500 w-[100px] h-screen absolute top-0 right-0 goo"></div>
+
+        <div class="bg-blue-500 w-[100px] h-screen absolute top-0 left-0 goo"></div>
+
+        <div class="bg-blue-500 h-[100px] w-screen absolute top-0 left-0 goo"></div>
+
+
+            <div class="bg-blue-500 h-[100px] w-1/2 absolute bottom-0 left-[100px] goo"></div>
+        <div class="bg-blue-500 h-[100px] w-[100px] absolute top-[100px] left-1/2 goo"></div>
+        <div class="bg-blue-500 h-[100px] w-[100px] absolute top-[210px] left-1/2 goo"></div> -->
+        <!-- style="clip-path: polygon(
+            0 0,
+            100% 0,
+            100% calc(100% - 80px),
+            calc(100% - 80px) calc(100% - 80px),
+            calc(100% - 80px) 100%,
+            0 100%
+          )" -->
+        <!-- <div
+            class="bg-purple-400 h-[400px] w-[400px] absolute top-1/2 right-1/2"
+            style="clip-path: path('M 0 0 H 400 V 320 H 340 A 20 20 0 0 0 320 340 V 400 H 0 Z');"        ></div> -->
+
+            <svg class="absolute top-1/2 right-1/2" width="400" height="400" viewBox="0 0 1 1" preserveAspectRatio="none">
+              <rect x="0" y="0" width="1" height="1" fill="#a78bfa" clip-path="url(#notchClip)"/>
+            </svg>
+
+
+            <!-- <div class="[--n:160px] [--r:160px] w-[400px] h-[400px] bg-purple-800
+[-webkit-mask:linear-gradient(#fff_0_0),linear-gradient(#fff_0_0),linear-gradient(#fff_0_0),radial-gradient(circle,#fff_98%,transparent_100%)]
+[-webkit-mask-position:0_0,calc(100%-var(--n))_calc(100%-var(--r)),calc(100%-var(--r))_calc(100%-var(--n)),calc(100%-var(--n))_calc(100%-var(--n))]
+[-webkit-mask-size:100%_100%,var(--n)_calc(var(--n)-var(--r)),calc(var(--n)-var(--r))_var(--n),var(--r)_var(--r)]
+[-webkit-mask-repeat:no-repeat]
+[-webkit-mask-composite:source-over,destination-out,destination-out,destination-out]">
+</div> -->
+            <!-- <div
+            class="bg-purple-400 h-[400px] w-[400px] absolute top-1/2 right-1/2"
+            style="clip-path: polygon(
+                0 0,
+                100% 0,
+                100% calc(100% - 80px),
+                calc(100% - 80px) calc(100% - 80px),
+                calc(100% - 80px) 100%,
+                0 100%
+              )"></div>   -->
+
+        </div>
+</div>

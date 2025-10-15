@@ -1,0 +1,61 @@
+:host {
+  display: block;
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+}
+
+.writing-mode-sideways-rl {
+  writing-mode: sideways-rl;
+}
+
+.writing-mode-vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+.writing-mode-horizontal-tb {
+  writing-mode: horizontal-tb;
+}
+
+// Animation classes
+.indicator-enter {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.indicator-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 300ms ease-out;
+}
+
+.indicator-leave {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.indicator-leave-active {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 300ms ease-in;
+}
+
+// Hover effects
+.hover\:bg-opacity-10:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hover\:bg-white:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+// Transitions
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+} 

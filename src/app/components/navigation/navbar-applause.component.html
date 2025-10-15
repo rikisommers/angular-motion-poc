@@ -1,0 +1,48 @@
+<div 
+  class="relative z-50 flex self-center gap-1 pointer-events-auto"
+  (mousemove)="handleContainerMouseMove($event)"
+  (mouseenter)="handleContainerMouseEnter()"
+  (mouseleave)="handleContainerMouseLeave()"
+  #containerRef
+  motionone
+  [staggerChildren]="0.2"
+  [delayChildren]="3"
+>
+  <div 
+    *ngFor="let page of pages"
+    [id]="'nav-item-' + page.id"
+    class="transition-all duration-300 ease-out rounded-lg aspect-square"
+    [style.background-color]="activePage === page.id ? 'var(--accentPri)' : 'var(--surface1)'"
+    [style.color]="activePage === page.id ? 'var(--textColor)' : 'var(--textColorInv)'"
+    [style.width.px]="getNavItemWidth(page)"
+    [style.height.px]="getNavItemWidth(page)"
+    
+    motionone
+    [initial]="indicatorVariants.initial"
+    [animate]="indicatorVariants.animate"
+    [exit]="indicatorVariants.exit"
+    [transition]="{ 
+        duration: 1,
+        ease: {
+          type: 'spring', 
+          stiffness: 100,
+          damping: 10
+        },
+
+     }"
+  >
+    <a
+      [routerLink]="page.url"
+      (click)="onNavClick(page.id)"
+      class="relative flex items-center justify-center w-full h-full p-3 text-sm no-underline uppercase transition-colors duration-300 hover:bg-white/10"
+    >
+      <!-- <ng-container *ngIf="page.icon">
+        {{ renderDynamicIcon(page.icon, 20) }}
+      </ng-container>
+      <ng-container *ngIf="!page.icon">
+        NO
+      </ng-container> -->
+      {{ page.title }}
+    </a>
+  </div>
+</div> 

@@ -1,0 +1,37 @@
+<div 
+  #menuRef
+  class="fixed top-0 left-0 z-[9999] w-full flex justify-center items-center py-8"
+>
+
+<!-- <app-navbar-awwwards
+[pages]="pages"
+[activePage]="activePage"
+[currentTheme]="themeService.currentTheme"
+(navClick)="handleNavClick($event)"
+></app-navbar-awwwards> -->
+
+<app-navbar-applause
+[pages]="pages"
+[activePage]="activePage"
+[currentTheme]="themeService.currentTheme"
+(navClick)="handleNavClick($event)"
+></app-navbar-applause>
+
+<!-- <ng-container [ngSwitch]="themeService.currentTheme.data.navTheme">
+    <app-navbar-awwwards
+      *ngSwitchCase="'awwwards'"
+      [pages]="pages"
+      [activePage]="activePage"
+      [currentTheme]="themeService.currentTheme"
+      (navClick)="handleNavClick($event)"
+    ></app-navbar-awwwards>
+    
+    <app-navbar-applause
+      *ngSwitchCase="'applause'"
+      [pages]="pages"
+      [activePage]="activePage"
+      [currentTheme]="themeService.currentTheme"
+      (navClick)="handleNavClick($event)"
+    ></app-navbar-applause>
+  </ng-container>
+</div>  -->

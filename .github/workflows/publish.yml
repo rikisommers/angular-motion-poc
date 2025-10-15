@@ -1,0 +1,59 @@
+name: Publish to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check if version changed
+        id: version-check
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+          # Check if this version already exists in registry
+          if npm view @rs-components/ng-motion@$CURRENT_VERSION 2>/dev/null; then
+            echo "Version $CURRENT_VERSION already exists, skipping publish"
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "Version $CURRENT_VERSION is new, will publish"
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Prepare directives for publishing
+        if: steps.version-check.outputs.should_publish == 'true'
+        run: |
+          # Copy directive files to root
+          cp src/app/directives/*.ts ./
+
+          # Create index.ts to export all directives
+          echo "export * from './motion-if.directive';" > index.ts
+          echo "export * from './motion-one-presence.component';" >> index.ts
+          echo "export * from './motion-one.directive';" >> index.ts
+
+      - name: Publish to GitHub Packages
+        if: steps.version-check.outputs.should_publish == 'true'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

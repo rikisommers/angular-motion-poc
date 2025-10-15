@@ -1,0 +1,47 @@
+:host{
+    width: 100%;
+    height:100%;
+    background-color: beige;
+    display: flex;
+    position: absolute;
+}
+
+.circle{
+  width: 87vh;
+  aspect-ratio: 1 / 1;
+  border-radius: 100%;
+
+  &-sm{
+    width: 3vh;
+  }
+
+  &-lg{
+    width: 87vh; 
+  }
+
+}
+
+.triangle {
+  --r: 4.4vh;
+  width: 25vh;
+  aspect-ratio: 1 / 0.8660254038;
+  --_g: calc(tan(60deg)* var(--r)) bottom var(--r), #000 98%, #0000 101%;
+  -webkit-mask: conic-gradient(from -30deg at 50% calc(200% - 3* var(--r) / 2), #000 60deg, rgba(0, 0, 0, 0) 0) 0 100% / 100% calc(100% - 3* var(--r) / 2) no-repeat, radial-gradient(var(--r) at 50% calc(2* var(--r)), #000 98%, rgba(0, 0, 0, 0) 101%), radial-gradient(var(--r) at left var(--_g)), radial-gradient(var(--r) at right var(--_g));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  transform: translateY(-24px);
+  }
+    
+
+  .square{
+    aspect-ratio: 1/1;
+    border-radius:10%;
+  
+    &-sm{
+      width: 33vh;
+
+    }
+    &-lg{
+      width: 55vh;
+    }
+  }
+
