@@ -1,6 +1,20 @@
 {
-  "name": "ng-motion-poc",
-  "version": "0.0.0",
+  "name": "@rs-components/ng-motion",
+  "version": "0.0.1",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "*.ts",
+    "*.js",
+    "*.d.ts"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rs-components/ng-motion-demo.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +23,6 @@
     "test": "ng test",
     "serve:ssr:ng-motion-poc": "node dist/ng-motion-poc/server/server.mjs"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",

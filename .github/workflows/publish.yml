@@ -1,0 +1,40 @@
+name: Publish to GitHub Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare directives for publishing
+        run: |
+          # Copy directive files to root
+          cp src/app/directives/*.ts ./
+
+          # Create index.ts to export all directives
+          echo "export * from './motion-if.directive';" > index.ts
+          echo "export * from './motion-one-presence.component';" >> index.ts
+          echo "export * from './motion-one.directive';" >> index.ts
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
