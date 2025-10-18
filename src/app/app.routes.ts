@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { WorkComponent } from './work/work.component';
-import { BlogComponent } from './blog/blog.component';
+import { WorkComponent } from './pages/work/work.component';
+import { BlogComponent } from './pages/blog/blog.component';
 import { AppComponent } from './app.component';
-import { TimelineComponent } from './timeline/timeline.component';
-import { PunchComponent } from './punch/punch.component';
+import { TimelineComponent } from './pages/timeline/timeline.component';
+import { PunchComponent } from './pages/punch/punch.component';
 export const routes: Routes = [
   {
     path: '',

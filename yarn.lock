@@ -5,45 +5,6 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@alliedtelesis-labs-nz/atui-components-angular@npm:0.0.110":
-  version: 0.0.110
-  resolution: "@alliedtelesis-labs-nz/atui-components-angular@npm:0.0.110::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40alliedtelesis-labs-nz%2Fatui-components-angular%2F0.0.110%2Fd3ef99e5378600825be606469bcc1b662d91bc0d"
-  dependencies:
-    "@alliedtelesis-labs-nz/atui-components-stencil": "npm:*"
-    tslib: "npm:^2.3.0"
-  peerDependencies:
-    "@angular/common": ^19.2.11
-    "@angular/core": ^19.2.11
-  checksum: 10c0/73fb3c48f417bae118dc5197895682d97ab55220a79b9e84ea1c3bf66c534177b5ad907ba5fd202e9ce3380ac2a1a7336d2f81ace649161f57a9bbc349595867
-  languageName: node
-  linkType: hard
-
-"@alliedtelesis-labs-nz/atui-components-stencil@npm:*":
-  version: 0.0.113
-  resolution: "@alliedtelesis-labs-nz/atui-components-stencil@npm:0.0.113::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40alliedtelesis-labs-nz%2Fatui-components-stencil%2F0.0.113%2F541dcb20daf6e17867238190bff7f5b7733d5f92"
-  checksum: 10c0/31bb30b22b8637b575055241ef4afc7b250eb4cb00ffb728a442ab53abcb6fb1161332059051c4ce00346d8953a1b151a378f04febc5a9afd2640ddb99ae8d67
-  languageName: node
-  linkType: hard
-
-"@alliedtelesis-labs-nz/atui-design-tokens@npm:0.0.18":
-  version: 0.0.18
-  resolution: "@alliedtelesis-labs-nz/atui-design-tokens@npm:0.0.18::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40alliedtelesis-labs-nz%2Fatui-design-tokens%2F0.0.18%2F8b78d57eb9fe0df957127c0f1144b8fc934f594e"
-  dependencies:
-    jsonc-parser: "npm:^3.3.1"
-    lodash: "npm:^4.17.21"
-  checksum: 10c0/f3ffee408af2545b236b4ecae3c893c30e340250f3c2ff4ae64d5f98976b14f309d639df5712f3a883a47fe7f09f485d9f71824203aee7ecd6a83127a3c0e51a
-  languageName: node
-  linkType: hard
-
-"@alliedtelesis-labs-nz/atui-typography@npm:0.0.16":
-  version: 0.0.16
-  resolution: "@alliedtelesis-labs-nz/atui-typography@npm:0.0.16::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40alliedtelesis-labs-nz%2Fatui-typography%2F0.0.16%2Ff334234bfe5a7668f5a7e0d150728d0e9e7004d0"
-  dependencies:
-    "@fontsource/roboto": "npm:^5.0.7"
-  checksum: 10c0/26bc6a0c93036d542d46f543cf83eb2f7c385b3279d6527d318ca70691bda35c6c23564455a459b624ea7075e5bacb90ac9447663c8fbb57d69bbab29c924d84
-  languageName: node
-  linkType: hard
-
 "@alloc/quick-lru@npm:^5.2.0":
   version: 5.2.0
   resolution: "@alloc/quick-lru@npm:5.2.0"
@@ -2117,13 +2078,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/roboto@npm:^5.0.7":
-  version: 5.2.6
-  resolution: "@fontsource/roboto@npm:5.2.6"
-  checksum: 10c0/a2fbadf2f3b8ebb859e7b13ad82d25e8b43901c30ad93b08095c201617fcfded279d99e64a7b110614d2a1b5bca77631df7d009abf1ad6c6a4df301ceb330a51
-  languageName: node
-  linkType: hard
-
 "@inquirer/checkbox@npm:^4.1.2":
   version: 4.1.8
   resolution: "@inquirer/checkbox@npm:4.1.8"
@@ -3321,6 +3275,48 @@ __metadata:
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
+
+"@rs-components/ng-motion@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@rs-components/ng-motion@workspace:."
+  dependencies:
+    "@angular-devkit/build-angular": "npm:^19.2.5"
+    "@angular/cli": "npm:^19.2.5"
+    "@angular/common": "npm:^19.2.0"
+    "@angular/compiler": "npm:^19.2.0"
+    "@angular/compiler-cli": "npm:^19.2.0"
+    "@angular/core": "npm:^19.2.0"
+    "@angular/forms": "npm:^19.2.0"
+    "@angular/platform-browser": "npm:^19.2.0"
+    "@angular/platform-browser-dynamic": "npm:^19.2.0"
+    "@angular/platform-server": "npm:^19.2.0"
+    "@angular/router": "npm:^19.2.0"
+    "@angular/ssr": "npm:^19.2.5"
+    "@types/express": "npm:^4.17.17"
+    "@types/jasmine": "npm:~5.1.0"
+    "@types/node": "npm:^18.18.0"
+    "@types/three": "npm:^0.155.0"
+    "@types/webgl2": "npm:0.0.7"
+    angular-cli-ghpages: "npm:^2.0.3"
+    autoprefixer: "npm:^10.4.21"
+    express: "npm:^4.18.2"
+    jasmine-core: "npm:~5.6.0"
+    karma: "npm:~6.4.0"
+    karma-chrome-launcher: "npm:~3.2.0"
+    karma-coverage: "npm:~2.2.0"
+    karma-jasmine: "npm:~5.1.0"
+    karma-jasmine-html-reporter: "npm:~2.1.0"
+    motion: "npm:^12.4.10"
+    postcss: "npm:^8.5.3"
+    rxjs: "npm:~7.8.0"
+    tailwindcss: "npm:^3.4.17"
+    three: "npm:^0.164.1"
+    tslib: "npm:^2.3.0"
+    tweakpane: "npm:^4.0.5"
+    typescript: "npm:~5.7.2"
+    zone.js: "npm:~0.15.0"
+  languageName: unknown
+  linkType: soft
 
 "@schematics/angular@npm:19.2.14":
   version: 19.2.14
@@ -6895,7 +6891,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonc-parser@npm:3.3.1, jsonc-parser@npm:^3.3.1":
+"jsonc-parser@npm:3.3.1":
   version: 3.3.1
   resolution: "jsonc-parser@npm:3.3.1"
   checksum: 10c0/269c3ae0a0e4f907a914bf334306c384aabb9929bd8c99f909275ebd5c2d3bc70b9bcd119ad794f339dec9f24b6a4ee9cd5a8ab2e6435e730ad4075388fc2ab6
@@ -7826,51 +7822,6 @@ __metadata:
   checksum: 10c0/c2f5a604a54a8ec5438a342e1f356dff4bc33ccccdb6dc668d94fe8e5eccfc9d2c2eea6064b0967a767ba63b33763f51ccf2cd2441b461a7322656c1f06b3f5d
   languageName: node
   linkType: hard
-
-"ng-motion-poc@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "ng-motion-poc@workspace:."
-  dependencies:
-    "@alliedtelesis-labs-nz/atui-components-angular": "npm:0.0.110"
-    "@alliedtelesis-labs-nz/atui-design-tokens": "npm:0.0.18"
-    "@alliedtelesis-labs-nz/atui-typography": "npm:0.0.16"
-    "@angular-devkit/build-angular": "npm:^19.2.5"
-    "@angular/cli": "npm:^19.2.5"
-    "@angular/common": "npm:^19.2.0"
-    "@angular/compiler": "npm:^19.2.0"
-    "@angular/compiler-cli": "npm:^19.2.0"
-    "@angular/core": "npm:^19.2.0"
-    "@angular/forms": "npm:^19.2.0"
-    "@angular/platform-browser": "npm:^19.2.0"
-    "@angular/platform-browser-dynamic": "npm:^19.2.0"
-    "@angular/platform-server": "npm:^19.2.0"
-    "@angular/router": "npm:^19.2.0"
-    "@angular/ssr": "npm:^19.2.5"
-    "@types/express": "npm:^4.17.17"
-    "@types/jasmine": "npm:~5.1.0"
-    "@types/node": "npm:^18.18.0"
-    "@types/three": "npm:^0.155.0"
-    "@types/webgl2": "npm:0.0.7"
-    angular-cli-ghpages: "npm:^2.0.3"
-    autoprefixer: "npm:^10.4.21"
-    express: "npm:^4.18.2"
-    jasmine-core: "npm:~5.6.0"
-    karma: "npm:~6.4.0"
-    karma-chrome-launcher: "npm:~3.2.0"
-    karma-coverage: "npm:~2.2.0"
-    karma-jasmine: "npm:~5.1.0"
-    karma-jasmine-html-reporter: "npm:~2.1.0"
-    motion: "npm:^12.4.10"
-    postcss: "npm:^8.5.3"
-    rxjs: "npm:~7.8.0"
-    tailwindcss: "npm:^3.4.17"
-    three: "npm:^0.164.1"
-    tslib: "npm:^2.3.0"
-    tweakpane: "npm:^4.0.5"
-    typescript: "npm:~5.7.2"
-    zone.js: "npm:~0.15.0"
-  languageName: unknown
-  linkType: soft
 
 "node-addon-api@npm:^6.1.0":
   version: 6.1.0
