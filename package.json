@@ -1,12 +1,36 @@
 {
-  "name": "@rikisommers/ng-motion",
-  "version": "0.0.7",
+  "name": "@rs-components/ng-motion",
+  "version": "0.0.8",
   "main": "index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./motion-one.directive": {
+      "types": "./src/app/directives/motion-one.directive.d.ts",
+      "default": "./src/app/directives/motion-one.directive.js"
+    },
+    "./motion-if.directive": {
+      "types": "./src/app/directives/motion-if.directive.d.ts",
+      "default": "./src/app/directives/motion-if.directive.js"
+    },
+    "./motion.directive": {
+      "types": "./src/directives/ngx-motion.directive.d.ts",
+      "default": "./src/directives/ngx-motion.directive.js"
+    }
+  },
   "files": [
     "*.ts",
     "*.js",
-    "*.d.ts"
+    "*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "public-api.ts",
+    "public-api.js",
+    "public-api.d.ts"
   ],
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
