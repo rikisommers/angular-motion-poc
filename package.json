@@ -11,7 +11,7 @@
     "./motion-one.directive": {
       "types": "./src/app/directives/motion-one.directive.d.ts",
       "default": "./src/app/directives/motion-one.directive.js"
-    },
+    }
   },
   "files": [
     "*.ts",
