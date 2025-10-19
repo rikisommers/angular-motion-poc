@@ -1,6 +1,6 @@
 {
-  "name": "@rs-components/ng-motion",
-  "version": "0.0.6",
+  "name": "@rikisommers/ng-motion",
+  "version": "0.0.7",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
