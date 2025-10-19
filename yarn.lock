@@ -255,6 +255,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/animations@npm:^19.2.0":
+  version: 19.2.15
+  resolution: "@angular/animations@npm:19.2.15"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": 19.2.15
+    "@angular/core": 19.2.15
+  checksum: 10c0/3fe6cca1dad4a83d8a1f5009dcb95c653e27c4bd1d397ccde6929ac67dab1278aec38ab59550bc6fbf5e393f6b8b048196d3cc4194def94bd311ffd72d1e1531
+  languageName: node
+  linkType: hard
+
 "@angular/build@npm:19.2.14":
   version: 19.2.14
   resolution: "@angular/build@npm:19.2.14"
@@ -3281,6 +3293,7 @@ __metadata:
   resolution: "@rs-components/ng-motion@workspace:."
   dependencies:
     "@angular-devkit/build-angular": "npm:^19.2.5"
+    "@angular/animations": "npm:^19.2.0"
     "@angular/cli": "npm:^19.2.5"
     "@angular/common": "npm:^19.2.0"
     "@angular/compiler": "npm:^19.2.0"
@@ -3315,6 +3328,12 @@ __metadata:
     tweakpane: "npm:^4.0.5"
     typescript: "npm:~5.7.2"
     zone.js: "npm:~0.15.0"
+  peerDependencies:
+    "@angular/animations": ^19.2.0
+    "@angular/common": ^19.0.0
+    "@angular/core": ^19.0.0
+    "@angular/router": ^19.0.0
+    motion: ^12.0.0
   languageName: unknown
   linkType: soft
 

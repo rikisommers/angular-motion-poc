@@ -58,7 +58,7 @@ export class MotionDirective implements OnDestroy, OnChanges {
     private builder: AnimationBuilder,
     private el: ElementRef,
     private motionService: MotionService,
-    
+
   ) {
 
     this.elementId = `motion-${uniqueIdCounter++}`;
@@ -98,13 +98,13 @@ export class MotionDirective implements OnDestroy, OnChanges {
     if (changes['animate'] && changes['animate'].previousValue !== undefined) {
       const oldState = changes['animate'].previousValue;
       let newState = changes['animate'].currentValue;
-      
+
       if (typeof newState === 'object') {
         this.playAnimation(oldState, newState);
       } else if (typeof newState === 'string' && this.variants?.[newState]) {
         newState = this.variants[newState];
         this.playAnimation(oldState, newState);
-      } 
+      }
     }
   }
 

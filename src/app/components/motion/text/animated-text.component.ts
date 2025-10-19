@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { themes } from '../../../utils/theme';
 import { TextAnimLineUpComponent } from './text-anim-line-up/text-line-up.component';
-import { TextAnimWordXComponent } from './text-anim-word-x/text-anim-word-x.component';
 import { TextAnimNavigatorsComponent } from './text-anim-navigators/text-anim-navigators.component';
 import { ThemeService } from '../../../services/theme.service';
 import { textAnimationThemes } from '../../../utils/theme';
@@ -36,7 +35,6 @@ import { textAnimationThemes } from '../../../utils/theme';
     NgSwitchCase,
     NgSwitchDefault,
     TextAnimLineUpComponent,
-    TextAnimWordXComponent,
     TextAnimNavigatorsComponent
   ],
   template: `
@@ -90,9 +88,9 @@ import { textAnimationThemes } from '../../../utils/theme';
           [highlight]="highlight"
         ></app-text-anim-line-up> -->
       </ng-container>
-      <!-- <app-text-anim-line-up  
-        [content]="content || 'ddsadasd'" 
-        [delay]="delay || 0" 
+      <!-- <app-text-anim-line-up
+        [content]="content || 'ddsadasd'"
+        [delay]="delay || 0"
         [highlight]="highlight">
       </app-text-anim-line-up> -->
     </ng-container>
