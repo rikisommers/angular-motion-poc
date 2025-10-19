@@ -12,14 +12,6 @@
       "types": "./src/app/directives/motion-one.directive.d.ts",
       "default": "./src/app/directives/motion-one.directive.js"
     },
-    "./motion-if.directive": {
-      "types": "./src/app/directives/motion-if.directive.d.ts",
-      "default": "./src/app/directives/motion-if.directive.js"
-    },
-    "./motion.directive": {
-      "types": "./src/directives/ngx-motion.directive.d.ts",
-      "default": "./src/directives/ngx-motion.directive.js"
-    }
   },
   "files": [
     "*.ts",
