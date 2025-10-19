@@ -1,21 +1,41 @@
-<div 
+<nav
   #menuRef
-  class="fixed top-0 left-0 z-[9999] w-full flex justify-center items-center py-8"
+  class="c-navbar"
 >
+  <a class="c-navbar__logo">
+    <img  src="assets/angularmotion1--light.svg" alt="logo1">
+  </a>
 
-<!-- <app-navbar-awwwards
-[pages]="pages"
-[activePage]="activePage"
-[currentTheme]="themeService.currentTheme"
-(navClick)="handleNavClick($event)"
-></app-navbar-awwwards> -->
+  <ul class="c-navbar__menu" role="menu">
+    <li>
+      <a routerLink="examples" routerLinkActive="active" class="c-navbar__menuitem">Examples</a>
+    </li>
 
-<app-navbar-applause
-[pages]="pages"
-[activePage]="activePage"
-[currentTheme]="themeService.currentTheme"
-(navClick)="handleNavClick($event)"
-></app-navbar-applause>
+    <li>
+      <a routerLink="tutorials" routerLinkActive="active" class="c-navbar__menuitem">Tutorials</a>
+    </li>
+    <li>
+      <button>search</button>
+    </li>
+    <li>
+      <button>Pro</button>
+    </li>
+  </ul>
+</nav>
+
+  <!-- <app-navbar-awwwards-->
+<!--[pages]="pages"-->
+<!--[activePage]="activePage"-->
+<!--[currentTheme]="themeService.currentTheme"-->
+<!--(navClick)="handleNavClick($event)"-->
+<!--&gt;</app-navbar-awwwards>-->
+
+<!--<app-navbar-applause-->
+<!--[pages]="pages"-->
+<!--[activePage]="activePage"-->
+<!--[currentTheme]="themeService.currentTheme"-->
+<!--(navClick)="handleNavClick($event)"-->
+<!--&gt;</app-navbar-applause>-->
 
 <!-- <ng-container [ngSwitch]="themeService.currentTheme.data.navTheme">
     <app-navbar-awwwards
@@ -25,7 +45,7 @@
       [currentTheme]="themeService.currentTheme"
       (navClick)="handleNavClick($event)"
     ></app-navbar-awwwards>
-    
+
     <app-navbar-applause
       *ngSwitchCase="'applause'"
       [pages]="pages"
@@ -34,4 +54,4 @@
       (navClick)="handleNavClick($event)"
     ></app-navbar-applause>
   </ng-container>
-</div>  -->
+  -->

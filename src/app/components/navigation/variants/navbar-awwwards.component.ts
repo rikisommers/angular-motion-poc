@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MotionOneDirective } from '../../directives/motion-one.directive';
+import { MotionOneDirective } from '../../../directives/motion-one.directive';
 
 interface Page {
   id: string;
@@ -58,4 +58,4 @@ export class NavbarAwwwardsComponent {
     this.navClick.emit(pageId);
     this.router.navigate([`/${pageId}`]);
   }
-} 
+}

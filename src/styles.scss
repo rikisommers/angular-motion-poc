@@ -3,14 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --bodyBackgroundColor: #fafafa;
+  --bodyBackgroundColor: #000;
   --backgroundColor: #f4f4f5;
   --surface1: #c1c1c1;
   --surface2: #6f6f6f;
   --surface3: #C0C6C9;
   --backgroundColorInv: #6b7280;
   --headingColor: #52525b;
-  --textColor: #09090b;
+  --text: #999;
+  --textHighlight: #fff;
+  --stateActiveForeground:#fff;
   --subtextColor: #52525b;
   --textColorInv: #fafafa;
   --navBg: #C0C6C9;
@@ -20,6 +22,26 @@
   --gradStop: #f4f4f5;
   --textAccent: #d946ef;
   --stateSuccessBackground: #d946ef;
+  --containerWidth: 1200px;
+  --borderRadius: 6px;
+  --z-index-modal: 9999;
+  --z-index-overlay: 9998;
+  --z-index-dropdown: 9997;
+  --z-index-sticky: 9996;
+  --z-index-fixed: 9995;
+  --z-index-overlay-backdrop: 9994;
+  --font-family: 'Inter', sans-serif;
+  --font-family-mono: 'Fira Code', monospace;
+  --button-font-size: 0.8rem;
+  --button-font-weight: 600;
+  --button-text-transform: uppercase;
+  --button-letter-spacing: 0.025em;
+  --button-padding-x: 0.5rem;
+  --button-padding-y: 0.5rem;
+  --button-border-radius: 0.5rem;
+  --button-focus-ring-width: 3px;
+  --button-focus-ring-opacity: 0.25;
+  --button-disabled-opacity: 0.5;
 }
 
 body {
@@ -122,7 +144,7 @@ html{
 body {
   background-color: var(--bodyBackgroundColor);
 }
-  
+
 
 
 

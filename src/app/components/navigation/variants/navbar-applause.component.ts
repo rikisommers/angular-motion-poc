@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ElementRef, ViewChild } from '@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MotionOneDirective } from '../../directives/motion-one.directive';
+import { MotionOneDirective } from '../../../directives/motion-one.directive';
 
 interface Page {
   id: string;
@@ -49,18 +49,18 @@ export class NavbarApplauseComponent {
 
   // Motion variants for the indicator
   indicatorVariants = {
-    initial: { 
+    initial: {
       opacity: 0,
       scale: 0.4,
       y: -40
     },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       scale: 1,
       y: 0
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       scale: 0.8,
       y: -40
     }
@@ -70,7 +70,7 @@ export class NavbarApplauseComponent {
 
   handleContainerMouseMove(event: MouseEvent): void {
     if (!this.containerRef?.nativeElement) return;
-    
+
     const rect = this.containerRef.nativeElement.getBoundingClientRect();
     this.mousePosition = {
       x: event.clientX - rect.left,
@@ -90,7 +90,7 @@ export class NavbarApplauseComponent {
           elementCenterX,
           elementCenterY
         );
-        
+
         if (distance < this.maxDistance) {
           const scale = 1 - (distance / this.maxDistance);
           this.hoverStates[page.id] = this.baseSize + (this.maxSize - this.baseSize) * scale;
@@ -134,4 +134,4 @@ export class NavbarApplauseComponent {
     this.navClick.emit(pageId);
     this.router.navigate([`/${pageId}`]);
   }
-} 
+}

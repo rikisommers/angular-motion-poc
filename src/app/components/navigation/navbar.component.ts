@@ -2,10 +2,10 @@ import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { AudioService } from '../../services/audio.service';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NavbarAwwwardsComponent } from './navbar-awwwards.component';
-import { NavbarApplauseComponent } from './navbar-applause.component';
+import { NavbarAwwwardsComponent } from './variants/navbar-awwwards.component';
+import { NavbarApplauseComponent } from './variants/navbar-applause.component';
 import { routes } from '../../app.routes';
 import { Route } from '@angular/router';
 
@@ -20,12 +20,14 @@ interface Page {
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss',
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
     NavbarAwwwardsComponent,
-    NavbarApplauseComponent
+    NavbarApplauseComponent,
+    NgOptimizedImage
   ]
 })
 export class NavbarComponent implements OnInit {
@@ -69,7 +71,7 @@ export class NavbarComponent implements OnInit {
           slug: path
         };
       });
-    
+
     this.activePage = this.pages.length > 0 ? this.pages[0].id : '';
   }
 
@@ -86,7 +88,7 @@ export class NavbarComponent implements OnInit {
 
   private hexToRgba(hex: string, alpha: number): string {
     if (!hex) return '';
-    
+
     hex = hex.replace(/^#/, '');
     let r: number, g: number, b: number;
 
@@ -154,4 +156,4 @@ export class NavbarComponent implements OnInit {
         return 'app-navbar-awwwards';
     }
   }
-} 
+}
