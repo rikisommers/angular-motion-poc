@@ -41,7 +41,6 @@
     "serve:ssr:ng-motion-poc": "node dist/ng-motion-poc/server/server.mjs"
   },
   "dependencies": {
-    "@angular/animations": "^19.2.15",
     "@angular/common": "^19.2.15",
     "@angular/compiler": "^19.2.15",
     "@angular/core": "^19.2.15",
@@ -59,7 +58,6 @@
     "zone.js": "~0.15.0"
   },
   "peerDependencies": {
-    "@angular/animations": "^19.2.15",
     "@angular/common": "^19.0.0",
     "@angular/core": "^19.0.0",
     "@angular/router": "^19.0.0",
