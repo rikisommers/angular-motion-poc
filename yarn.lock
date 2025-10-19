@@ -255,7 +255,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:^19.2.0":
+"@angular/animations@npm:^19.2.15":
   version: 19.2.15
   resolution: "@angular/animations@npm:19.2.15"
   dependencies:
@@ -3293,7 +3293,7 @@ __metadata:
   resolution: "@rs-components/ng-motion@workspace:."
   dependencies:
     "@angular-devkit/build-angular": "npm:^19.2.5"
-    "@angular/animations": "npm:^19.2.0"
+    "@angular/animations": "npm:^19.2.15"
     "@angular/cli": "npm:^19.2.5"
     "@angular/common": "npm:^19.2.0"
     "@angular/compiler": "npm:^19.2.0"
@@ -3329,7 +3329,7 @@ __metadata:
     typescript: "npm:~5.7.2"
     zone.js: "npm:~0.15.0"
   peerDependencies:
-    "@angular/animations": ^19.2.0
+    "@angular/animations": ^19.2.15
     "@angular/common": ^19.0.0
     "@angular/core": ^19.0.0
     "@angular/router": ^19.0.0
