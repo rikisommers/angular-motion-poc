@@ -255,18 +255,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:^19.2.15":
-  version: 19.2.15
-  resolution: "@angular/animations@npm:19.2.15"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  peerDependencies:
-    "@angular/common": 19.2.15
-    "@angular/core": 19.2.15
-  checksum: 10c0/3fe6cca1dad4a83d8a1f5009dcb95c653e27c4bd1d397ccde6929ac67dab1278aec38ab59550bc6fbf5e393f6b8b048196d3cc4194def94bd311ffd72d1e1531
-  languageName: node
-  linkType: hard
-
 "@angular/build@npm:19.2.18":
   version: 19.2.18
   resolution: "@angular/build@npm:19.2.18"
@@ -364,7 +352,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/common@npm:^19.2.15":
+"@angular/common@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/common@npm:19.2.15"
   dependencies:
@@ -376,7 +364,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/compiler-cli@npm:^19.2.15":
+"@angular/compiler-cli@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/compiler-cli@npm:19.2.15"
   dependencies:
@@ -399,7 +387,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:^19.2.15":
+"@angular/compiler@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/compiler@npm:19.2.15"
   dependencies:
@@ -408,7 +396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/core@npm:^19.2.15":
+"@angular/core@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/core@npm:19.2.15"
   dependencies:
@@ -420,7 +408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/forms@npm:^19.2.15":
+"@angular/forms@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/forms@npm:19.2.15"
   dependencies:
@@ -434,7 +422,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/platform-browser-dynamic@npm:^19.2.15":
+"@angular/platform-browser-dynamic@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/platform-browser-dynamic@npm:19.2.15"
   dependencies:
@@ -448,7 +436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/platform-browser@npm:^19.2.15":
+"@angular/platform-browser@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/platform-browser@npm:19.2.15"
   dependencies:
@@ -464,7 +452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/platform-server@npm:^19.2.15":
+"@angular/platform-server@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/platform-server@npm:19.2.15"
   dependencies:
@@ -480,7 +468,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/router@npm:^19.2.15":
+"@angular/router@npm:^19.2.4":
   version: 19.2.15
   resolution: "@angular/router@npm:19.2.15"
   dependencies:
@@ -3394,17 +3382,16 @@ __metadata:
   resolution: "@rs-components/ng-motion@workspace:."
   dependencies:
     "@angular-devkit/build-angular": "npm:^19.2.5"
-    "@angular/animations": "npm:^19.2.15"
     "@angular/cli": "npm:^19.2.5"
-    "@angular/common": "npm:^19.2.15"
-    "@angular/compiler": "npm:^19.2.15"
-    "@angular/compiler-cli": "npm:^19.2.15"
-    "@angular/core": "npm:^19.2.15"
-    "@angular/forms": "npm:^19.2.15"
-    "@angular/platform-browser": "npm:^19.2.15"
-    "@angular/platform-browser-dynamic": "npm:^19.2.15"
-    "@angular/platform-server": "npm:^19.2.15"
-    "@angular/router": "npm:^19.2.15"
+    "@angular/common": "npm:^19.2.4"
+    "@angular/compiler": "npm:^19.2.4"
+    "@angular/compiler-cli": "npm:^19.2.4"
+    "@angular/core": "npm:^19.2.4"
+    "@angular/forms": "npm:^19.2.4"
+    "@angular/platform-browser": "npm:^19.2.4"
+    "@angular/platform-browser-dynamic": "npm:^19.2.4"
+    "@angular/platform-server": "npm:^19.2.4"
+    "@angular/router": "npm:^19.2.4"
     "@angular/ssr": "npm:^19.2.5"
     "@types/express": "npm:^4.17.17"
     "@types/jasmine": "npm:~5.1.0"
@@ -3430,7 +3417,6 @@ __metadata:
     typescript: "npm:~5.7.2"
     zone.js: "npm:~0.15.0"
   peerDependencies:
-    "@angular/animations": ^19.2.15
     "@angular/common": ^19.0.0
     "@angular/core": ^19.0.0
     "@angular/router": ^19.0.0
