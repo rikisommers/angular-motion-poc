@@ -1,0 +1,52 @@
+{
+  "name": "@hilux/ngx-motion",
+  "version": "1.0.0",
+  "description": "Angular directive for Motion One animations",
+  "author": "Hilux",
+  "keywords": [
+    "angular",
+    "animation",
+    "motion",
+    "directive",
+    "motion-one",
+    "ngx"
+  ],
+  "homepage": "https://github.com/rs-components/ng-motion-demo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rs-components/ng-motion-demo.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/router": "^19.0.0",
+    "motion": "^12.0.0",
+    "rxjs": "~7.8.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/router": "^19.0.0",
+    "motion": "^12.0.0",
+    "rxjs": "~7.8.0"
+  },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:lib": "ng build ngx-motion",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:ng-motion-poc": "node dist/ng-motion-poc/server/server.mjs",
+    "publish:lib": "ng build && cd dist/ngx-motion && npm publish",
+    "pack:lib": "ng build && cd dist/ngx-motion && npm pack"
+  },
+  "sideEffects": false
+}

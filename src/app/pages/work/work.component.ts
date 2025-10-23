@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MotionOneDirective } from '../../directives/motion-one.directive';
+import { MotionOneDirective } from '@rs-components/ng-motion';
 import { PageTransitionComponent } from '../../components/transition/page-transition/page-transition.component';
 import { LogoComponent } from "../../components/motion/logo/logo.component";
 import { BlockHeroComponent } from '../../components/blocks/block-hero/block-hero.component';

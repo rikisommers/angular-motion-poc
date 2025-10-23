@@ -16,4 +16,3 @@ export type{
 // Export services
 export { MotionOneService } from './src/app/services/motion-one.service';
 export { MotionAnimationService } from './src/app/services/motion-animation.service';
-export { MotionService } from './src/app/services/motion.service';
