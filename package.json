@@ -1,33 +1,10 @@
 {
-  "name": "@rs-components/ng-motion",
+  "name": "ng-motion-workspace",
   "version": "0.0.9",
-  "main": "index.js",
-  "types": "index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "default": "./index.js"
-    },
-    "./motion-one.directive": {
-      "types": "./src/app/directives/motion-one.directive.d.ts",
-      "default": "./src/app/directives/motion-one.directive.js"
-    }
-  },
-  "files": [
-    "*.ts",
-    "*.js",
-    "*.d.ts",
-    "src/**/*.ts",
-    "src/**/*.js",
-    "src/**/*.d.ts",
-    "public-api.ts",
-    "public-api.js",
-    "public-api.d.ts"
+  "private": true,
+  "workspaces": [
+    "projects/*"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/rs-components/ng-motion-demo.git"
@@ -36,9 +13,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:lib": "ng build ngx-motion",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:ng-motion-poc": "node dist/ng-motion-poc/server/server.mjs"
+    "serve:ssr:ng-motion-poc": "node dist/ng-motion-poc/server/server.mjs",
+    "publish:lib": "ng build ngx-motion && cd dist/ngx-motion && npm publish",
+    "pack:lib": "ng build ngx-motion && cd dist/ngx-motion && npm pack"
   },
   "dependencies": {
     "@angular/common": "^19.2.4",
@@ -50,19 +30,12 @@
     "@angular/platform-server": "^19.2.4",
     "@angular/router": "^19.2.4",
     "@angular/ssr": "^19.2.5",
-    "@rs-components/ng-motion": "0.0.9",
     "express": "^4.18.2",
     "rxjs": "~7.8.0",
     "three": "^0.164.1",
     "tslib": "^2.3.0",
     "tweakpane": "^4.0.5",
     "zone.js": "~0.15.0"
-  },
-  "peerDependencies": {
-    "@angular/common": "^19.0.0",
-    "@angular/core": "^19.0.0",
-    "@angular/router": "^19.0.0",
-    "motion": "^12.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.5",

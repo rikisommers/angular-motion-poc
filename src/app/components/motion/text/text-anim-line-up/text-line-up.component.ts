@@ -1,4 +1,4 @@
-import { MotionOneDirective } from '../../../../directives/motion-one.directive';
+import { MotionOneDirective } from 'ngx-motion';
 import { HighlightedSegment } from '../utils/highlighted-segment/text-highlighted-segment.component';
 import { Component, Input, ElementRef, ViewChild } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';

@@ -1,59 +1,267 @@
-# ng motion poc
+# Angular Motion Demo & Library
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.5.
+This project demonstrates **@hilux/ngx-motion**, a powerful Angular directive library for Motion One animations with a Framer Motion-like API.
 
-## Development server
+## 🚀 Features
 
-To start a local development server, run:
+### Motion One Integration
+- Built on top of the performant Motion One animation library
+- Familiar Framer Motion API for React developers transitioning to Angular
+- Full TypeScript support with type safety
+- Server-Side Rendering (SSR) compatible with Angular Universal
 
-```bash
-ng serve
-```
+### Animation Capabilities
+- **Basic Animations**: `initial`, `animate`, and `exit` states
+- **Gesture Animations**: `whileHover`, `whileTap`, `whileFocus`
+- **Stagger Animations**: Built-in support for staggered children animations
+- **Timeline Support**: Create complex sequential animations with precise timing
+- **Conditional Rendering**: `motionIf` directive for animated presence
+- **Variants**: Named animation states for clean, reusable animations
+- **Spring Physics**: Native spring animations with customizable stiffness and damping
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Advanced Features
+- **Transform Shortcuts**: Use `x`, `y`, `scale`, `rotate` instead of transform strings
+- **Color Animation**: Smooth color transitions with automatic color format handling
+- **Keyframe Arrays**: Support for complex keyframe-based animations
+- **Per-Property Transitions**: Different timing for each animated property
+- **Responsive Design**: Animation that work across all screen sizes
+- **Performance Optimized**: Leverages Motion One's efficient animation engine
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 📦 Library Installation
 
 ```bash
-ng test
+npm install @hilux/ngx-motion motion
 ```
 
-## Running end-to-end tests
+## 🎯 Basic Usage
 
-For end-to-end (e2e) testing, run:
+Import the directive in your component:
 
+```typescript
+import { MotionOneDirective } from '@hilux/ngx-motion';
+
+@Component({
+  selector: 'app-example',
+  standalone: true,
+  imports: [MotionOneDirective],
+  template: `
+    <div
+      motionone
+      [initial]="{ opacity: 0, y: 50 }"
+      [animate]="{ opacity: 1, y: 0 }"
+      [transition]="{ duration: 0.5, ease: 'easeOut' }"
+    >
+      Animated content
+    </div>
+  `
+})
+export class ExampleComponent {}
+```
+
+## 🎨 Animation Examples
+
+### Hover Animations
+```html
+<button
+  motionone
+  [initial]="{ scale: 1 }"
+  [whileHover]="{ scale: 1.05 }"
+  [whileTap]="{ scale: 0.95 }"
+  [transition]="{ type: 'spring', stiffness: 400, damping: 17 }"
+>
+  Hover me!
+</button>
+```
+
+### Stagger Children
+```html
+<div
+  motionone
+  [initial]="{ opacity: 0 }"
+  [animate]="{ opacity: 1 }"
+  [transition]="{ staggerChildren: 0.1, delayChildren: 0.3 }"
+>
+  <div motionone [initial]="{ x: -50, opacity: 0 }" [animate]="{ x: 0, opacity: 1 }">Item 1</div>
+  <div motionone [initial]="{ x: -50, opacity: 0 }" [animate]="{ x: 0, opacity: 1 }">Item 2</div>
+  <div motionone [initial]="{ x: -50, opacity: 0 }" [animate]="{ x: 0, opacity: 1 }">Item 3</div>
+</div>
+```
+
+### Variants
+```typescript
+@Component({
+  template: `
+    <div
+      motionone
+      [variants]="containerVariants"
+      [initial]="'hidden'"
+      [animate]="'visible'"
+    >
+      <div motionone [variants]="itemVariants">Item 1</div>
+      <div motionone [variants]="itemVariants">Item 2</div>
+    </div>
+  `
+})
+export class VariantsExample {
+  containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  itemVariants = {
+    hidden: { x: -20, opacity: 0 },
+    visible: { x: 0, opacity: 1 }
+  };
+}
+```
+
+### Conditional Animation with motionIf
+```html
+<div *motionIf="isVisible">
+  <div
+    motionone
+    [initial]="{ scale: 0, opacity: 0 }"
+    [animate]="{ scale: 1, opacity: 1 }"
+    [exit]="{ scale: 0, opacity: 0 }"
+    [transition]="{ duration: 0.3 }"
+  >
+    This will animate in and out!
+  </div>
+</div>
+```
+
+### Timeline Animations
+```typescript
+@Component({
+  template: `
+    <div
+      motionone
+      [timeline]="complexTimeline"
+      [animate]="{ opacity: 1 }"
+    >
+      Complex sequenced animation
+    </div>
+  `
+})
+export class TimelineExample {
+  complexTimeline = [
+    { prop: 'x', to: 100, duration: 1, atTime: 0 },
+    { prop: 'rotate', to: 180, duration: 0.5, atTime: 0.5 },
+    { prop: 'scale', to: 1.2, duration: 0.3, atTime: 1.2 }
+  ];
+}
+```
+
+## 🛠️ Development Setup
+
+### Prerequisites
+- Node.js 18+
+- Angular 19+
+- Motion One library
+
+### Running the Demo
 ```bash
-ng e2e
+# Install dependencies
+yarn install
+
+# Start development server
+yarn start
+
+# Build the library
+yarn build:lib
+
+# Test library build
+yarn pack:lib
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Building for Production
+```bash
+# Build demo app
+yarn build
 
-## Additional Resources
+# Build and publish library
+yarn publish:lib
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 📚 API Reference
+
+### Inputs
+
+| Input | Type | Description |
+|-------|------|-------------|
+| `initial` | `VariantWithTransition \| string` | Initial animation state |
+| `animate` | `VariantWithTransition \| string` | Target animation state |
+| `exit` | `VariantWithTransition \| string` | Exit animation state |
+| `transition` | `TransitionOptions \| Record<string, TransitionOptions>` | Animation transition configuration |
+| `variants` | `Record<string, VariantWithTransition>` | Named animation variants |
+| `whileHover` | `VariantWithTransition` | Animation while hovering |
+| `whileTap` | `VariantWithTransition` | Animation while pressing |
+| `whileFocus` | `VariantWithTransition` | Animation while focused |
+| `timeline` | `TimelineStep[]` | Sequential animation timeline |
+
+### Transition Options
+
+```typescript
+interface TransitionOptions {
+  duration?: number;
+  delay?: number;
+  ease?: string | number[] | { type: 'spring'; stiffness?: number; damping?: number };
+  repeat?: number | boolean;
+  repeatType?: 'loop' | 'mirror' | 'reverse' | 'forwards' | 'pingPong';
+  repeatDelay?: number;
+  staggerChildren?: number;
+  staggerDirection?: number;
+  when?: 'beforeChildren' | 'afterChildren' | 'together';
+  delayChildren?: number;
+}
+```
+
+### Available Easing Functions
+- `'ease'` - Default CSS ease
+- `'ease-in'` - CSS ease-in
+- `'ease-out'` - CSS ease-out
+- `'ease-in-out'` - CSS ease-in-out
+- `[0.4, 0, 0.2, 1]` - Custom cubic bezier
+- `{ type: 'spring', stiffness: 400, damping: 17 }` - Spring physics
+
+## 🎯 Project Structure
+
+```
+ng-motion-demo/
+├── projects/ngx-motion/          # Library source code
+│   ├── src/lib/directives/       # Motion directives
+│   ├── src/lib/services/         # Animation services
+│   └── src/public-api.ts         # Library exports
+├── src/app/                      # Demo application
+│   ├── components/               # Demo components
+│   ├── pages/                    # Demo pages
+│   └── directives/               # Original directive sources
+└── dist/ngx-motion/              # Built library output
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - see LICENSE file for details
+
+## 🔗 Links
+
+- [Motion One Documentation](https://motion.dev/)
+- [Angular Documentation](https://angular.dev/)
+- [Framer Motion API Reference](https://www.framer.com/motion/)
+
+---
+
+Built with ❤️ using Angular and Motion One

@@ -3,8 +3,7 @@
 import { Component, Input, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MotionOneDirective } from '../../../../directives/motion-one.directive';
-import { MotionAnimationService } from '../../../../services/motion-animation.service';
+import { MotionOneDirective, MotionAnimationService } from 'ngx-motion';
 
 interface Page {
   id: string;

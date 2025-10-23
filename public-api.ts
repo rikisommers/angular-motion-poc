@@ -13,6 +13,5 @@ export type{
   TimelineStep
 } from './src/app/directives/motion-one.directive';
 
-// Export services
-export { MotionOneService } from './src/app/services/motion-one.service';
-export { MotionAnimationService } from './src/app/services/motion-animation.service';
+
+

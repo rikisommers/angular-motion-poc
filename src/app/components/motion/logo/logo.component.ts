@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MotionOneDirective } from '../../../directives/motion-one.directive';
+import { MotionOneDirective } from 'ngx-motion';
 import { cubicBezier, spring } from 'motion';
 @Component({
   selector: 'app-logo',

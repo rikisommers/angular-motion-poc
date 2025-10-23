@@ -7,7 +7,9 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "types": [],
+    "lib": ["ES2022", "dom"],
+    "skipLibCheck": true
   },
   "exclude": [
     "**/*.spec.ts"

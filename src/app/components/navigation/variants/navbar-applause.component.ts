@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ElementRef, ViewChild } from '@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MotionOneDirective } from '../../../directives/motion-one.directive';
+import { MotionOneDirective } from 'ngx-motion';
 
 interface Page {
   id: string;

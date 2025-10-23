@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { WorkComponent } from './pages/work/work.component';
 import { BlogComponent } from './pages/blog/blog.component';
 import { AppComponent } from './app.component';
-import { TimelineComponent } from './timeline/timeline.component';
+import { TimelineComponent } from './pages/timeline/timeline.component';
 import { PunchComponent } from './pages/punch/punch.component';
 import { TutorialsComponent } from './pages/tutorials/tutorials.component';
 import { ExamplesComponent } from './pages/examples/examples.component';

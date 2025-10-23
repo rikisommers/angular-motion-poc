@@ -3,7 +3,7 @@ import { HighlightedSegment } from '../utils/highlighted-segment/text-highlighte
 import { motion } from 'framer-motion';
 import { processItalicText, isItalic } from '../utils/text-formatting.util';
 import { NgFor, NgIf } from '@angular/common';
-import { MotionOneDirective } from '../../../../directives/motion-one.directive';
+import { MotionOneDirective } from 'ngx-motion';
 import { spring } from 'motion';
 @Component({
   selector: 'app-text-anim-word-x',

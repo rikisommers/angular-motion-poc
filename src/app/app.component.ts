@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterOutlet,RouterLink } from '@angular/router';
-import { MotionOneDirective } from './directives/motion-one.directive';
 import { ThemeService } from './services/theme.service';
 import { themes } from './utils/theme';
 import { ThemeEditorComponent } from './components/theme-editor/theme-editor.component';
