@@ -7,6 +7,7 @@
 const mockAnimate = () => ({ stop: () => {} });
 const mockEasing = { ease: [0, 0, 1, 1] };
 const mockStagger = () => 0;
+const mockInView = () => ({ stop: () => {} });
 
 // Check if we're in a browser environment
 const isBrowser = typeof window !== 'undefined';
@@ -17,7 +18,8 @@ let motionExports: any = {
   easeIn: mockEasing,
   easeOut: mockEasing,
   easeInOut: mockEasing,
-  stagger: mockStagger
+  stagger: mockStagger,
+  inView: mockInView
 };
 
 // Only try to load motion in browser environment
@@ -30,6 +32,7 @@ if (isBrowser) {
       motionExports.easeOut = motion.easeOut;
       motionExports.easeInOut = motion.easeInOut;
       motionExports.stagger = motion.stagger;
+      motionExports.inView = motion.inView;
     }).catch(e => {
       console.warn('Failed to import motion library, using mock implementations', e);
     });
@@ -50,8 +53,12 @@ export const stagger = (...args: any[]) => {
   return motionExports.stagger(...args);
 };
 
+export const inView = (...args: any[]) => {
+  return motionExports.inView(...args);
+};
+
 // Re-export types
-export type { 
-  AnimationOptions, 
-  Target 
+export type {
+  AnimationOptions,
+  Target
 } from 'motion';

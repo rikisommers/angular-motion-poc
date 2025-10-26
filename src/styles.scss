@@ -108,8 +108,8 @@ html{
 
 .test2{
   width: 100vw;
-  height:100vh;
-  overflow: hidden;
+min-height:100vh;
+  overflow: auto;
   box-sizing: border-box;
   border:1px solid hotpink;
   view-transition-name: content;

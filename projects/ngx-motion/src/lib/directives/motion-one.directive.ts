@@ -20,7 +20,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { MotionOneService } from '../services/motion-one.service';
 import { MotionAnimationService } from '../services/motion-animation.service';
 import type { AnimationOptions, Target } from 'motion';
-import { animate, easeIn, easeOut, easeInOut, stagger } from '../services/motion-browser-safe';
+import { animate, easeIn, easeOut, easeInOut, stagger, inView } from '../services/motion-browser-safe';
 
 // Define interface for transition object similar to Framer Motion
 export interface TransitionOptions {
@@ -85,10 +85,50 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   @Input() whileTap: VariantWithTransition = {};
   @Input() whileFocus: VariantWithTransition = {};
   @Input() whileInView: VariantWithTransition = {};
+  @Input() runInView?: 'never' | 'once' | 'always'; // Controls if animation waits for inView ('never'/undefined = immediate, 'once' = single trigger, 'always' = repeats on scroll)
   @Input() variants: { [key: string]: VariantWithTransition } = {};
-  @Input() transition: TransitionOptions | Record<string, TransitionOptions> = {};  
+  @Input() transition: TransitionOptions | Record<string, TransitionOptions> = {};
   @Input() timeline: TimelineStep[] | undefined;
   @Output() animationComplete = new EventEmitter<void>();
+
+
+  // Add a public method to restart animations
+  public restartAnimation() {
+    console.log('[MotionOne] Restarting animation for:', this.elementId);
+
+    // Stop any current animations
+    if (this.controls) {
+      this.controls.stop();
+    }
+
+    // Force reset to initial state immediately without animation
+    const initialVariant = this.getVariant(this.initial);
+    const initialStyles = this.extractStyleProperties(initialVariant);
+
+    // Apply initial styles directly with no transition
+    const element = this.el.nativeElement;
+    element.style.transition = 'none';
+    Object.assign(element.style, initialStyles);
+
+    // Force a reflow to ensure the reset is applied
+    element.offsetHeight;
+
+    // Remove the transition override and start the animation fresh
+    setTimeout(() => {
+      element.style.transition = '';
+
+      // Check if this element uses runInView
+      if (this.isRunInViewEnabled) {
+        // For runInView elements, just reset to initial and let inView handle the animation
+        console.log('[MotionOne] Retrigger for runInView element - resetting to initial state');
+        // Element is already reset to initial, inView will trigger when appropriate
+      } else {
+        // For non-runInView elements, play the animation directly
+        console.log('[MotionOne] Retrigger for normal element - playing animation');
+        this.playAnimation(this.initial, this.animate);
+      }
+    }, 10);
+  }
 
   // Query for child motionone directives
   @ContentChildren(MotionOneDirective, { descendants: true }) childMotionDirectives!: QueryList<MotionOneDirective>;
@@ -103,12 +143,23 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   private isChild = false;
   private parentDirective: MotionOneDirective | null = null;
   private initialAnimationPlayed = false;
-  private staggerDelay = 0;
+  private _skipStartStylesApplication = false;
+  private staggerDelay: number | undefined = undefined;
   private childrenCount = 0;
   private childIndex = 0;
+  private isStaggeredChild = false; // Flag to indicate if this child is part of a stagger group
 
   get scrollProgress() {
     return this.motionService.scrollYProgress();
+  }
+
+  // Helper methods for runInView configuration
+  private get isRunInViewEnabled(): boolean {
+    return this.runInView === 'once' || this.runInView === 'always';
+  }
+
+  private get runInViewRepeat(): 'once' | 'always' {
+    return this.runInView === 'always' ? 'always' : 'once'; // Default to 'once' if undefined or 'never'
   }
 
   constructor(
@@ -132,7 +183,15 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   ngOnInit() {
-   // console.log(`[${this.elementId}] Initializing motionone directive`);
+   console.log(`[MotionOne] 🚀 Initializing directive for element:`, this.elementId);
+   console.log(`[MotionOne] 📋 Element details:`, {
+     tag: this.el.nativeElement.tagName,
+     text: this.el.nativeElement.textContent?.trim().substring(0, 30) + '...',
+     runInView: this.runInView,
+     isRunInViewEnabled: this.isRunInViewEnabled,
+     runInViewRepeat: this.runInViewRepeat
+   });
+
    this.applyInitialStyles(); // Ensure initial styles are applied
 
     // Only run animations in browser environment
@@ -142,20 +201,42 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       while (parent) {
         if (parent.hasAttribute('motionone')) {
           this.isChild = true;
-      //    console.log(`[${this.elementId}] Detected as child of another motionone element: ${parent.id}`);
+          console.log(`[MotionOne] 👶 ${this.elementId} detected as child of another motionone element: ${parent.id}`);
           break;
         }
         parent = parent.parentElement;
       }
 
-    //  console.log(`[${this.elementId}] isChild=${this.isChild}, will ${!this.isChild ? 'auto-play' : 'wait for parent'}`);
-      
-      // Only auto-play animation if not a child of another motionone element
-      if (!this.isChild) {
-        this.playAnimation(this.initial, this.animate);
+      console.log(`[MotionOne] 🎯 ${this.elementId} isChild=${this.isChild}, will ${!this.isChild ? 'auto-play' : 'wait for parent'}`);
 
-        // setTimeout(() => {
-        // },2000);
+      // Set up runInView logic based on parent-child relationship
+      if (this.isRunInViewEnabled) {
+        if (!this.isChild) {
+          // Parent elements with runInView set up their own observer
+          console.log('[MotionOne] 🔍 Setting up runInView for PARENT element:', this.elementId, 'repeat:', this.runInViewRepeat);
+          this.setupInViewAnimation();
+        } else {
+          // Child elements with runInView only set up observer if parent doesn't have stagger
+          // We'll check this later in ngAfterContentInit when we know about parent stagger settings
+          console.log('[MotionOne] ⏸️ Child element with runInView - will check parent stagger later:', this.elementId);
+        }
+      } else if (!this.isChild && !this.isRunInViewEnabled) {
+        // Only auto-play animation if not a child AND no runInView
+        console.log('[MotionOne] ▶️ Running immediate animation for:', this.elementId);
+        this.playAnimation(this.initial, this.animate);
+      } else if (!this.isChild && this.isRunInViewEnabled) {
+        // Parent with runInView - wait for intersection observer
+        console.log('[MotionOne] ⏸️ Parent with runInView - waiting for viewport entry:', this.elementId);
+      } else {
+        console.log('[MotionOne] ⏸️ Child element waiting for parent:', this.elementId);
+      }
+
+      // Setup inView animation if inView or whileInView properties are set (but not if runInView is already handled)
+      if (!this.isRunInViewEnabled &&
+          ((this.inView && Object.keys(this.inView).length > 0) ||
+           (this.whileInView && Object.keys(this.whileInView).length > 0))) {
+        console.log('[MotionOne] 🎪 Setting up inView/whileInView animation for:', this.elementId);
+        this.setupInViewAnimation();
       }
     }
   }
@@ -163,36 +244,81 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   ngAfterContentInit() {
     // Register child directives if we have staggerChildren
     if (this.childMotionDirectives && this.childMotionDirectives.length > 0) {
-   //   console.log(`[${this.elementId}] Found ${this.childMotionDirectives.length} child directives`);
-      
+      console.log(`[MotionOne] 👨‍👩‍👧‍👦 ${this.elementId} Found ${this.childMotionDirectives.length} child directives`);
+
       // Set this directive as the parent for all children
       setTimeout(() => {
         // Filter out self from children
         const childDirectives = this.childMotionDirectives.filter(child => child !== this);
         this.childrenCount = childDirectives.length;
-        
-     //   console.log(`[${this.elementId}] After filtering self, found ${this.childrenCount} actual children`);
-        
+
+        console.log(`[MotionOne] 👨‍👩‍👧‍👦 ${this.elementId} After filtering self, found ${this.childrenCount} actual children`);
+
         // Set parent and index for each child
         childDirectives.forEach((child, index) => {
-      //    console.log(`[${this.elementId}] Setting parent for child ${child.elementId} with index ${index}/${this.childrenCount}`);
+          console.log(`[MotionOne] 👶 ${this.elementId} Setting parent for child ${child.elementId} with index ${index}/${this.childrenCount}`);
           child.setParent(this, index, this.childrenCount);
         });
-        
+
         // Check if we need to stagger children
         const staggerValue = this.getStaggerValue();
-      //  console.log(`[${this.elementId}] Stagger value: ${staggerValue}, childrenCount: ${this.childrenCount}`);
-        
-        if (staggerValue > 0 && this.childrenCount > 0) {
-      ///    console.log(`[${this.elementId}] Will apply stagger to children`);
-          // Trigger staggered animations for children
-          this.applyStaggerToChildren();
+        console.log(`[MotionOne] 📊 ${this.elementId} Stagger value: ${staggerValue}, childrenCount: ${this.childrenCount}`);
+
+        // Handle child runInView setup based on parent runInView and stagger
+        if (this.runInView === 'always') {
+          console.log(`[MotionOne] 🎯 ${this.elementId} Parent has runInView="always" - will manage ALL children`);
+
+          // Mark ALL children as managed by parent (regardless of stagger)
+          childDirectives.forEach(child => {
+            if (child.isRunInViewEnabled) {
+              console.log(`[MotionOne] 🏷️ Child ${child.elementId} managed by parent with runInView="always"`);
+              child.isStaggeredChild = true; // Mark so child knows parent manages it
+              // DO NOT set up intersection observer - parent handles everything
+            }
+          });
+
+          // CRITICAL: Set up intersection observer for the parent
+          console.log(`[MotionOne] 🔍 ${this.elementId} Setting up intersection observer for runInView="always"`);
+          this.setupRunInViewObserver();
+
+          // Check if we have stagger
+          if (staggerValue > 0 && this.childrenCount > 0) {
+            console.log(`[MotionOne] ⏸️ ${this.elementId} Skipping immediate stagger (runInView="always" - will wait for intersection observer)`);
+          } else {
+            console.log(`[MotionOne] ⏸️ ${this.elementId} No stagger, but parent has runInView="always" - will wait for intersection observer`);
+          }
+        } else if (staggerValue > 0 && this.childrenCount > 0) {
+          console.log(`[MotionOne] 🎭 ${this.elementId} Will apply stagger to children`);
+
+          // For staggered children, mark them as staggered but DON'T set up intersection observers
+          childDirectives.forEach(child => {
+            if (child.isRunInViewEnabled) {
+              console.log(`[MotionOne] 🏷️ Marking staggered child ${child.elementId}`);
+              child.isStaggeredChild = true;
+            }
+          });
+
+          // Trigger staggered animations for children (only if parent not using runInView)
+          if (!this.isRunInViewEnabled) {
+            console.log(`[MotionOne] 🚀 ${this.elementId} Triggering immediate stagger (no runInView)`);
+            this.applyStaggerToChildren();
+          } else {
+            console.log(`[MotionOne] ⏸️ ${this.elementId} Skipping immediate stagger (runInView enabled)`);
+          }
         } else {
-      //    console.log(`[${this.elementId}] No stagger needed (staggerValue=${staggerValue}, childrenCount=${this.childrenCount})`);
+          console.log(`[MotionOne] 🔄 ${this.elementId} No stagger - children can have individual runInView observers`);
+
+          // If no stagger and parent doesn't have runInView="always", children can set up their own observers
+          childDirectives.forEach(child => {
+            if (child.isRunInViewEnabled) {
+              console.log(`[MotionOne] 🔍 Setting up individual runInView for child: ${child.elementId}`);
+              child.setupInViewAnimation();
+            }
+          });
         }
       });
     } else {
-      //=    console.log(`[${this.elementId}] No child directives found`);
+      console.log(`[MotionOne] 👶 ${this.elementId} No child directives found`);
     }
   }
 
@@ -203,25 +329,185 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     this.childrenCount = totalChildren;
   }
 
+  // COMPLETE RESET METHOD: Reset parent and all children to initial state (like Framer Motion)
+  public completeResetToInitial() {
+    console.log(`[MotionOne] 🔥 COMPLETE RESET - ${this.elementId} resetting self and all children to initial`);
+
+    // 1. Reset self to initial
+    this.forceResetToInitial();
+
+    // 2. Reset all children to their individual initial states
+    if (this.childMotionDirectives && this.childMotionDirectives.length > 0) {
+      const childDirectives = this.childMotionDirectives.filter(child => child !== this);
+      console.log(`[MotionOne] 🔄 COMPLETE RESET - Found ${childDirectives.length} children to reset`);
+
+      childDirectives.forEach((child, index) => {
+        console.log(`[MotionOne] 🔄 COMPLETE RESET - Resetting child ${index + 1}: ${child.elementId}`);
+        child.forceResetToInitial();
+      });
+
+      console.log(`[MotionOne] ✅ COMPLETE RESET - All children reset to initial state`);
+    }
+  }
+
+  // FORCE RESET: Reset this element to its initial state immediately
+  public forceResetToInitial() {
+    console.log(`[MotionOne] 🔧 FORCE RESET - ${this.elementId} resetting to initial`);
+
+    // Stop any current animation immediately
+    if (this.controls) {
+      this.controls.stop();
+      this.controls = null;
+      console.log(`[MotionOne] ⏹️ FORCE RESET - Stopped animation for ${this.elementId}`);
+    }
+
+    // Get this element's initial state
+    const initialVariant = this.getVariant(this.initial);
+    const initialStyles = this.extractStyleProperties(initialVariant);
+
+    console.log(`[MotionOne] 🎯 FORCE RESET - ${this.elementId} applying initial:`, initialStyles);
+    console.log(`[MotionOne] 🎯 FORCE RESET - ${this.elementId} raw initial:`, this.initial);
+
+    // Apply initial styles immediately with no transition
+    this.el.nativeElement.style.transition = 'none';
+
+    // Clear any existing styles first
+    this.el.nativeElement.style.opacity = '';
+    this.el.nativeElement.style.transform = '';
+
+    // Apply initial styles
+    Object.assign(this.el.nativeElement.style, initialStyles);
+    this.el.nativeElement.offsetHeight; // Force reflow
+    this.el.nativeElement.style.transition = '';
+
+    // Reset animation flags
+    this.initialAnimationPlayed = false;
+
+    console.log(`[MotionOne] ✅ FORCE RESET - ${this.elementId} reset complete`);
+  }
+
+  // Simple method to reset child to initial if parent has runInView
+  public resetToInitialIfParentHasRunInView() {
+    console.log(`[MotionOne] 🔄 Child ${this.elementId} resetting to initial (parent has runInView)`);
+    this.forceResetToInitial();
+  }
+
+  // Method to call complete reset when parent exits viewport
+  public parentExitViewportReset() {
+    console.log(`[MotionOne] 🔥 PARENT EXIT VIEWPORT - ${this.elementId} triggering complete reset`);
+    this.completeResetToInitial();
+  }
+
+  // Set up intersection observer for runInView functionality
+  private setupRunInViewObserver() {
+    console.log(`[MotionOne] 🔍 Setting up runInView intersection observer for: ${this.elementId}`);
+
+    if (!isPlatformBrowser(this.platformId)) {
+      console.log(`[MotionOne] ⚠️ Not in browser - skipping intersection observer setup`);
+      return;
+    }
+
+    // Create intersection observer with proper threshold
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          console.log(`[MotionOne] 👁️ Intersection callback for ${this.elementId}:`, {
+            isIntersecting: entry.isIntersecting,
+            intersectionRatio: entry.intersectionRatio
+          });
+
+          if (entry.isIntersecting) {
+            console.log(`[MotionOne] ✅ ENTERING VIEWPORT: ${this.elementId}`);
+            this.handleViewportEntry();
+          } else {
+            console.log(`[MotionOne] ❌ EXITING VIEWPORT: ${this.elementId}`);
+            this.handleViewportExit();
+          }
+        });
+      },
+      {
+        root: null, // Use viewport as root
+        rootMargin: '0px',
+        threshold: 0.1 // Trigger when 10% of element is visible
+      }
+    );
+
+    // Start observing the element
+    this.observer.observe(this.el.nativeElement);
+    console.log(`[MotionOne] 🎯 Started observing ${this.elementId} for viewport changes`);
+  }
+
+  // Handle when element enters viewport
+  private handleViewportEntry() {
+    console.log(`[MotionOne] 🚀 ${this.elementId} handling viewport entry`);
+
+    // Check if we have stagger children
+    const staggerValue = this.getStaggerValue();
+    if (staggerValue > 0 && this.childMotionDirectives?.length > 0) {
+      console.log(`[MotionOne] 🎭 ${this.elementId} triggering stagger animation`);
+      this.applyStaggerToChildren();
+    } else {
+      console.log(`[MotionOne] ▶️ ${this.elementId} triggering normal animation`);
+      this.playAnimation(this.initial, this.animate);
+    }
+  }
+
+  // Handle when element exits viewport
+  private handleViewportExit() {
+    if (this.runInView === 'always') {
+      console.log(`[MotionOne] EXIT ${this.elementId} - reset children to initial variant`);
+
+      // Force children to their initial variant state
+      if (this.childMotionDirectives && this.childMotionDirectives.length > 0) {
+        const childDirectives = this.childMotionDirectives.filter(child => child !== this);
+        childDirectives.forEach((child) => {
+          console.log(`[MotionOne] EXIT RESET ${child.elementId} using initial variant:`, child.initial);
+
+          // Stop any animation and immediately set to initial variant
+          if (child.controls) {
+            child.controls.stop();
+            child.controls = null;
+          }
+
+          // Use playAnimation to go to initial variant (instant)
+          child.playAnimation(child.animate, child.initial);
+          child.initialAnimationPlayed = false;
+        });
+      }
+    }
+  }
+
   // Method to stagger children animations
   applyStaggerToChildren() {
+    console.log('[MotionOne] 🎭 applyStaggerToChildren for:', this.elementId);
+
     // Get stagger configuration
     const staggerValue = this.getStaggerValue();
     const staggerDirection = this.getStaggerDirection();
     const delayChildren = this.delayChildren; // number
     const parentDelay = (((this.transition as TransitionOptions)?.delay) ?? 0) as number;
-    
+
+    console.log('[MotionOne] 📊 Stagger config:', {
+      staggerValue,
+      staggerDirection,
+      delayChildren,
+      parentDelay
+    });
+
     // Get all child directives (excluding self)
     const childDirectives = this.childMotionDirectives.filter(child => child !== this);
-    
+    console.log('[MotionOne] 👶 Found', childDirectives.length, 'child directives');
+
     // Determine when to animate parent relative to children
     const when = this.getWhen();
-    
+    console.log('[MotionOne] ⏰ When property:', when);
+
     // Animate parent if needed
     if (when !== 'afterChildren') {
+      console.log('[MotionOne] ▶️ Running parent self animation (before/together)');
       this.runSelfAnimation();
     }
-    
+
     // Animate each child with appropriate stagger delay
     childDirectives.forEach((childDirective, index) => {
       // Calculate the stagger delay based on index and direction
@@ -231,30 +517,41 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       } else {
         staggerIndex = this.childrenCount - 1 - index;
       }
-      
+
       // Combine parent delay, delayChildren, and stagger delay
       const totalDelay = (parentDelay as number) + delayChildren + (staggerIndex * staggerValue);
-      
-      this.logDebug(`Child ${childDirective.elementId} index=${index}, staggerIndex=${staggerIndex}, totalDelay=${totalDelay}`);
-      
+
+      console.log(`[MotionOne] 👶 Child ${childDirective.elementId} index=${index}, staggerIndex=${staggerIndex}, totalDelay=${totalDelay}`);
+
       // Force override the child's delay
       childDirective.overrideDelay(totalDelay);
-      
-      // Trigger the child's animation
-      childDirective.runInitAnimation();
+
+      // Trigger the child's animation directly with its own variants
+      console.log(`[MotionOne] 🎬 Triggering animation for child ${childDirective.elementId}`);
+      console.log(`[MotionOne] 🔍 Child ${childDirective.elementId} initial:`, childDirective.initial);
+      console.log(`[MotionOne] 🔍 Child ${childDirective.elementId} animate:`, childDirective.animate);
+
+      // CRITICAL: Use child's own variants directly (parent has no initial/animate)
+      setTimeout(() => {
+        console.log(`[MotionOne] VARIANT CHECK ${childDirective.elementId} FROM:`, childDirective.initial, 'TO:', childDirective.animate);
+        childDirective.playAnimation(childDirective.initial, childDirective.animate);
+      }, totalDelay * 1000);
     });
-    
+
     // Animate parent after children if specified
     if (when === 'afterChildren') {
       const totalChildrenDuration = (parentDelay as number) + delayChildren + (this.childrenCount * staggerValue);
+      console.log('[MotionOne] ⏰ Running parent animation after children, delay:', totalChildrenDuration);
       this.overrideDelay(totalChildrenDuration);
       this.runSelfAnimation();
     }
+
+    console.log('[MotionOne] ✅ applyStaggerToChildren completed');
   }
 
   // Method to override the delay for this directive
   overrideDelay(delay: number) {
-    //  console.log(`[${this.elementId}] Delay overridden: ${this.staggerDelay} -> ${delay}`);
+    console.log(`[MotionOne] ⏰ ${this.elementId} Delay overridden: ${this.staggerDelay} -> ${delay}`);
     this.staggerDelay = delay;
   }
 
@@ -262,23 +559,49 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   runSelfAnimation() {
     // Get animation options
     const options = this.getAnimationOptions();
-    
-    //  console.log(`[${this.elementId}] Running self animation with delay: ${options.delay}`);
-    
+
+    console.log(`[MotionOne] 🎯 ${this.elementId} Running self animation with delay: ${options.delay}`);
+
     // Extract only style properties for animation
     const targetStyles = this.extractStyleProperties(this.getVariant(this.animate));
-    
-    // Apply start state immediately
     const startStyles = this.extractStyleProperties(this.getVariant(this.initial));
-    Object.assign(this.el.nativeElement.style, startStyles);
-    
+
+    console.log('[MotionOne] 📊 SELF ANIMATION - Target styles:', targetStyles);
+    console.log('[MotionOne] 📊 SELF ANIMATION - Start styles:', startStyles);
+
+    // Add DOM style logging before applying start styles
+    const beforeStartComputedStyles = window.getComputedStyle(this.el.nativeElement);
+    console.log('[MotionOne] 📊 BEFORE START STYLES - Current computed styles:', {
+      opacity: beforeStartComputedStyles.opacity,
+      transform: beforeStartComputedStyles.transform,
+      backgroundColor: beforeStartComputedStyles.backgroundColor
+    });
+
+    // Only apply start state immediately if not part of stagger coordination
+    // For stagger children, the parent coordination handles initial state setup
+    if (!this.isStaggeredChild) {
+      console.log('[MotionOne] 🔧 Applying start styles (not staggered child)');
+      Object.assign(this.el.nativeElement.style, startStyles);
+    } else {
+      console.log('[MotionOne] ⏸️ Skipping start styles application (staggered child - parent handles this)');
+    }
+
+    // Add logging after applying start styles
+    const afterStartComputedStyles = window.getComputedStyle(this.el.nativeElement);
+    console.log('[MotionOne] 📊 AFTER START STYLES - Current computed styles:', {
+      opacity: afterStartComputedStyles.opacity,
+      transform: afterStartComputedStyles.transform,
+      backgroundColor: afterStartComputedStyles.backgroundColor
+    });
+
     // Create animation
+    console.log('[MotionOne] 🎬 Creating animation for element:', this.elementId);
     this.controls = this.motionAnimation.animate(
       this.el.nativeElement as Target,
       targetStyles,
       options
     );
-    
+
     this.initialAnimationPlayed = true;
   }
 
@@ -433,7 +756,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   // Helper to extract only style properties from a variant (excluding transition)
-  private extractStyleProperties(variant: VariantWithTransition): Record<string, any> {
+  public extractStyleProperties(variant: VariantWithTransition): Record<string, any> {
     if (!variant) return {};
     
     const result: Record<string, any> = {};
@@ -576,8 +899,10 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     
     const transitionObj: TransitionOptions = stateTransition || globalTransition || {};
     
-    // Always prioritize stagger delay over any other delay settings
-    const delay = this.staggerDelay > 0 ? this.staggerDelay : (transitionObj.delay ?? this.delay);
+    // Always prioritize stagger delay over any other delay settings (including 0)
+    const delay = this.staggerDelay !== undefined && this.staggerDelay >= 0 ? this.staggerDelay : (transitionObj.delay ?? this.delay);
+
+    console.log(`[MotionOne] ⏰ ${this.elementId} getAnimationOptions - staggerDelay: ${this.staggerDelay}, transitionDelay: ${transitionObj.delay}, globalDelay: ${this.delay}, finalDelay: ${delay}`);
     
     const easeInput = transitionObj.ease ?? this.easing;
     // Detect if target contains keyframe arrays (avoid native spring in that case)
@@ -701,63 +1026,33 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       resolvedTargetState = targetState;
     }
 
-    console.log('Playing animation with target state:', resolvedTargetState);
+    console.log('[MotionOne] 🎬 Playing animation for:', this.elementId);
+    console.log('[MotionOne] 📊 Start state:', resolvedStartState);
+    console.log('[MotionOne] 🎯 Target state:', resolvedTargetState);
+    console.log('[MotionOne] 🔧 isChild:', this.isChild, 'isRunInViewEnabled:', this.isRunInViewEnabled);
 
     // Check if target state has an 'at' property
     if (resolvedTargetState.at !== undefined) {
-      console.log(`Scheduling animation to start in ${resolvedTargetState.at} seconds`);
+      console.log(`[MotionOne] ⏰ Scheduling animation to start in ${resolvedTargetState.at} seconds`);
       // Schedule the animation to start at the specified time
       setTimeout(() => {
-        console.log('Executing delayed animation');
+        console.log('[MotionOne] ⏰ Executing delayed animation');
         this.continueAnimation(resolvedTargetState, false);
       }, resolvedTargetState.at * 1000); // Convert seconds to milliseconds
       return;
     }
-
-
-
-
-    // // Stop any existing children animations
-    // this.childrenControls.forEach(control => {
-    //   if (control) control.stop();
-    // });
-    // this.childrenControls = [];
-
-    // // Check if this is the initial animation to the animate state
-    // const isInitialAnimation = 
-    //   (targetState === this.animate || 
-    //    (typeof targetState === 'string' && this.variants?.[targetState] === this.animate));
-
-    // // Apply start state immediately (excluding transition property)
-    // if (resolvedStartState) {
-    //   const styles = this.extractStyleProperties(resolvedStartState);
-      
-    //   // Apply initial styles immediately to prevent flash
-    //   if (styles && Object.keys(styles).length > 0) {
-    //     // Use requestAnimationFrame to ensure styles are applied before animation starts
-    //     requestAnimationFrame(() => {
-    //       Object.assign(this.el.nativeElement.style, styles);
-          
-    //       // Use another requestAnimationFrame to ensure the next frame has the styles applied
-    //       requestAnimationFrame(() => {
-    //         // Continue with animation after styles are applied
-    //         this.continueAnimation(resolvedTargetState, isInitialAnimation);
-    //       });
-    //     });
-    //     return; // Exit early, animation will continue in the callback
-    //   }
-    // }
-    
-    // // If no start state or no styles to apply, continue immediately
-    // this.continueAnimation(resolvedTargetState, isInitialAnimation);
 
     // Continue with normal animation if no 'at' property
     this.continueAnimation(resolvedTargetState, false);
   }
 
   private continueAnimation(resolvedTargetState: VariantWithTransition, isInitialAnimation: boolean) {
+    console.log('[MotionOne] 🎬 continueAnimation for:', this.elementId, 'isInitialAnimation:', isInitialAnimation);
+    console.log('[MotionOne] 📊 Target state:', resolvedTargetState);
+
     // Timeline takes precedence
     if (this.timeline && this.timeline.length > 0) {
+      console.log('[MotionOne] 📋 Running timeline animation');
       this.runTimeline(resolvedTargetState);
       return;
     }
@@ -766,71 +1061,93 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     const t: any = resolvedTargetState.transition;
     const isPerPropMap = t && typeof t === 'object' && t.duration === undefined && t.delay === undefined && t.ease === undefined;
     if (isPerPropMap) {
+      console.log('[MotionOne] 🔧 Running per-property animations');
       this.runPerPropertyAnimations(resolvedTargetState);
       return;
     }
+
     // Check if this is the initial animation to the animate state
     if (isInitialAnimation && !this.initialAnimationPlayed) {
+      console.log('[MotionOne] 🎯 Processing initial animation');
       const staggerValue = this.getStaggerValue();
-      
+      console.log('[MotionOne] 📊 Stagger value:', staggerValue, 'children count:', this.childMotionDirectives?.length);
+
       if (staggerValue > 0 && this.childMotionDirectives && this.childMotionDirectives.length > 1) {
+        console.log('[MotionOne] 👨‍👩‍👧‍👦 Stagger detected - running stagger logic');
         // Stagger will be handled by ngAfterContentInit
         // Just animate self according to 'when' property
         const when = this.getWhen();
-        
+        console.log('[MotionOne] ⏰ When property:', when);
+
         if (when !== 'afterChildren') {
+          console.log('[MotionOne] ▶️ Running self animation (stagger context)');
           this.runSelfAnimation();
         }
-        
+
         return;
       }
     }
 
+    console.log('[MotionOne] 🎯 Running standard animation');
+
     // For non-staggered animations or non-initial animations
     // Get animation options with priority to target state's transition
     const options = this.getAnimationOptions(resolvedTargetState);
-    
+    console.log('[MotionOne] ⚙️ Animation options:', options);
+
     // Extract only style properties for animation (excluding transition)
     const targetStyles = this.extractStyleProperties(resolvedTargetState);
-    
+    console.log('[MotionOne] 🎨 Target styles:', targetStyles);
+
     // Create animation with Motion One for the element itself
+    console.log('[MotionOne] 🚀 Creating animation with Motion One');
     this.controls = this.motionAnimation.animate(
       this.el.nativeElement as Target,
       targetStyles,
       options
     );
-    
+    console.log('[MotionOne] ✅ Animation created successfully');
+
     if (isInitialAnimation) {
       this.initialAnimationPlayed = true;
+      console.log('[MotionOne] 🏷️ Marked initial animation as played');
     }
-    
+
     // Handle regular DOM children (without motionone directives) for non-initial animations
     if (!isInitialAnimation && this.el.nativeElement.children.length > 0) {
+      console.log('[MotionOne] 👶 Processing children elements');
       // Get children elements
       const children = Array.from(this.el.nativeElement.children) as HTMLElement[];
-      
+      console.log('[MotionOne] 👶 Found', children.length, 'children');
+
       // Animate each child with the same animation
-      children.forEach((child) => {
+      children.forEach((child, index) => {
         // Skip children that have their own motionone directive
         if (child.hasAttribute('motionone')) {
+          console.log('[MotionOne] ⏭️ Skipping child', index, '(has motionone directive)');
           return;
         }
-        
+
+        console.log('[MotionOne] 🎬 Animating child', index);
         // Create child animation
         const childControl = this.motionAnimation.animate(
           child,
           targetStyles,
           options
         );
-        
+
         // Store the control for cleanup
         this.childrenControls.push(childControl);
       });
+    } else if (!isInitialAnimation) {
+      console.log('[MotionOne] 👶 No children to process or is initial animation');
     }
+
+    console.log('[MotionOne] ✅ continueAnimation completed for:', this.elementId);
   }
 
   private runPerPropertyAnimations(resolvedTargetState: VariantWithTransition) {
-    const baseDelay = this.staggerDelay > 0 ? this.staggerDelay : (((resolvedTargetState.transition as TransitionOptions)?.delay) ?? this.delay);
+    const baseDelay = this.staggerDelay !== undefined && this.staggerDelay >= 0 ? this.staggerDelay : (((resolvedTargetState.transition as TransitionOptions)?.delay) ?? this.delay);
     const transitionMap = resolvedTargetState.transition as Record<string, TransitionOptions>;
     const props = Object.keys(resolvedTargetState).filter(k => k !== 'transition' && k !== 'at');
 
@@ -866,7 +1183,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   private runTimeline(resolvedTargetState: VariantWithTransition) {
-    const baseDelay = this.staggerDelay > 0 ? this.staggerDelay : (((resolvedTargetState.transition as TransitionOptions)?.delay) ?? this.delay);
+    const baseDelay = this.staggerDelay !== undefined && this.staggerDelay >= 0 ? this.staggerDelay : (((resolvedTargetState.transition as TransitionOptions)?.delay) ?? this.delay);
     let maxEnd = 0;
     // Also animate any non-timeline props from the target state (e.g., opacity)
     const timelinePropsSet = new Set((this.timeline || []).map(s => s.prop));
@@ -922,27 +1239,41 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     setTimeout(() => this.animationComplete.emit(), maxEnd * 1000);
   }
 
-  // private setupInViewAnimation() {
-  //   if (isPlatformBrowser(this.platformId)) {
-  //     this.inViewInstance = inView(
-  //       this.el.nativeElement,
-  //       (info) => {
-  //         if (info.isInView) {
-  //           this.runInViewAnimation();
-  //           if (!this.repeat) {
-  //             info.stop();
-  //           }
-  //         } else if (!info.isInView && this.repeat) {
-  //           Object.assign(this.el.nativeElement.style, this.initial);
-  //         }
-  //       },
-  //       {
-  //         margin: this.offset as `${MarginValue}`,
-  //         amount: 'some'
-  //       }
-  //     );
-  //   }
-  // }
+  private setupInViewAnimation() {
+    if (isPlatformBrowser(this.platformId)) {
+      console.log('[MotionOne] 🚀🚀🚀 setupInViewAnimation called for:', this.elementId);
+      console.log('[MotionOne] 📋 Config - runInViewEnabled:', this.isRunInViewEnabled, 'repeat:', this.runInViewRepeat);
+
+      try {
+        // Use Motion One's inView API - it handles state management automatically
+        if (this.isRunInViewEnabled) {
+          console.log('[MotionOne] 🎯 Using Motion One inView API for superior state management');
+
+          // Set up Motion One's inView with automatic state management
+          this.setupMotionOneInView();
+        } else {
+          // For non-runInView functionality, use Motion One's inView for backwards compatibility
+          console.log('[MotionOne] 🎪 Using Motion One inView for whileInView/inView functionality');
+
+          this.inViewInstance = inView(
+            this.el.nativeElement,
+            (info: any) => {
+              console.log('\n[MotionOne] 👁️ Motion One inView callback for:', this.elementId);
+              console.log('[MotionOne] ✅ ENTERING VIEWPORT (Motion One):', this.elementId);
+              this.runInViewAnimation();
+            },
+            {
+              margin: this.offset,
+              amount: 'some'
+            }
+          );
+          console.log('[MotionOne] ✅ Motion One inView created for:', this.elementId);
+        }
+      } catch (error) {
+        console.error('[MotionOne] ❌ Error setting up inView observer:', error);
+      }
+    }
+  }
 
   runInViewAnimation() {
     if (this.inView && Object.keys(this.inView).length > 0) {
@@ -950,42 +1281,246 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     }
   }
 
+  // New method using Motion One's inView API following Framer Motion pattern
+  private setupMotionOneInView() {
+    console.log('[MotionOne] 🔥🔥🔥 NEW MOTION ONE INVIEW IMPLEMENTATION 🔥🔥🔥 Setting up for:', this.elementId);
+    console.log('[MotionOne] 🔥 runInViewEnabled:', this.isRunInViewEnabled);
+    console.log('[MotionOne] 🔥 runInView value:', this.runInView);
+
+    // Get margin from offset
+    const margin = this.offset || '0px';
+
+    // Determine if this is a parent with stagger children
+    const hasStaggerChildren = this.getStaggerValue() > 0 && this.childMotionDirectives?.length > 1;
+
+    if (hasStaggerChildren && !this.isChild) {
+      // Parent with stagger children - handle stagger animation
+      console.log('[MotionOne] 👨‍👩‍👧‍👦 Setting up stagger parent inView');
+      this.setupStaggerParentInView(margin);
+    } else if (!this.isStaggeredChild) {
+      // Individual element or non-staggered child
+      console.log('[MotionOne] 🎯 Setting up individual element inView');
+      this.setupIndividualElementInView(margin);
+    } else {
+      console.log('[MotionOne] ⏸️ Staggered child - parent will handle animation');
+    }
+  }
+
+  private setupStaggerParentInView(margin: string) {
+    // For parent elements with stagger, use inView with enter/exit callbacks
+    this.inViewInstance = inView(
+      this.el.nativeElement,
+      (info: { isIntersecting: boolean }) => {
+        if (info.isIntersecting) {
+          console.log('[MotionOne] ✅ STAGGER PARENT ENTERING VIEWPORT:', this.elementId);
+
+          // Stop any existing animations
+          if (this.controls) this.controls.stop();
+
+          // Reset parent to initial
+          const parentInitialStyles = this.extractStyleProperties(this.getVariant(this.initial));
+          if (Object.keys(parentInitialStyles).length > 0) {
+            this.el.nativeElement.style.transition = 'none';
+            Object.assign(this.el.nativeElement.style, parentInitialStyles);
+            this.el.nativeElement.offsetHeight;
+            this.el.nativeElement.style.transition = '';
+          }
+
+          // Get all child elements
+          const childDirectives = this.childMotionDirectives?.filter(child => child !== this) || [];
+
+          if (childDirectives.length > 0) {
+            console.log(`[MotionOne] 🎭 Animating ${childDirectives.length} children with stagger`);
+
+            // Stop and reset all children to initial state first
+            childDirectives.forEach(child => {
+              if (child.controls) child.controls.stop();
+
+              const childInitialStyles = child.extractStyleProperties(child.getVariant(child.initial));
+              console.log(`[MotionOne] 🔄 Child ${child.elementId} reset to:`, childInitialStyles);
+
+              child.el.nativeElement.style.transition = 'none';
+              Object.assign(child.el.nativeElement.style, childInitialStyles);
+              child.el.nativeElement.offsetHeight;
+              child.el.nativeElement.style.transition = '';
+            });
+
+            // Small delay to ensure resets are applied
+            setTimeout(() => {
+              const staggerValue = this.getStaggerValue();
+
+              // Animate children with stagger
+              childDirectives.forEach((child, index) => {
+                const childAnimateStyles = child.extractStyleProperties(child.getVariant(child.animate));
+                const options = child.getAnimationOptions();
+
+                // Override delay with stagger delay
+                const staggerDelay = index * staggerValue;
+                options.delay = staggerDelay;
+
+                console.log(`[MotionOne] 🎬 Animating child ${child.elementId} from initial to animate with delay: ${staggerDelay}`);
+
+                // Create animation for this child
+                child.controls = animate(child.el.nativeElement, childAnimateStyles, options);
+              });
+
+              // Animate parent if it has its own animation
+              const parentAnimateStyles = this.extractStyleProperties(this.getVariant(this.animate));
+              if (Object.keys(parentAnimateStyles).length > 0) {
+                const parentOptions = this.getAnimationOptions();
+                this.controls = animate(this.el.nativeElement, parentAnimateStyles, parentOptions);
+              }
+            }, 50);
+          }
+        } else if (this.runInViewRepeat === 'always') {
+          // Exit viewport - reset to initial for "always" behavior
+          console.log('[MotionOne] ❌ STAGGER PARENT EXITING VIEWPORT:', this.elementId);
+
+          // Stop all animations
+          if (this.controls) this.controls.stop();
+
+          // Reset parent to initial
+          const parentInitialStyles = this.extractStyleProperties(this.getVariant(this.initial));
+          if (Object.keys(parentInitialStyles).length > 0) {
+            this.el.nativeElement.style.transition = 'none';
+            Object.assign(this.el.nativeElement.style, parentInitialStyles);
+            this.el.nativeElement.offsetHeight;
+            this.el.nativeElement.style.transition = '';
+          }
+
+          // Reset all children to initial
+          const childDirectives = this.childMotionDirectives?.filter(child => child !== this) || [];
+          childDirectives.forEach(child => {
+            if (child.controls) child.controls.stop();
+
+            const childInitialStyles = child.extractStyleProperties(child.getVariant(child.initial));
+            child.el.nativeElement.style.transition = 'none';
+            Object.assign(child.el.nativeElement.style, childInitialStyles);
+            child.el.nativeElement.offsetHeight;
+            child.el.nativeElement.style.transition = '';
+          });
+
+          console.log('[MotionOne] ✅ All elements reset to initial on exit');
+        }
+      },
+      {
+        margin,
+        amount: 0.1
+      }
+    );
+  }
+
+  private setupIndividualElementInView(margin: string) {
+    // For individual elements, simple initial -> animate transition
+    this.inViewInstance = inView(
+      this.el.nativeElement,
+      (info: { isIntersecting: boolean }) => {
+        if (info.isIntersecting) {
+          console.log('[MotionOne] ✅ INDIVIDUAL ENTERING VIEWPORT:', this.elementId);
+
+          // Stop any existing animation
+          if (this.controls) this.controls.stop();
+
+          // Reset to initial state first
+          const initialStyles = this.extractStyleProperties(this.getVariant(this.initial));
+          this.el.nativeElement.style.transition = 'none';
+          Object.assign(this.el.nativeElement.style, initialStyles);
+          this.el.nativeElement.offsetHeight;
+          this.el.nativeElement.style.transition = '';
+
+          // Animate to target state
+          const animateStyles = this.extractStyleProperties(this.getVariant(this.animate));
+          const options = this.getAnimationOptions();
+
+          console.log('[MotionOne] 🎬 Creating inView animation for:', this.elementId);
+          this.controls = animate(this.el.nativeElement, animateStyles, options);
+        } else if (this.runInViewRepeat === 'always') {
+          // Exit viewport - reset to initial for "always" behavior
+          console.log('[MotionOne] ❌ INDIVIDUAL EXITING VIEWPORT:', this.elementId);
+
+          // Stop animation and reset to initial
+          if (this.controls) this.controls.stop();
+
+          const initialStyles = this.extractStyleProperties(this.getVariant(this.initial));
+          this.el.nativeElement.style.transition = 'none';
+          Object.assign(this.el.nativeElement.style, initialStyles);
+          this.el.nativeElement.offsetHeight;
+          this.el.nativeElement.style.transition = '';
+
+          console.log('[MotionOne] ✅ Element reset to initial on exit');
+        }
+      },
+      {
+        margin,
+        amount: 0.1
+      }
+    );
+  }
+
   runInitAnimation() {
     if (!isPlatformBrowser(this.platformId) || !this.initial || !this.animate) return;
-    
+
+    console.log(`[MotionOne] 🎬 runInitAnimation for ${this.elementId} - isChild: ${this.isChild}, staggerDelay: ${this.staggerDelay ?? 'undefined'}`);
+    console.log(`[MotionOne] 📋 Initial state:`, this.initial);
+    console.log(`[MotionOne] 📋 Animate state:`, this.animate);
+
     // For child elements with stagger, make sure we use the stagger delay
-    if (this.isChild && this.staggerDelay > 0) {
-      //  console.log(`[${this.elementId}] Running staggered init animation with delay: ${this.staggerDelay}`);
-      
-      // Apply start state immediately
-      const startStyles = this.extractStyleProperties(this.getVariant(this.initial));
-      Object.assign(this.el.nativeElement.style, startStyles);
-      
+    if (this.isChild && this.staggerDelay !== undefined && this.staggerDelay >= 0) {
+      console.log(`[MotionOne] 🎭 ${this.elementId} Running staggered init animation with delay: ${this.staggerDelay}`);
+
+      // Apply start state immediately (unless we're in a reset stagger flow)
+      if (!this._skipStartStylesApplication) {
+        const startStyles = this.extractStyleProperties(this.getVariant(this.initial));
+        console.log(`[MotionOne] 🔄 ${this.elementId} Applying start styles:`, startStyles);
+
+        // Force reset without transition
+        const element = this.el.nativeElement;
+        element.style.transition = 'none';
+        Object.assign(element.style, startStyles);
+      } else {
+        console.log(`[MotionOne] ⏸️ ${this.elementId} SKIPPING start styles application (already reset by parent)`);
+        // Clear the flag after use
+        this._skipStartStylesApplication = false;
+      }
+      this.el.nativeElement.offsetHeight; // Force reflow
+
       // Get animation options with stagger delay
       const options = this.getAnimationOptions();
-      //  console.log(`[${this.elementId}] Animation options:`, options);
-      
-      // Extract only style properties for animation
-      const targetStyles = this.extractStyleProperties(this.getVariant(this.animate));
-      
-      // Create animation with stagger delay
-      this.controls = this.motionAnimation.animate(
-        this.el.nativeElement as Target,
-        targetStyles,
-        options
-      );
-      
+      console.log(`[MotionOne] ⚙️ ${this.elementId} Animation options:`, options);
+
+      // VARIANT CONTROL: Use variants to ensure correct animation direction
+      console.log(`[MotionOne] 🔍 ${this.elementId} VARIANT CONTROL - Raw animate property:`, this.animate);
+
+      // Force use the child's specific animate variant (not parent's)
+      const childAnimateVariant = this.getVariant(this.animate || {});
+      console.log(`[MotionOne] 🔍 ${this.elementId} VARIANT CONTROL - Child animate variant:`, childAnimateVariant);
+
+      // Ensure we're animating from initial → animate (not the reverse)
+      const targetStyles = this.extractStyleProperties(childAnimateVariant);
+      console.log(`[MotionOne] 🎯 ${this.elementId} VARIANT CONTROL - Target styles (should be animate state):`, targetStyles);
+
+      // Double-check: log what the current element state is
+      const currentStyles = window.getComputedStyle(this.el.nativeElement);
+      console.log(`[MotionOne] 📊 ${this.elementId} VARIANT CONTROL - Current DOM state:`, {
+        opacity: currentStyles.opacity,
+        transform: currentStyles.transform
+      });
+
+      // Use playAnimation to ensure proper initial→animate direction
+      setTimeout(() => {
+        this.el.nativeElement.style.transition = '';
+        console.log(`[MotionOne] 🚀 ${this.elementId} Using playAnimation for stagger (initial→animate)`);
+
+        // CRITICAL: Use playAnimation with variants to force correct direction
+        this.playAnimation(this.initial, this.animate);
+        console.log(`[MotionOne] ✅ ${this.elementId} Staggered playAnimation completed`);
+      }, 5);
+
       this.initialAnimationPlayed = true;
     } else {
       // Normal animation without stagger
-        console.log(`[${this.elementId}] Running normal init animation, isChild=${this.isChild}, staggerDelay=${this.staggerDelay}, routeDelay=${this.routeDelay}`);
-
-        this.playAnimation(this.initial, this.animate);
-
-      // setTimeout(() => {
-      //   this.playAnimation(this.initial, this.animate);
-      // }, this.routeDelay);
-
+      console.log(`[MotionOne] 🎬 ${this.elementId} Running normal init animation, isChild=${this.isChild}, staggerDelay=${this.staggerDelay ?? 'undefined'}, routeDelay=${this.routeDelay}`);
+      this.playAnimation(this.initial, this.animate);
     }
   }
 
@@ -1164,7 +1699,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     this.runExitAnimation();
   }
 
-  private getVariant(variant: VariantWithTransition | string): VariantWithTransition {
+  public getVariant(variant: VariantWithTransition | string): VariantWithTransition {
     if (typeof variant === 'string') {
       return this.variants[variant] || {};
     } else if (typeof variant === 'object') {

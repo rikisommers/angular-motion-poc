@@ -5,7 +5,7 @@ Angular directive for Motion One animations with Framer Motion-like API.
 ## Installation
 
 ```bash
-npm install @hilux/ngx-motion motion
+npm install ngx-motion motion
 ```
 
 ## Usage

@@ -10,6 +10,7 @@ const customWidths = {
   'panel-md': 'var(--token-width-panel-md)',
   'panel-lg': 'var(--token-width-panel-lg)',
   'panel-xl': 'var(--token-width-panel-xl)',
+  'container': '800px',
 };
 
 const customHeights = {
