@@ -24,6 +24,21 @@
             <!-- TEST 2: Stagger with runInView -->
             <div>
                 <h3 class="mb-4 text-lg">TEST 2: Stagger with runInView</h3>
+                <p class="mb-4 text-sm text-gray-600">
+                    ⚠️ Note: Child delays are automatically overridden when parent has staggerChildren.
+                    Parent stagger timing takes priority to prevent conflicts.
+                </p>
+                <!--
+                STAGGER ANIMATION BEHAVIOR:
+                - Parent has [runInView]="'always'" - animates on every viewport entry
+                - Parent has [staggerChildren]="0.2" - children animate with 0.2s intervals
+                - Parent has empty [initial]="{}" and [animate]="{}" - no parent animation
+                - Children have their own [initial] and [animate] properties for individual animation
+                - Children have [transition]="{ duration: 0.5, delay: i * 0.1 + 0.2 }"
+                  BUT these delays are AUTOMATICALLY OVERRIDDEN by parent stagger logic
+                - Final timing: Child 0=0s, Child 1=0.2s, Child 2=0.4s, Child 3=0.6s
+                - Viewport behavior: exit→reset to initial, enter→animate initial→animate
+                -->
                 <div
                     class="flex flex-wrap gap-2 text-2xl font-bold"
                     motionone
@@ -33,13 +48,20 @@
                     [animate]="{}"
                     [transition]="{ duration: 0.3, staggerChildren: 0.2 }"
                 >
+                    <!--
+                    CHILD ANIMATION NOTES:
+                    - Each child has individual [initial] and [animate] properties
+                    - Child delays (i * 0.1 + 0.2) are IGNORED in favor of parent stagger timing
+                    - This prevents timing conflicts and ensures proper stagger behavior
+                    - Children animate from opacity:0,y:20 to opacity:1,y:0 with stagger delays
+                    -->
                     <div
                         *ngFor="let word of staggerWords; let i = index"
                         class="inline-block mr-3"
                         motionone
                         [initial]="{ opacity: 0, y: 20 }"
                         [animate]="{ opacity: 1, y: 0 }"
-                        [transition]="{ duration: 0.5 }"
+                        [transition]="{ duration: 0.5, delay: i * 0.1 + 0.2 }"
                         >
                             {{ word }}
                     </div>
