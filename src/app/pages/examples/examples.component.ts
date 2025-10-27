@@ -1,29 +1,48 @@
-import { Component, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageTransitionComponent } from '../../components/transition/page-transition/page-transition.component';
 import { BlockExampleComponent } from '../../components/blocks/block-example/block-example.component';
-import { DialogComponent } from '../../components/base/dialog/dialog.component';
-import { ButtonComponent } from '../../components/base/button/button.component';
 import { MotionOneDirective } from 'ngx-motion';
+import { PageNavComponent, NavItem } from '../../components/navigation/page-nav/page-nav.component';
 
 @Component({
   selector: 'app-examples',
-  imports: [CommonModule, PageTransitionComponent, BlockExampleComponent, DialogComponent, ButtonComponent, MotionOneDirective ],
+  imports: [CommonModule, BlockExampleComponent, MotionOneDirective, PageNavComponent],
   templateUrl: './examples.component.html',
   styleUrl: './examples.component.scss'
 })
 export class ExamplesComponent {
-  @ViewChild('exampleDialog') exampleDialog!: DialogComponent;
   @ViewChildren(MotionOneDirective) motionDirectives!: QueryList<MotionOneDirective>;
+
+  // Navigation content array for page-nav component
+  navigationContent: NavItem[] = [
+    { id: 'hover', title: 'hover' },
+    { id: 'focus', title: 'focus' },
+    { id: 'tap', title: 'tap' },
+    { id: 'variants', title: 'variants' },
+
+    { id: 'easings', title: 'easings' },
+    { id: 'repeat', title: 'repeat' },
+    { id: 'delay', title: 'delay' },
+    { id: 'timeline', title: 'timeline' },
+    { id: 'stagger', title: 'stagger' },
+    { id: 'runInView', title: 'runInView' },
+    { id: 'runInViewStagger', title: 'runInViewStagger' },
+
+    { id: 'run-in-view', title: 'run-in-view' },
+    { id: 'in-view', title: 'in-view' },
+  ];
 
     // Define variants for the interactive square
     squareVariants = {
       idle: { scale: 1, rotate: 0, backgroundColor: '#3b82f6' },
-      hover: { scale: 1.1, rotate: 45, backgroundColor: '#ef4444' },
+      hover: { scale: 2, rotate: 45, backgroundColor: '#ef4444' },
     };
 
     // Simple stagger animation data
     staggerWords = ['Staggered', 'text', 'animation', 'example'];
+
+    // Delay animation items (4 items for the loop)
+    delayItems = Array.from({ length: 16 }, (_, i) => i);
 
     // Make Infinity available in template
     Infinity = Infinity;
@@ -77,11 +96,4 @@ export class ExamplesComponent {
   
 
 
-  async showDialog(): Promise<void> {
-    await this.exampleDialog.openDialog();
-  }
-
-  async hideDialog(): Promise<void> {
-    await this.exampleDialog.closeDialog();
-  }
 }

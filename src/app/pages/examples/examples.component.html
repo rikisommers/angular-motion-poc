@@ -1,458 +1,515 @@
-<div class="flex flex-col gap-16 py-80 mx-auto max-w-container mt-[2000px]">
+<div
+  class="h-screen bg-gray-900 w-screen overflow-hidden grid grid-cols-[300px_1fr] gap-4"
+>
+  <div>
+    <nav>
+      <ul class="flex flex-col gap-2 p-16 text-white">
+        <li>
+          <a href="#hover" class="text-red-200 hover:text-white">Hover</a>
+        </li>
+        <li>
+          <a href="#focus" class="text-red-200 hover:text-white">Focus</a>
+        </li>
+        <li>
+          <a href="#tap" class="text-red-200 hover:text-white">Tap</a>
+        </li>
+        <li>
+          <a href="#variants" class="text-red-200 hover:text-white">Variants</a>
+        </li>
 
-    <h1 class="text-4xl font-bold !text-white !bg-red-500">FFFFFF</h1>
-    <block-example
-        title="Stagger Animations"
-        description="Staggered animations with delayChildren and staggerChildren."
-        [onRetrigger]="retriggerStagger">
+        <li>
+          <a href="#easings" class="text-red-200 hover:text-white">Easings</a>
+        </li>
+        <li>
+          <a href="#repeat" class="text-red-200 hover:text-white">Repeat</a>
+        </li>
+        <li>
+          <a href="#delay" class="text-red-200 hover:text-white">Delay</a>
+        </li>
 
-        <div content class="flex justify-center items-center">
-            <!-- TEST 1: Simple animation without runInView -->
-            <div class="mb-8">
-                <h3 class="mb-4 text-lg">TEST 1: Basic animation (no runInView)</h3>
-                <div
-                    class="text-2xl font-bold"
-                    motionone
-                    [initial]="{ opacity: 0, y: 20 }"
-                    [animate]="{ opacity: 1, y: 0 }"
-                    [transition]="{ duration: 1 }"
-                >
-                    Basic Animation Test
-                </div>
-            </div>
-
-            <!-- TEST 2: Stagger with runInView -->
-            <div>
-                <h3 class="mb-4 text-lg">TEST 2: Stagger with runInView</h3>
-                <p class="mb-4 text-sm text-gray-600">
-                    ⚠️ Note: Child delays are automatically overridden when parent has staggerChildren.
-                    Parent stagger timing takes priority to prevent conflicts.
-                </p>
-                <!--
-                STAGGER ANIMATION BEHAVIOR:
-                - Parent has [runInView]="'always'" - animates on every viewport entry
-                - Parent has [staggerChildren]="0.2" - children animate with 0.2s intervals
-                - Parent has empty [initial]="{}" and [animate]="{}" - no parent animation
-                - Children have their own [initial] and [animate] properties for individual animation
-                - Children have [transition]="{ duration: 0.5, delay: i * 0.1 + 0.2 }"
-                  BUT these delays are AUTOMATICALLY OVERRIDDEN by parent stagger logic
-                - Final timing: Child 0=0s, Child 1=0.2s, Child 2=0.4s, Child 3=0.6s
-                - Viewport behavior: exit→reset to initial, enter→animate initial→animate
-                -->
-                <div
-                    class="flex flex-wrap gap-2 text-2xl font-bold"
-                    motionone
-                    [runInView]="'always'"
-                    [staggerChildren]="0.2"
-                    [initial]="{}"
-                    [animate]="{}"
-                    [transition]="{ duration: 0.3, staggerChildren: 0.2 }"
-                >
-                    <!--
-                    CHILD ANIMATION NOTES:
-                    - Each child has individual [initial] and [animate] properties
-                    - Child delays (i * 0.1 + 0.2) are IGNORED in favor of parent stagger timing
-                    - This prevents timing conflicts and ensures proper stagger behavior
-                    - Children animate from opacity:0,y:20 to opacity:1,y:0 with stagger delays
-                    -->
-                    <div
-                        *ngFor="let word of staggerWords; let i = index"
-                        class="inline-block mr-3"
-                        motionone
-                        [initial]="{ opacity: 0, y: 20 }"
-                        [animate]="{ opacity: 1, y: 0 }"
-                        [transition]="{ duration: 0.5, delay: i * 0.1 + 0.2 }"
-                        >
-                            {{ word }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-     
-    </block-example>
-
-    <!-- <block-example
-        title="RunInView Options"
-        description="Comparison of different runInView configurations: boolean vs object with repeat options."
-        [onRetrigger]="retriggerInViewOptions">
-
-        <div content class="flex flex-col gap-8">
-            <div class="flex flex-col gap-2">
-                <span class="text-sm text-gray-600">Once: [runInView]="'once'" (runs once when entering viewport)</span>
-                <div
-                    motionone
-                    [runInView]="'once'"
-                    [initial]="{ opacity: 0, x: -50 }"
-                    [animate]="{ opacity: 1, x: 0 }"
-                    [transition]="{ duration: 0.8 }"
-                    class="w-32 h-8 bg-blue-500 rounded"
-                ></div>
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <span class="text-sm text-gray-600">Always: [runInView]="'always'" (repeats every time entering viewport)</span>
-                <div
-                    motionone
-                    [runInView]="'always'"
-                    [initial]="{ opacity: 0, x: 50 }"
-                    [animate]="{ opacity: 1, x: 0 }"
-                    [transition]="{ duration: 0.8 }"
-                    class="w-32 h-8 bg-green-500 rounded"
-                ></div>
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <span class="text-sm text-gray-600">Never/Undefined: (no runInView) - runs immediately</span>
-                <div
-                    motionone
-                    [initial]="{ opacity: 0, scale: 0.8 }"
-                    [animate]="{ opacity: 1, scale: 1 }"
-                    [transition]="{ duration: 0.8 }"
-                    class="w-32 h-8 bg-purple-500 rounded"
-                ></div>
-            </div>
-        </div>
-
-        <div code>
-            &lt;!-- Runs once when entering viewport --&gt;
-            &lt;div motionone
-                 [runInView]="'once'"
-                 [initial]="&#123; opacity: 0, x: -50 &#125;"
-                 [animate]="&#123; opacity: 1, x: 0 &#125;"&gt;
-            &lt;/div&gt;
-
-            &lt;!-- Repeats every time element enters viewport --&gt;
-            &lt;div motionone
-                 [runInView]="'always'"
-                 [initial]="&#123; opacity: 0, x: 50 &#125;"
-                 [animate]="&#123; opacity: 1, x: 0 &#125;"&gt;
-            &lt;/div&gt;
-
-            &lt;!-- Runs immediately (no runInView) --&gt;
-            &lt;div motionone
-                 [initial]="&#123; opacity: 0, scale: 0.8 &#125;"
-                 [animate]="&#123; opacity: 1, scale: 1 &#125;"&gt;
-            &lt;/div&gt;
-        </div>
-    </block-example>
-
-    <block-example
-        title="Variants Animation"
-        description="Using variants to define multiple animation states with hover interactions."
-        [onRetrigger]="retriggerVariants">
-
-        <div content class="flex gap-4 justify-center items-center">
-            <div
-                motionone
-                [variants]="squareVariants"
-                [initial]="'idle'"
-                [animate]="animationTriggers['variants'] ? 'idle' : 'idle'"
-                [whileHover]="squareVariants.hover"
-                [transition]="{ duration: 0.3, ease: 'easeInOut' }"
-                class="w-16 h-16 rounded-lg cursor-pointer"
-            >
-            </div>
-
-            <div
-                motionone
-                [variants]="{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                    exit: { opacity: 0, y: -20 }
-                }"
-                [initial]="'hidden'"
-                [animate]="animationTriggers['variants'] ? 'visible' : 'hidden'"
-                [transition]="{ duration: 0.5, delay: 0.2 }"
-                class="px-4 py-2 text-center bg-gray-200 rounded"
-            >
-                Hover the square!
-            </div>
-        </div>
-
-
-    </block-example>
-
-    <block-example
-        title="Fade and scale in"
-        description="This is a description of the timeline example."
-        [onRetrigger]="retriggerFadeScale">
-
-        <div content>
-            <div
-                motionone
-                [runInView]="'once'"
-                [initial]="{ opacity: 0, scale: 0.8 }"
-                [animate]="{ opacity: 1, scale: 1 }"
-                [duration]="3"
-                [delay]="1"
-                [easing]="'ease-out'"
-            >
-                Fade and scale in
-            </div>
-        </div>
-    </block-example>
-    
-    <block-example
-        title="Timeline Animation"
-        description="Complex timeline with multiple properties animating at different times."
-        [onRetrigger]="retriggerTimeline">
-
-        <div content class="flex justify-center items-center">
-            <div class="h-12 bg-blue-600" style="width:40px"
-                motionone
-                [runInView]="'once'"
-                [initial]="{ width: '40px', backgroundColor: '#3b82f6', transform: 'scaleY(0.5)' }"
-                [animate]="{ width: '160px', backgroundColor: '#22c55e', transform: 'scaleY(2)' }"
-                [transition]="{ duration: 2, ease: 'easeInOut' }"
-            >
-            </div>
-        </div>
-
-        <div code>
-            &lt;div motionone
-            [timeline]="[
-            &#123; prop: 'width',
-                keyframes: ['40px','160px','80px'],
-                duration: 1.2, atTime: 0.0, ease: 'ease-out',
-                times: [0,.7,1] &#125;,
-            &#123; prop: 'backgroundColor',
-            keyframes: ['#f00','#0f0','#00f'],
-            duration: 5.0, atTime: 0.5, ease: 'ease-in',
-            times: [0,.4,1] &#125;,
-            &#123; prop: 'transform',
-                keyframes: ['scaleY(0.5)','scaleY(1)','scaleY(10)'],
-                duration: 6.0,
-                atTime: 0,
-                ease: &#123; type:'spring', stiffness:100, damping:10 &#125;,
-                times: [0,4,5] &#125;
-            ]"&gt;
-            &lt;/div&gt;
-        </div>
-    </block-example>
-
-    <block-example
+        <li>
+          <a href="#timeline" class="text-red-200 hover:text-white">Timeline</a>
+        </li>
+        <li>
+          <a href="#stagger" class="text-red-200 hover:text-white">Stagger Children</a>
+        </li>
+        <li>
+            <a href="#runInView" class="text-red-200 hover:text-white">RunInView</a>
+          </li>
+        <li>
+          <a href="#runInViewStagger" class="text-red-200 hover:text-white">RunInView + Stagger Children</a>
+        </li>
+        <li>
+          <a href="#in-view" class="text-red-200 hover:text-white">In View</a>
+        </li>
+        <li></li>
+      </ul>
+    </nav>
+    <app-page-nav [content]="navigationContent"></app-page-nav>
+  </div>
+  <div class="overflow-y-auto h-screen bg-gray-800 border border-red-500">
+    <div class="flex flex-col gap-16 py-80 mx-auto max-w-container">
+      <block-example
+        id="hover"
         title="Hover Effects"
         description="Different hover animations and interactions."
-        [onRetrigger]="retriggerHover">
-        <div content class="flex gap-4 justify-center items-center">
-            <div
-                motionone
-                [whileHover]="{ scale: 1.2, rotate: 180 }"
-                [transition]="{ duration: 0.3 }"
-                class="w-16 h-16 bg-purple-500 rounded cursor-pointer"
-            >
-            </div>
+        [onRetrigger]="retriggerHover"
+      >
+        <div content class="flex gap-16 justify-center items-center">
+          <div
+            motionone
+            [initial]="{ scale: 1, rotate: 0 }"
+            [whileHover]="{ scale: 1.2, rotate: 180 }"
+            [transition]="{
+              duration: 0.3,
+              ease: { type: 'spring', stiffness: 400, damping: 10 }
+            }"
+            class="w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+          ></div>
 
-            <div
-                motionone
-                [whileHover]="{ y: -10, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }"
-                [transition]="{ duration: 0.3, ease: { type: 'spring', stiffness: 400, damping: 10 } }"
-                class="w-16 h-16 bg-green-500 rounded-lg cursor-pointer"
-            >
-            </div>
+          <div
+            motionone
+            [initial]="{ y: '0', boxShadow: '0 0 0 0 rgba(0, 0, 0, 0)' }"
+            [whileHover]="{
+              y: -10,
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+            }"
+            [transition]="{
+              duration: 0.3,
+              ease: { type: 'spring', stiffness: 400, damping: 10 }
+            }"
+            class="w-[64px] h-[64px] bg-green-500 rounded-lg cursor-pointer"
+          ></div>
 
-            <div
-                motionone
-                [whileHover]="{ borderRadius: '50%', backgroundColor: '#ef4444' }"
-                [transition]="{ duration: 0.4, ease: 'easeInOut' }"
-                class="w-16 h-16 bg-blue-500 rounded cursor-pointer"
-            >
-            </div>
+          <div
+            motionone
+            [initial]="{ borderRadius: '10px', backgroundColor: '#3b82f6' }"
+            [whileHover]="{ borderRadius: '50%', backgroundColor: '#ef4444' }"
+            [transition]="{ duration: 0.3, ease: 'easeInOut' }"
+            class="w-[64px] h-[64px] rounded-lg cursor-pointer"
+          ></div>
         </div>
 
         <div code>
-            &lt;div motionone
-            [whileHover]="&#123; scale: 1.2, rotate: 180 &#125;"
-            [transition]="&#123; duration: 0.3 &#125;"&gt;
-            &lt;/div&gt;
-
-            &lt;div motionone
-            [whileHover]="&#123; y: -10, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' &#125;"
-            [transition]="&#123; duration: 0.3, ease: &#123; type: 'spring', stiffness: 400, damping: 10 &#125; &#125;"&gt;
-            &lt;/div&gt;
-
-            &lt;div motionone
-            [whileHover]="&#123; borderRadius: '50%', backgroundColor: '#ef4444' &#125;"
-            [transition]="&#123; duration: 0.4, ease: 'easeInOut' &#125;"&gt;
-            &lt;/div&gt;
+          <!-- TODO -->
         </div>
-    </block-example>
+      </block-example>
 
-    <block-example
-        title="Repeat & Delay"
-        description="Animations with repeat and delay configurations."
-        [onRetrigger]="retriggerRepeat">
-        <div content class="flex gap-4 justify-center items-center">
-            <div
-                motionone
-                [animate]="{ rotate: 360 }"
-                [transition]="{ duration: 2, repeat: Infinity, ease: 'linear' }"
-                class="w-16 h-16 bg-orange-500 rounded"
-            >
-            </div>
-
-            <div
-                motionone
-                [animate]="{ scale: [1, 1.5, 1] }"
-                [transition]="{ duration: 1, repeat: Infinity, repeatType: 'reverse', delay: 0.5 }"
-                class="w-16 h-16 bg-pink-500 rounded-full"
-            >
-            </div>
-
-            <div
-                motionone
-                [animate]="{ y: [-10, 10, -10] }"
-                [transition]="{ duration: 0.8, repeat: Infinity, repeatType: 'loop', delay: 1 }"
-                class="w-16 h-16 bg-indigo-500 rounded"
-            >
-            </div>
-        </div>
-
-        <div code>
-            &lt;div motionone
-            [animate]="&#123; rotate: 360 &#125;"
-            [transition]="&#123; duration: 2, repeat: Infinity, ease: 'linear' &#125;"&gt;
-            &lt;/div&gt;
-
-            &lt;div motionone
-            [animate]="&#123; scale: [1, 1.5, 1] &#125;"
-            [transition]="&#123; duration: 1, repeat: Infinity, repeatType: 'reverse', delay: 0.5 &#125;"&gt;
-            &lt;/div&gt;
-
-            &lt;div motionone
-            [animate]="&#123; y: [-10, 10, -10] &#125;"
-            [transition]="&#123; duration: 0.8, repeat: Infinity, repeatType: 'loop', delay: 1 &#125;"&gt;
-            &lt;/div&gt;
-        </div>
-    </block-example>
-
-    <block-example
-        title="Different Easings"
-        description="Comparison of different easing functions."
-        [onRetrigger]="retriggerEasings">
-        <div content class="flex flex-col gap-4">
-            <div class="flex gap-2 items-center">
-                <div
-                    motionone
-                    [animate]="{ x: 200 }"
-                    [transition]="{ duration: 2, ease: 'linear', repeat: Infinity, repeatType: 'reverse' }"
-                    class="w-4 h-4 bg-red-500 rounded-full"
-                ></div>
-                <span class="text-sm">Linear</span>
-            </div>
-
-            <div class="flex gap-2 items-center">
-                <div
-                    motionone
-                    [animate]="{ x: 200 }"
-                    [transition]="{ duration: 2, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse' }"
-                    class="w-4 h-4 bg-blue-500 rounded-full"
-                ></div>
-                <span class="text-sm">Ease In Out</span>
-            </div>
-
-            <div class="flex gap-2 items-center">
-                <div
-                    motionone
-                    [animate]="{ x: 200 }"
-                    [transition]="{ duration: 2, ease: [0.25, 0.1, 0.25, 1], repeat: Infinity, repeatType: 'reverse' }"
-                    class="w-4 h-4 bg-green-500 rounded-full"
-                ></div>
-                <span class="text-sm">Custom Cubic Bezier</span>
-            </div>
-        </div>
-
-        <div code>
-            &lt;div motionone
-            [animate]="&#123; x: 200 &#125;"
-            [transition]="&#123; duration: 2, ease: 'linear' &#125;"&gt;&lt;/div&gt;
-
-            &lt;div motionone
-            [animate]="&#123; x: 200 &#125;"
-            [transition]="&#123; duration: 2, ease: 'easeInOut' &#125;"&gt;&lt;/div&gt;
-
-            &lt;div motionone
-            [animate]="&#123; x: 200 &#125;"
-            [transition]="&#123; duration: 2, ease: [0.25, 0.1, 0.25, 1] &#125;"&gt;&lt;/div&gt;
-        </div>
-    </block-example>
-
-    <block-example
-        title="In View Animations"
-        description="Animations triggered when elements come into view."
-        [onRetrigger]="retriggerInView">
-        <div content class="flex overflow-y-auto flex-col gap-8 h-64">
-            <div class="h-32"></div>
-            <div
-                motionone
-                [whileInView]="{ opacity: 1, scale: 1 }"
-                [initial]="{ opacity: 0, scale: 0.8 }"
-                [transition]="{ duration: 0.6 }"
-                class="mx-auto w-32 h-32 bg-purple-500 rounded-lg"
-            ></div>
-            <div class="h-32"></div>
-            <div
-                motionone
-                [whileInView]="{ x: 0, opacity: 1 }"
-                [initial]="{ x: -100, opacity: 0 }"
-                [transition]="{ duration: 0.8, delay: 0.2 }"
-                class="w-32 h-16 bg-teal-500 rounded"
-            ></div>
-            <div class="h-32"></div>
-        </div>
-
-        <div code>
-            &lt;div motionone
-            [whileInView]="&#123; opacity: 1, scale: 1 &#125;"
-            [initial]="&#123; opacity: 0, scale: 0.8 &#125;"
-            [transition]="&#123; duration: 0.6 &#125;"&gt;
-            &lt;/div&gt;
-
-            &lt;div motionone
-            [whileInView]="&#123; x: 0, opacity: 1 &#125;"
-            [initial]="&#123; x: -100, opacity: 0 &#125;"
-            [transition]="&#123; duration: 0.8, delay: 0.2 &#125;"&gt;
-            &lt;/div&gt;
-        </div>
-    </block-example>
-
-    <block-example
+      <block-example
+        id="focus"
         title="Focus Animations"
         description="Animations triggered on focus events."
-        [onRetrigger]="retriggerFocus">
-        <div content class="flex gap-4 justify-center items-center">
-            <input
-                motionone
-                [whileFocus]="{ scale: 1.05, borderColor: '#3b82f6' }"
-                [transition]="{ duration: 0.2 }"
-                class="px-4 py-2 rounded border border-gray-300 focus:outline-none"
-                placeholder="Focus me"
-            />
-
-            <button
-                motionone
-                [whileFocus]="{ scale: 1.1, backgroundColor: '#dc2626' }"
-                [whileHover]="{ scale: 1.05 }"
-                [transition]="{ duration: 0.2 }"
-                class="px-4 py-2 text-white bg-blue-500 rounded focus:outline-none"
-            >
-                Click me
-            </button>
+      >
+        <div content class="flex gap-16 justify-center items-center">
+          <div
+            motionone
+            [initial]="{ scale: 1, rotate: 0 }"
+            [whileFocus]="{ scale: 1.2, rotate: 180 }"
+            [transition]="{
+              duration: 0.3,
+              ease: { type: 'spring', stiffness: 400, damping: 10 }
+            }"
+            class="w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+          ></div>
         </div>
 
         <div code>
-            &lt;input motionone
-            [whileFocus]="&#123; scale: 1.05, borderColor: '#3b82f6' &#125;"
-            [transition]="&#123; duration: 0.2 &#125;"
-            placeholder="Focus me" /&gt;
-
-            &lt;button motionone
-            [whileFocus]="&#123; scale: 1.1, backgroundColor: '#dc2626' &#125;"
-            [whileHover]="&#123; scale: 1.05 &#125;"&gt;
-            Click me
-            &lt;/button&gt;
+          <!-- TODO -->
         </div>
-    </block-example> -->
+      </block-example>
 
+      <block-example
+        id="tap"
+        title="Focus Animations"
+        description="Animations triggered on tap events."
+      >
+        <div content class="flex gap-16 justify-center items-center">
+          <div
+            motionone
+            [tabIndex]="1"
+            [initial]="{ scale: 1, rotate: 0 }"
+            [whileTap]="{ scale: 1.2, rotate: 180 }"
+            [transition]="{
+              duration: 0.3,
+              ease: { type: 'spring', stiffness: 400, damping: 10 }
+            }"
+            class="w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+          ></div>
+        </div>
+
+        <div code>
+          <!-- TODO -->
+        </div>
+      </block-example>
+
+      <block-example
+        id="variants"
+        title="Variants Animation"
+        description="Using variants to define multiple animation states with hover interactions."
+        [onRetrigger]="retriggerVariants"
+      >
+        <div content class="flex gap-4 justify-center items-center">
+          <!-- TODO: Support variants in any animation props e.g initial, animate, hwhileHover , whileTap ... -->
+          <div
+            motionone
+            [variants]="squareVariants"
+            [initial]="'idle'"
+            [animate]="animationTriggers['variants'] ? 'idle' : 'idle'"
+            [whileHover]="squareVariants.hover"
+            [transition]="{
+              duration: 0.3,
+              ease: { type: 'spring', stiffness: 400, damping: 10 }
+            }"
+            class="w-[64px] h-[64px] bg-yellow-400 rounded-lg cursor-pointer"
+          ></div>
+        </div>
+      </block-example>
+
+      <block-example
+        id="easings"
+        title="Different Easings"
+        description="Comparison of different easing functions."
+      >
+        <div content class="flex gap-8 justify-center items-center">
+          <!-- easing options -->
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [whileHover]="{ scaleY: 2 }"
+              [transition]="{ duration: 0.6, ease: 'linear' }"
+              class="w-[64px] h-[64px] bg-yellow-200 rounded-lg"
+            ></div>
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [whileHover]="{ scaleY: 2 }"
+              [transition]="{ duration: 0.6, ease: 'easeInOut' }"
+              class="w-[64px] h-[64px] bg-yellow-200 rounded-lg"
+            ></div>
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [whileHover]="{ scaleY: 2 }"
+              [transition]="{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }"
+              class="w-[64px] h-[64px] bg-yellow-200 rounded-lg"
+            ></div>
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [whileHover]="{ scaleY: 2 }"
+              [transition]="{
+                duration: 0.6,
+                ease: { type: 'spring', stiffness: 400, damping: 10 }
+              }"
+              class="w-[64px] h-[64px] rounded-lg bg-yellow-200"
+            ></div>
+          </div>
+        </div>
+
+        <div code>
+          <!-- TODO -->
+        </div>
+      </block-example>
+
+      <block-example
+        id="repeat"
+        title="DiffereEasingsnt "
+        description="Comparison of different repeat functions."
+      >
+        <div content class="flex gap-8 justify-center items-center">
+          <!-- TODO: remove loop and mirror if we dont need the these seem to be the same as forwards and backwards  repeatType?: 'loop' | 'mirror' | 'reverse' | 'forwards' | 'pingPong'; -->
+
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [animate]="{ scaleY: 2 }"
+              [transition]="{
+                duration: 2,
+                ease: 'easeInOutCirc',
+                repeat: Infinity,
+                repeatType: 'forwards'
+              }"
+              class="w-[64px] h-[64px] rounded-lg bg-yellow-300"
+            ></div>
+          </div>
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [animate]="{ scaleY: 2 }"
+              [transition]="{
+                duration: 2,
+                ease: 'easeInOutCirc',
+                repeat: Infinity,
+                repeatType: 'reverse'
+              }"
+              class="w-[64px] h-[64px] bg-yellow-300 rounded-lg"
+            ></div>
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [animate]="{ scaleY: 2 }"
+              [transition]="{
+                duration: 2,
+                ease: 'easeInOutCirc',
+                repeat: Infinity,
+                repeatType: 'loop'
+              }"
+              class="w-[64px] h-[64px] bg-yellow-300 rounded-lg"
+            ></div>
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [animate]="{ scaleY: 2 }"
+              [transition]="{
+                duration: 2,
+                ease: 'easeInOutCirc',
+                repeat: Infinity,
+                repeatType: 'mirror'
+              }"
+              class="w-[64px] h-[64px] bg-yellow-300 rounded-lg"
+            ></div>
+          </div>
+        </div>
+
+        <div code>
+          <!-- TODO -->
+        </div>
+      </block-example>
+
+      <block-example
+        id="delay"
+        title="Delay Animation"
+        description="Delay animation with delay property."
+      >
+        <div content class="flex gap-8 justify-center items-center">
+          <div
+            *ngFor="let item of delayItems; let i = index"
+            class="flex gap-2 items-center"
+          >
+            <div
+              motionone
+              [initial]="{ scaleY: 1 }"
+              [animate]="{ scaleY: 2 }"
+              [transition]="{
+                duration: 1,
+                ease: 'easeInOutCirc',
+                delay: i * 0.4,
+                repeat: Infinity,
+                repeatType: 'mirror'
+              }"
+              class="w-4 h-[40px] rounded-lg bg-yellow-300"
+            ></div>
+          </div>
+        </div>
+
+        <div code>
+          <!-- TODO -->
+        </div>
+      </block-example>
+
+      <block-example
+        id="timeline"
+        title="Timeline Animation"
+        description="Complex timeline with multiple properties animating at different times."
+      >
+        <div content class="flex justify-center items-center min-h-[200px] relative">
+          <div class="h-[64px] w-[64px] bg-yellow-400 rounded-lg"
+          motionone
+          [timeline]="[
+            { prop: 'width',
+               keyframes: ['64px','120px','160px','80px','64px'],
+               duration: 4, atTime: 0.0, ease: 'ease-out',
+               times: [0,.25,.5,.75,1],
+               repeat: Infinity, repeatType: 'loop' },
+            { prop: 'backgroundColor',
+              keyframes: ['#f00','#00f','#f00'],
+              duration: 4, atTime: 0.5, ease: 'ease-in',
+              times: [0,.5,1],
+              repeat: Infinity, repeatType: 'loop' },
+            { prop: 'transform',
+               keyframes: ['rotate(0deg)','rotate(90deg)','rotate(180deg)','rotate(270deg)','rotate(360deg)'],
+                duration: 4,
+                atTime: 0,
+                ease: 'easeInOut',
+                times: [0,.25,.5,.75,1],
+                repeat: Infinity, repeatType: 'loop' },
+            { prop: 'x',
+               keyframes: ['0px','60px','60px','0px','0px'],
+               duration: 4,
+               atTime: 1,
+               ease: 'easeInOut',
+               times: [0,.25,.5,.75,1],
+               repeat: Infinity, repeatType: 'loop' },
+            { prop: 'y',
+               keyframes: ['0px','0px','-40px','-40px','0px'],
+               duration: 4,
+               atTime: 1,
+               ease: 'easeInOut',
+               times: [0,.25,.5,.75,1],
+               repeat: Infinity, repeatType: 'loop' }
+          ]"
+        ></div>
+        </div>
+
+        <div code>
+          <!-- TODO -->
+        </div>
+      </block-example>
+
+
+
+      <block-example
+        id="stagger"
+        title="Stagger Children"
+        description="Simple stagger animation triggered by hover."
+      >
+        <div content class="flex justify-center items-center">
+          <div
+            motionone
+            [staggerChildren]="0.2"
+            [whileHover]="{ scale: 1.1 }"
+            [transition]="{ duration: 0.3 }"
+            class="flex gap-2 p-4 bg-gray-700 rounded-lg cursor-pointer"
+          >
+            <div
+              *ngFor="let word of staggerWords"
+              motionone
+              [initial]="{ opacity: 0, y: 20 }"
+              [whileHover]="{ opacity: 1, y: 0 }"
+              [transition]="{ duration: 0.4 }"
+              class="px-3 py-2 text-white bg-blue-500 rounded-md"
+            >
+              {{ word }}
+            </div>
+          </div>
+        </div>
+
+        <div code>
+<!-- TODO -->
+        </div>
+      </block-example>
+
+
+      <block-example
+        id="runInView"
+        title="RunInView Variants"
+        description="Variant transitions triggered when element enters viewport."
+        [onRetrigger]="retriggerInViewOptions"
+      >
+
+      <!-- TODO: Support variants -->
+        <div content class="flex flex-col gap-8 min-h-[400px]">
+          <div class="h-32"></div>
+
+          <div
+            motionone
+            [initial]="{ scale: 1, rotate: 0, backgroundColor: '#3b82f6' }"
+            [animate]="{ scale: 2, rotate: 45, backgroundColor: '#ef4444' }"
+            [runInView]="'always'"
+            [transition]="{ duration: 0.6, ease: { type: 'spring', stiffness: 400, damping: 10 } }"
+            class="mx-auto w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+          ></div>
+
+
+
+          <div class="h-32"></div>
+        </div>
+
+        <div code>
+<!-- TODO -->
+        </div>
+      </block-example>
+
+      <block-example
+        id="runInViewStagger"
+        title="RunInView + Stagger Children"
+        description="Staggered animations triggered when entering viewport with automatic reset on exit."
+      >
+        <div content class="flex justify-center items-center min-h-[400px]">
+          <div class="h-32"></div>
+
+          <div class="text-center">
+            <h3 class="mb-4 text-lg text-white">Stagger with RunInView</h3>
+            <p class="mb-4 text-sm text-gray-400">
+              ⚠️ Child delays are overridden by parent staggerChildren timing
+            </p>
+
+            <div
+              class="flex flex-wrap gap-2 justify-center text-2xl font-bold"
+              motionone
+              [runInView]="'always'"
+              [staggerChildren]="0.2"
+              [initial]="{}"
+              [animate]="{}"
+              [transition]="{ duration: 0.3, staggerChildren: 0.2 }"
+            >
+              <div
+                *ngFor="let word of staggerWords; let i = index"
+                class="inline-block px-3 py-2 text-white bg-purple-600 rounded-md"
+                motionone
+                [initial]="{ opacity: 0, y: 20 }"
+                [animate]="{ opacity: 1, y: 0 }"
+                [transition]="{ duration: 0.5, delay: i * 0.1 + 0.2 }"
+              >
+                {{ word }}
+              </div>
+            </div>
+
+            <p class="mt-4 text-xs text-gray-500">
+              Scroll up/down to see staggered animations reset and replay
+            </p>
+          </div>
+
+          <div class="h-32"></div>
+        </div>
+
+        <div code>
+<!-- TODO -->
+        </div>
+      </block-example>
+
+
+
+      <block-example
+        id="in-view"
+        title="In View Animations"
+        description="Animations triggered when elements come into view."
+
+      >
+        <div content class="flex overflow-y-auto flex-col gap-8 h-64">
+          <div class="h-32"></div>
+          <div
+            motionone
+            [whileInView]="{ opacity: 1, scale: 1 }"
+            [initial]="{ opacity: 0, scale: 0.8 }"
+            [transition]="{ duration: 0.6 }"
+            class="mx-auto w-32 h-32 bg-purple-500 rounded-lg"
+          ></div>
+          <div class="text-2xl font-bold text-yellow-300">IM IN VIEW</div>
+        </div>
+
+        <div code>
+          <!-- TODO -->
+        </div>
+      </block-example>
+    </div>
   </div>
+</div>

@@ -1,16 +1,20 @@
 <app-page-transition>
-
   <div class="py-40">
-  <h1 style="color: black; position: absolute; top: 0; right: 0; z-index: 900">
-    {{ status }}{{animatedStyle()}}
-  </h1>
+    <h1
+      style="color: black; position: absolute; top: 0; right: 0; z-index: 900"
+    >
+      {{ status }}{{ animatedStyle() }}
+    </h1>
 
-  <h1 class="text-4xl font-bold text-red-500">sdadsads</h1>
+    <h1 class="text-4xl font-bold text-red-500">sdadsads</h1>
 
-
-  <button class="fixed right-0 top-6 z-50 p-2 text-white bg-red-500 rounded-md transition-all duration-300 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-opacity-50" (click)="changeStatus()">Change Status</button>
-  
-</div>
+    <button
+      class="fixed right-0 top-6 z-50 p-2 text-white bg-red-500 rounded-md transition-all duration-300 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-opacity-50"
+      (click)="changeStatus()"
+    >
+      Change Status
+    </button>
+  </div>
   <!-- 
 @if(isPanelOpen) {
 
@@ -28,7 +32,7 @@
   </div>
   
 } -->
-<!-- <div
+  <!-- <div
     motion
     [variants]="foodVariants"
     [animate]="status"
@@ -61,16 +65,16 @@ class="fixed top-0 left-0 w-[100px] h-[100px] z-50"
 >
 <p>{{ scrollProgress }}%</p>
 </div> -->
-<div
-motion
-[animate]="{
-  translateY:animatedStyle().transform,
-  transform:animatedStyle().transform
-}"
-class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
->
-<p>{{ scrollProgress }}% {{animatedStyle().transform}}</p>
-</div>
+  <div
+    motion
+    [animate]="{
+      translateY: animatedStyle().transform,
+      transform: animatedStyle().transform
+    }"
+    class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
+  >
+    <p>{{ scrollProgress }}% {{ animatedStyle().transform }}</p>
+  </div>
 
   <div
     motion
@@ -112,7 +116,6 @@ class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
         transform: 'translateX(100px)'
       }"
       [duration]="'.5s'"
-
       style="height: 100px; width: 100px; background-color: red"
     >
       Hello
@@ -130,30 +133,28 @@ class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
         transform: 'translateX(100px)'
       }"
       [duration]="'.5s'"
-
       style="height: 100px; width: 100px; background-color: red"
     >
       Hello
     </div>
     <div
-    motion
-    [initial]="{
-      backgroundColor: 'red',
-      scale: 1,
-      transform: 'translateX(0px)'
-    }"
-    [animate]="{
-      backgroundColor: 'aqua',
-      scale: 1,
-      transform: 'translateX(100px)'
-    }"
-    [duration]="'.5s'"
-    style="height: 100px; width: 100px; background-color: red"
-  >
-    Hello
+      motion
+      [initial]="{
+        backgroundColor: 'red',
+        scale: 1,
+        transform: 'translateX(0px)'
+      }"
+      [animate]="{
+        backgroundColor: 'aqua',
+        scale: 1,
+        transform: 'translateX(100px)'
+      }"
+      [duration]="'.5s'"
+      style="height: 100px; width: 100px; background-color: red"
+    >
+      Hello
+    </div>
   </div>
-  </div>
-
 
   <div
     motion
@@ -179,10 +180,9 @@ class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
     [duration]="'3s'"
     [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
     [staggerChildren]="'1s'"
-
   >
     <h1>HOMsE222222</h1>
-    </div>
+  </div>
 
   <div
     motion
@@ -210,7 +210,6 @@ class="fixed top-16 left-16 w-[100px] h-[100px] z-50 bg-red-500"
     [duration]="'.4s'"
     [delay]="'0s'"
     [easing]="'cubic-bezier(0.68, -0.6, 0.32, 1.6)'"
-
   >
     <h1>HOsssssME</h1>
   </div>
