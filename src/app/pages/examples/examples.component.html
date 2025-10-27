@@ -421,9 +421,8 @@
 
           <div
             motionone
-            [initial]="{ scale: 1, rotate: 0, backgroundColor: '#3b82f6' }"
-            [animate]="{ scale: 2, rotate: 45, backgroundColor: '#ef4444' }"
-            [runInView]="'always'"
+            [initial]="{ opacity: 0, scale: 1, rotate: 0, backgroundColor: '#3b82f6' }"
+            [whileInView]="{ opacity: 1, scale: 2, rotate: 45, backgroundColor: '#ef4444' }"
             [transition]="{ duration: 0.6, ease: { type: 'spring', stiffness: 400, damping: 10 } }"
             class="mx-auto w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
           ></div>

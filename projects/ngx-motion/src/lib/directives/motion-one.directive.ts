@@ -198,22 +198,20 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       // Set up runInView logic based on parent-child relationship
       if (this.isRunInViewEnabled) {
         if (!this.isChild) {
-          // Parent elements with runInView set up their own observer
+          // Host elements (non-child) with runInView set up their own observer immediately
           this.setupInViewAnimation();
         } else {
           // Child elements with runInView only set up observer if parent doesn't have stagger
           // We'll check this later in ngAfterContentInit when we know about parent stagger settings
         }
-      } else if (!this.isChild && !this.isRunInViewEnabled) {
+      } else if (!this.isChild) {
         // Only auto-play animation if not a child AND no runInView
         this.playAnimation(this.initial, this.animate);
-      } else if (!this.isChild && this.isRunInViewEnabled) {
-        // Parent with runInView - wait for intersection observer
-      } else {
       }
 
-      // Setup inView animation if inView or whileInView properties are set (but not if runInView is already handled)
-      if (!this.isRunInViewEnabled &&
+      // Setup inView/whileInView animations - these work independently of runInView
+      // Only set up if this element is not managed by a parent with runInView
+      if (!this.isStaggeredChild &&
           ((this.inView && Object.keys(this.inView).length > 0) ||
            (this.whileInView && Object.keys(this.whileInView).length > 0))) {
         this.setupInViewAnimation();
@@ -652,13 +650,18 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   private applyInitialStyles() {
     // Extract only style properties (exclude transition)
     const styles = this.extractStyleProperties(this.getVariant(this.initial));
-    
+
     // Apply initial styles immediately to prevent flash
     if (styles && Object.keys(styles).length > 0) {
-      // Use requestAnimationFrame to ensure styles are applied before the element is visible
-      // requestAnimationFrame(() => {
+      // For runInView elements, ensure initial styles are applied without any transition
+      if (this.isRunInViewEnabled) {
+        this.el.nativeElement.style.transition = 'none';
         Object.assign(this.el.nativeElement.style, styles);
-      // });
+        this.el.nativeElement.offsetHeight; // Force reflow
+        this.el.nativeElement.style.transition = '';
+      } else {
+        Object.assign(this.el.nativeElement.style, styles);
+      }
     }
   }
 
@@ -1134,18 +1137,26 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
           // Set up Motion One's inView with automatic state management
           this.setupMotionOneInView();
         } else {
-          // For non-runInView functionality, use Motion One's inView for backwards compatibility
+          // For inView and whileInView functionality
+          const hasWhileInView = this.whileInView && Object.keys(this.whileInView).length > 0;
+          const hasInView = this.inView && Object.keys(this.inView).length > 0;
 
-          this.inViewInstance = inView(
-            this.el.nativeElement,
-            (info: any) => {
-              this.runInViewAnimation();
-            },
-            {
-              margin: this.offset,
-              amount: 'some'
-            }
-          );
+          if (hasWhileInView) {
+            // whileInView needs enter/exit behavior
+            this.setupWhileInViewAnimation();
+          } else if (hasInView) {
+            // inView is a one-time trigger on enter
+            this.inViewInstance = inView(
+              this.el.nativeElement,
+              (info: any) => {
+                this.runInViewAnimation();
+              },
+              {
+                margin: this.offset,
+                amount: 'some'
+              }
+            );
+          }
         }
       } catch (error) {
         console.error('[MotionOne] ❌ Error setting up inView observer:', error);
@@ -1154,9 +1165,34 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   runInViewAnimation() {
+    // Handle both inView and whileInView properties
     if (this.inView && Object.keys(this.inView).length > 0) {
       this.playAnimation(this.initial, this.inView);
+    } else if (this.whileInView && Object.keys(this.whileInView).length > 0) {
+      this.playAnimation(this.initial, this.whileInView);
     }
+  }
+
+  // New method to handle whileInView enter behavior (no exit reset)
+  private setupWhileInViewAnimation() {
+    // whileInView should only animate once when entering viewport
+    // It should NOT reset when exiting (that's only for runInView="always")
+    this.inViewInstance = inView(
+      this.el.nativeElement,
+      // Enter callback - when element comes into view
+      (info: any) => {
+        // Element entered viewport - animate to whileInView state
+        // This will only trigger once, and element stays in whileInView state
+        this.playAnimation(this.initial, this.whileInView);
+      },
+      {
+        margin: this.offset,
+        amount: 'some'
+      }
+    );
+
+    // No exit behavior for whileInView - elements should stay in their animated state
+    // Only runInView="always" should reset on exit
   }
 
   // New method using Motion One's inView API following Framer Motion pattern
@@ -1286,18 +1322,18 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
           // Stop any existing animation
           if (this.controls) this.controls.stop();
 
-          // Reset to initial state first
+          // Reset to initial state first with a small delay to ensure proper reset
           const initialStyles = this.extractStyleProperties(this.getVariant(this.initial));
           this.el.nativeElement.style.transition = 'none';
           Object.assign(this.el.nativeElement.style, initialStyles);
-          this.el.nativeElement.offsetHeight;
+          this.el.nativeElement.offsetHeight; // Force reflow
           this.el.nativeElement.style.transition = '';
 
-          // Animate to target state
-          const animateStyles = this.extractStyleProperties(this.getVariant(this.animate));
-          const options = this.getAnimationOptions();
-
-          this.controls = animate(this.el.nativeElement, animateStyles, options);
+          // Use a small timeout to ensure the reset is applied before starting animation
+          setTimeout(() => {
+            // Animate from initial to animate state using the directive's playAnimation method
+            this.playAnimation(this.initial, this.animate);
+          }, 50);
         } else if (this.runInViewRepeat === 'always') {
           // Exit viewport - reset to initial for "always" behavior
 
