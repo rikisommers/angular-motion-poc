@@ -75,6 +75,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Build ngx-motion library
+        run: yarn build:lib
+
       - name: Build Angular app
         run: yarn build
 
