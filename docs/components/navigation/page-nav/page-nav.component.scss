@@ -1,0 +1,62 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.3);
+    border-radius: 2px;
+
+    &:hover {
+      background-color: rgba(156, 163, 175, 0.5);
+    }
+  }
+}
+
+.group:hover .w-2 {
+  transform: scale(1.2);
+}
+
+a {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+    transition: width 0.3s ease;
+    z-index: -1;
+  }
+
+  &:hover::before {
+    width: 100%;
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #3b82f6, #a855f7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

@@ -1,0 +1,201 @@
+:host {
+  display: inline-block;
+}
+
+.button-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &:focus-visible {
+    .focus-indicator {
+      opacity: 1;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.focus-indicator {
+  position: absolute;
+  inset: -2px;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-left,
+.icon-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+
+  &[data-in-progress="true"] {
+    opacity: 0;
+  }
+
+  // Hide empty icon slots
+  &:empty {
+    display: none;
+  }
+}
+
+.label {
+  &[data-in-progress="true"] {
+    opacity: 0;
+  }
+}
+
+// Size variants
+.button-container[data-size="sm"] {
+  padding: 8px 12px;
+  font-size: 14px;
+
+  .container {
+    gap: 6px;
+  }
+}
+
+.button-container[data-size="md"] {
+  padding: 12px 16px;
+  font-size: 16px;
+}
+
+.button-container[data-size="lg"] {
+  padding: 16px 24px;
+  font-size: 16px;
+}
+
+// Type variants
+.button-container[data-type="primary"] {
+  background-color: #3b82f6;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: #2563eb;
+  }
+}
+
+.button-container[data-type="primaryOutline"] {
+  background-color: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+
+  &:hover:not(:disabled) {
+    background-color: #3b82f6;
+    color: white;
+  }
+}
+
+.button-container[data-type="primaryText"] {
+  background-color: transparent;
+  color: #3b82f6;
+
+  &:hover:not(:disabled) {
+    background-color: #eff6ff;
+  }
+}
+
+.button-container[data-type="secondary"] {
+  background-color: #6b7280;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: #4b5563;
+  }
+}
+
+.button-container[data-type="secondaryOutline"] {
+  background-color: transparent;
+  color: #6b7280;
+  border: 1px solid #6b7280;
+
+  &:hover:not(:disabled) {
+    background-color: #6b7280;
+    color: white;
+  }
+}
+
+.button-container[data-type="secondaryText"] {
+  background-color: transparent;
+  color: #6b7280;
+
+  &:hover:not(:disabled) {
+    background-color: #f3f4f6;
+  }
+}
+
+.button-container[data-type="destructive"] {
+  background-color: #ef4444;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: #dc2626;
+  }
+}
+
+.button-container[data-type="destructiveOutline"] {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+
+  &:hover:not(:disabled) {
+    background-color: #ef4444;
+    color: white;
+  }
+}
+
+.button-container[data-type="destructiveText"] {
+  background-color: transparent;
+  color: #ef4444;
+
+  &:hover:not(:disabled) {
+    background-color: #fef2f2;
+  }
+}

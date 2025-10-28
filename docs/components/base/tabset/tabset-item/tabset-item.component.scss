@@ -1,0 +1,48 @@
+:host {
+  display: contents;
+}
+
+.group\/tab {
+  padding: 0.75rem 1rem;
+  margin: 0 0.25rem;
+  min-height: 44px;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  &:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  // Layout-specific styles
+  &.inline-block {
+    display: inline-block;
+  }
+
+  &.flex {
+    display: flex;
+    width: 100%;
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+// Active states
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.bg-blue-50 {
+  background-color: #eff6ff;
+}
+
+// Ensure z-index works
+.z-index-20 {
+  z-index: 20;
+}

@@ -1,0 +1,42 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { RouterOutlet,RouterLink } from '@angular/router';
+import { ThemeService } from './services/theme.service';
+import { themes } from './utils/theme';
+import { ThemeEditorComponent } from './components/theme-editor/theme-editor.component';
+import { ModalComponent } from "./components/base/modal/modal.component";
+import { NavbarComponent } from "./components/navigation/navbar.component";
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, RouterLink, ThemeEditorComponent, ModalComponent, NavbarComponent],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
+})
+export class AppComponent implements OnInit {
+  @ViewChild(ModalComponent) modalComponent!: ModalComponent;
+
+  constructor(private themeService: ThemeService) {}
+
+  ngOnInit() {
+    this.setTheme('light');
+  }
+
+  setTheme(themeKey: string) {
+    const theme = themes.akc12;
+    if (theme) {
+      this.themeService.updateTheme(theme.data);
+    } else {
+      console.error(`Theme not found: ${themeKey}`);
+    }
+  }
+
+  openModal() {
+    this.modalComponent.openModal();
+  }
+
+  test(){
+    console.log('test');
+  }
+  onModalStateChange(isOpen: boolean) {
+    console.log(`Modal is now ${isOpen ? 'open' : 'closed'}`);
+  }
+}

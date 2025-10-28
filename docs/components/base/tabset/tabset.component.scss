@@ -1,0 +1,43 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tabset-horizontal {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.tabset-vertical {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+.tabset-navigation {
+  margin-bottom: 1rem;
+}
+
+.tabset-content {
+  flex-grow: 1;
+}
+
+.tabset-master {
+  min-width: 200px;
+  margin-right: 2rem;
+}
+
+.tabset-detail {
+  flex-grow: 1;
+}
+
+nav[role="tablist"] {
+  position: relative;
+}
+
+// Override for z-index class that might not be available
+:host ::ng-deep .z-index-20 {
+  z-index: 20;
+}

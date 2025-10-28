@@ -1,0 +1,70 @@
+<div
+  class="group relative grid grid-cols-[1fr_2rem_0.5rem_0.5rem] h-full items-center grid-rows-1"
+  (mouseenter)="handleMouseEnter()"
+  (mouseleave)="handleMouseLeave()">
+
+  <ul
+    motionone
+    class="flex flex-col p-4 pr-[40px] z-40 col-start-1 col-end-4 row-span-1 row-start-1 origin-center rounded-lg shadow-xl origin-right bg-gray-900 border border-gray-700"
+    [initial]="'initial'"
+    [animate]="isOpen ? 'animate' : 'initial'"
+    [variants]="subMenuAnimate"
+    [transition]="{ duration: 0.2 }"
+    (mouseenter)="isOpen ? handleMenuMouseEnter() : null"
+    (mouseleave)="isOpen ? handleMenuMouseLeave() : null">
+
+    <li
+      *ngFor="let item of content; let index = index"
+      motionone
+      [variants]="childVariants"
+      [ngClass]="{
+        'bg-gray-800': activeItem === item.title,
+        'hover:bg-gray-800': activeItem !== item.title
+      }"
+      class="relative px-2 py-1 mb-1 text-sm rounded-md transition-colors"
+      [whileHover]="{ backgroundColor: '#374151' }">
+
+      <div
+        *ngIf="activeItem === item.title"
+        motionone
+        class="absolute top-0 left-0 z-0 w-full h-full bg-gray-700 bg-opacity-50 rounded-md"
+        [initial]="{ opacity: 0, scale: 0.8 }"
+        [animate]="{ opacity: 1, scale: 1 }"
+        [transition]="{ duration: 0.2 }">
+      </div>
+
+      <a
+        [href]="item.href || '#' + item.title"
+        (click)="onNavClick($event, item)"
+        class="relative z-50 no-underline text-gray-300 hover:text-white"
+        [ngClass]="{
+          'text-blue-400': activeItem === item.title,
+          'text-gray-300': activeItem !== item.title
+        }">
+        {{ item.title }}
+      </a>
+    </li>
+  </ul>
+
+  <ul
+    motionone
+    class="flex relative z-50 flex-col col-start-2 col-end-3 row-span-1 row-start-1 gap-4 items-end px-3 py-4 rounded-lg transition-all pointer-events-none"
+    [variants]="indicatorAnimate"
+    [animate]="isOpen ? 'animate' : 'initial'">
+
+    <li
+      *ngFor="let item of content; let index = index"
+      class="relative w-2 h-0.5 rounded-sm"
+      [ngClass]="{
+        'bg-blue-400': activeItem === item.title,
+        'bg-gray-600': activeItem !== item.title
+      }">
+
+      <a
+        [href]="item.href || '#' + item.title"
+        (focus)="handleMenuMouseEnter()"
+        class="flex w-2 h-0.5 rounded-sm">
+      </a>
+    </li>
+  </ul>
+</div>
