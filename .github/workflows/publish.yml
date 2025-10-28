@@ -48,12 +48,6 @@ jobs:
           cp -r projects/ngx-motion/src/lib/* ./
           cp projects/ngx-motion/src/public-api.ts ./index.ts
 
-      - name: Publish to GitHub Packages
-        if: steps.version-check.outputs.should_publish == 'true'
-        run: npm publish --registry=https://npm.pkg.github.com --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
   publish-pages:
     runs-on: ubuntu-latest
     permissions:
@@ -73,7 +67,7 @@ jobs:
         run: npm run build:lib
 
       - name: Build Angular app
-        run: npm run build
+        run: npm run build -- --base-href=/angular-motion-poc/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
