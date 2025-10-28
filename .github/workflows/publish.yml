@@ -69,17 +69,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Install dependencies
-        run: yarn install --immutable
+        run: npm install
 
       - name: Build ngx-motion library
-        run: yarn build:lib
+        run: npm run build:lib
 
       - name: Build Angular app
-        run: yarn build
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
