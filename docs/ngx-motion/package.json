@@ -1,0 +1,45 @@
+{
+  "name": "@hilux/ngx-motion",
+  "version": "1.1.1",
+  "description": "Angular directive for Motion One animations",
+  "author": "Hilux",
+  "keywords": [
+    "angular",
+    "animation",
+    "motion",
+    "directive",
+    "motion-one",
+    "ngx"
+  ],
+  "homepage": "https://github.com/rs-components/ng-motion-demo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rs-components/ng-motion-demo.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/router": "^19.0.0",
+    "motion": "^12.0.0",
+    "rxjs": "~7.8.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "module": "fesm2022/hilux-ngx-motion.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./fesm2022/hilux-ngx-motion.mjs"
+    }
+  }
+}
