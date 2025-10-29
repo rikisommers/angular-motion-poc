@@ -9,7 +9,8 @@ import { ExamplesComponent } from './pages/examples/examples.component';
 export const routes: Routes = [
   {
     path: '',
-    component: AppComponent
+    redirectTo: 'examples', // Redirects to the 'home' path
+    pathMatch: 'full'
   },
   {
     path: 'work',

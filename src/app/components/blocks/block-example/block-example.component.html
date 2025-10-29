@@ -1,49 +1,23 @@
-<section class="flex flex-col gap-4">
+<section class="flex flex-col gap-8">
   <header>
-    @if(title) { <h3 class="text-2xl font-bold">{{ title }}</h3> }
-    @if(description) { <p class="text-sm text-gray-500">{{ description }}</p> }
+    @if(title) { <h3 class="text-2xl font-bold text-gray-200">{{ title }}</h3> }
+    @if(description) { <p class="text-sm text-gray-400">{{ description }}</p> }
     <ng-content select="header"></ng-content>
   </header>
 
-  <app-tabset
-    [tabs]="tabs"
-    [active_tab]="activeTab"
-    (atuiChange)="handleTabChange($event)"
-    layout="horizontal">
-  </app-tabset>
-
-  @if(activeTab === 'content') {
-    <div class="flex overflow-hidden relative justify-center items-center w-full rounded-lg bg-slate-700 aspect-video">
-      <div class="absolute top-4 right-4 flex gap-2">
-        @if(onRetrigger) {
-          <app-button
-            label="Retrigger"
-            type="secondary"
-            size="sm"
-            (awClick)="onRetrigger()">
-          </app-button>
-        }
-        <app-button
-          label="View Code"
-          type="primary"
-          size="sm"
-          (awClick)="toggleDialog()">
-        </app-button>
-      </div>
-      <ng-content select="[content]"></ng-content>
+  <div class="flex overflow-hidden relative justify-center items-center w-full rounded-lg bg-slate-700 aspect-video">
+    <div class="absolute top-4 right-4 flex gap-2">
+      <app-button
+        label="View Code"
+        type="primary"
+        size="sm"
+        (awClick)="toggleDialog()">
+      </app-button>
     </div>
-  }
+    <ng-content select="[content]"></ng-content>
+  </div>
 
-  @if(activeTab === 'code') {
-    <pre class="flex overflow-hidden relative justify-center items-center w-full rounded-lg bg-slate-700 aspect-video">
-      <code>
-        <ng-content select="[code]"></ng-content>
-      </code>
-    </pre>
-  }
-
-
-</section>    
+</section>
 
 <app-dialog
 #exampleDialog

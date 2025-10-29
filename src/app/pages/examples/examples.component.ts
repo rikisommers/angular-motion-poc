@@ -24,12 +24,9 @@ export class ExamplesComponent {
     { id: 'repeat', title: 'repeat' },
     { id: 'delay', title: 'delay' },
     { id: 'timeline', title: 'timeline' },
-    { id: 'stagger', title: 'stagger' },
-    { id: 'runInView', title: 'runInView' },
-    { id: 'runInViewStagger', title: 'runInViewStagger' },
+    { id: 'whileInView', title: 'whileInView' },
 
-    { id: 'run-in-view', title: 'run-in-view' },
-    { id: 'in-view', title: 'in-view' },
+    { id: 'staggerChildren', title: 'stagger children' },
   ];
 
     // Define variants for the interactive square
@@ -93,7 +90,17 @@ export class ExamplesComponent {
     retriggerFocus = () => this.retriggerAnimation('focus');
     retriggerInViewOptions = () => this.retriggerAnimation('inViewOptions');
 
-  
-
+    // Handle navigation clicks with smooth scroll
+    onNavClick(event: Event, href: string) {
+      event.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        history.pushState(null, '', href);
+      }
+    }
 
 }

@@ -44,6 +44,10 @@
   --button-disabled-opacity: 0.5;
 }
 
+html, body {
+  overflow: hidden;
+}
+
 body {
   background-color: var(--bodyBackgroundColor);
   color: var(--textColor);
@@ -56,7 +60,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Add more global styles that use these variables */
 
 
-:root {
+/*:root {
   --vt-duration: 1600ms;
   --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -78,7 +82,7 @@ html{
   }
 }
 
-/* Global defaults and easy overrides */
+!* Global defaults and easy overrides *!
 :root {
   --vt-duration: 600ms;
   --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
@@ -111,12 +115,12 @@ html{
 min-height:100vh;
   overflow: auto;
   box-sizing: border-box;
-  border:1px solid hotpink;
+//  border:1px solid hotpink;
   view-transition-name: content;
   transition: all 2s cubic-bezier(0.22, 1, 0.36, 1);
   animation-duration: 2s;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
+}*/
 
 
 /* Named View Transitions */
@@ -143,10 +147,9 @@ min-height:100vh;
 
 body {
   background-color: var(--bodyBackgroundColor);
+  font-family: 'Inter', sans-serif;
+  color: var(--textColor);
 }
-
-
-
 
 .table-auto,
 .table-fixed {
