@@ -34,9 +34,9 @@
       </div>
 
       <a
-        [href]="item.href || '#' + item.title"
+        [href]="item.href || '#' + item.id"
         (click)="onNavClick($event, item)"
-        class="relative z-50 no-underline text-gray-300 hover:text-white"
+        class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg relative z-50 no-underline"
         [ngClass]="{
           'text-blue-400': activeItem === item.title,
           'text-gray-300': activeItem !== item.title
@@ -61,7 +61,8 @@
       }">
 
       <a
-        [href]="item.href || '#' + item.title"
+        [href]="item.href || '#' + item.id"
+        (click)="onNavClick($event, item)"
         (focus)="handleMenuMouseEnter()"
         class="flex w-2 h-0.5 rounded-sm">
       </a>

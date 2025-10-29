@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { NgFor, NgClass, NgIf } from '@angular/common';
 import { MotionOneDirective } from 'ngx-motion';
+import { ScrollService } from '../../../services/scroll.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 export interface NavItem {
   id: string;
@@ -23,6 +25,12 @@ export class PageNavComponent implements OnInit, OnDestroy {
   isOpen = false;
 
   private observer?: IntersectionObserver;
+
+  constructor(
+    private scrollService: ScrollService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   // Animation variants based on the React component
   subMenuAnimate = {
@@ -76,6 +84,13 @@ export class PageNavComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setupIntersectionObserver();
+
+    // Subscribe to route fragment changes
+    this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.activeItem = fragment;
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -95,7 +110,7 @@ export class PageNavComponent implements OnInit, OnDestroy {
 
     // Observe each section
     this.content.forEach((item) => {
-      const section = document.getElementById(item.title);
+      const section = document.getElementById(item.id);
       if (section) {
         this.observer?.observe(section);
       }
@@ -124,14 +139,14 @@ export class PageNavComponent implements OnInit, OnDestroy {
 
   onNavClick(event: Event, item: NavItem) {
     event.preventDefault();
-    const href = item.href || `#${item.title}`;
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-      history.pushState(null, '', href);
-    }
+
+    // Use the scroll service to navigate and scroll
+    this.scrollService.navigateToFragment(item.id);
+
+    // Set active item immediately for visual feedback
+    this.activeItem = item.id;
+
+    // Close menu if it's open
+    this.isOpen = false;
   }
 }

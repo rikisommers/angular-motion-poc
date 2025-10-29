@@ -1,8 +1,10 @@
-import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockExampleComponent } from '../../components/blocks/block-example/block-example.component';
 import { MotionOneDirective } from 'ngx-motion';
 import { PageNavComponent, NavItem } from '../../components/navigation/page-nav/page-nav.component';
+import { ScrollService } from '../../services/scroll.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-examples',
@@ -10,8 +12,13 @@ import { PageNavComponent, NavItem } from '../../components/navigation/page-nav/
   templateUrl: './examples.component.html',
   styleUrl: './examples.component.scss'
 })
-export class ExamplesComponent {
+export class ExamplesComponent implements OnInit, AfterViewInit {
   @ViewChildren(MotionOneDirective) motionDirectives!: QueryList<MotionOneDirective>;
+
+  constructor(
+    private scrollService: ScrollService,
+    private route: ActivatedRoute
+  ) {}
 
   // Navigation content array for page-nav component
   navigationContent: NavItem[] = [
@@ -90,17 +97,25 @@ export class ExamplesComponent {
     retriggerFocus = () => this.retriggerAnimation('focus');
     retriggerInViewOptions = () => this.retriggerAnimation('inViewOptions');
 
-    // Handle navigation clicks with smooth scroll
-    onNavClick(event: Event, href: string) {
-      event.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-        history.pushState(null, '', href);
-      }
+    ngOnInit() {
+      this.route.fragment.subscribe(fragment => {
+        if (fragment) {
+          setTimeout(() => {
+            this.scrollService.scrollToElement(fragment, 500);
+          }, 100);
+        }
+      });
     }
 
+    ngAfterViewInit() {
+      this.route.fragment.subscribe(fragment => {
+        if (fragment) {
+          this.scrollService.scrollToElement(fragment, 1000);
+        }
+      });
+    }
+
+    scrollToSection(sectionId: string) {
+      this.scrollService.scrollToElement(sectionId);
+    }
 }

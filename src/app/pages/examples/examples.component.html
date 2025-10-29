@@ -1,48 +1,48 @@
 <div
-  class="h-screen bg-gray-800 w-screen overflow-hidden grid grid-cols-[300px_1fr] gap-4"
+  class=" bg-gray-800 w-screen gap-4"
 >
-  <div>
-    <nav class="">
+  <div class="h-[vh100] fixed left-0 top-0 w-[300px]">
+    <nav >
 
       <ul class="flex flex-col gap-2 p-16 text-white sticky top-24">
         <li class="flex">
           <h5 class="text-gray-400 uppercase font-normal text-xs py-8 px-16 ">Examples</h5>
         </li>
         <li class="flex">
-          <a class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" href="#hover" (click)="onNavClick($event, '#hover')">Hover</a>
+          <a class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" href="#hover" (click)="scrollToSection('hover'); $event.preventDefault()">Hover</a>
         </li>
         <li class="flex">
-          <a href="#focus" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#focus')">Focus & Tap</a>
+          <a href="#focus" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('focus'); $event.preventDefault()">Focus & Tap</a>
         </li>
         <li class="flex">
-          <a href="#variants" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#variants')">Variants</a>
-        </li>
-
-        <li class="flex">
-          <a href="#easings" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#easings')">Easings</a>
-        </li>
-        <li class="flex">
-          <a href="#repeat" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#repeat')">Repeat</a>
-        </li>
-        <li class="flex">
-        <a href="#delay" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#delay')">Delay</a>
+          <a href="#variants" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('variants'); $event.preventDefault()">Variants</a>
         </li>
 
         <li class="flex">
-          <a href="#timeline" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#timeline')">Timeline</a>
+          <a href="#easings" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('easings'); $event.preventDefault()">Easings</a>
         </li>
         <li class="flex">
-            <a href="#whileInView" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#whileInView')">WhileInView</a>
+          <a href="#repeat" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('repeat'); $event.preventDefault()">Repeat</a>
+        </li>
+        <li class="flex">
+        <a href="#delay" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('delay'); $event.preventDefault()">Delay</a>
+        </li>
+
+        <li class="flex">
+          <a href="#timeline" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('timeline'); $event.preventDefault()">Timeline</a>
+        </li>
+        <li class="flex">
+            <a href="#whileInView" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('whileInView'); $event.preventDefault()">WhileInView</a>
           </li>
         <li class="flex">
-          <a href="#staggerChildren" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="onNavClick($event, '#staggerChildren')">Stagger Children</a>
+          <a href="#staggerChildren" class="text-gray-100 bg-gray-800 py-8 px-16 transition-colors hover:bg-gray-900 w-full rounded-lg" (click)="scrollToSection('staggerChildren'); $event.preventDefault()">Stagger Children</a>
         </li>
         <li></li>
       </ul>
     </nav>
-<!--    <app-page-nav [content]="navigationContent"></app-page-nav>-->
+   <app-page-nav [content]="navigationContent"></app-page-nav>
   </div>
-  <div class="overflow-y-auto h-screen bg-gray-800">
+  <div #scrollContainer class="overflow-y-auto h-screen bg-gray-800">
     <div class="flex flex-col gap-32 py-80 mx-auto max-w-container">
       <block-example
         id="hover"

@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+  width: 100%;
+  position: fixed;
+
+  .overflow-y-auto {
+    scroll-behavior: smooth;
+    scroll-padding-top: 0px;
+  }
+}
