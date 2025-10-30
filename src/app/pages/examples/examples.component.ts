@@ -93,11 +93,16 @@ export class ExamplesComponent {
     // Handle navigation clicks with smooth scroll
     onNavClick(event: Event, href: string) {
       event.preventDefault();
+      const container = document.getElementById('scrollContainer');
       const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+      if (container && target) {
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const scrollTop = container.scrollTop + targetRect.top - containerRect.top;
+
+        container.scrollTo({
+          top: scrollTop,
+          behavior: 'smooth'
         });
         history.pushState(null, '', href);
       }
