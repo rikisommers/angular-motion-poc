@@ -13,7 +13,7 @@ export type {
   TransitionOptions,
   VariantWithTransition,
   TimelineStep
-} from './lib/directives/motion-one.directive';
+} from './lib/types/motion-animation.types';
 
 export type {
   MotionElement
