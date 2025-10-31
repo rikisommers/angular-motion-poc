@@ -23,6 +23,7 @@ import { MotionAnimationOptionsService } from '../services/motion-animation-opti
 import { MotionStaggerService } from '../services/motion-stagger.service';
 import { MotionInViewService } from '../services/motion-inview.service';
 import { MotionTimelineService } from '../services/motion-timeline.service';
+import { MotionGestureService } from '../services/motion-gesture.service';
 import type { AnimationOptions, Target } from 'motion';
 import { animate, inView } from '../services/motion-browser-safe';
 import { VariantWithTransition, TransitionOptions, TimelineStep } from '../types/motion-animation.types';
@@ -123,6 +124,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     private staggerService: MotionStaggerService,
     private inViewService: MotionInViewService,
     private timelineService: MotionTimelineService,
+    private gestureService: MotionGestureService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -367,6 +369,9 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   ngOnDestroy() {
+    // Clean up gesture state
+    this.gestureService.clearElement(this.elementId);
+
     if (this.exit && Object.keys(this.exit).length > 0) {
       this.runExitAnimation();
     }
@@ -408,22 +413,39 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   onMouseEnter() {
     if (Object.keys(this.whileHover).length > 0) {
       clearTimeout(this.hoverTimeout);
-      if (Object.keys(this.animate).length > 0) {
-        this.playAnimation(this.animate, this.whileHover);
-      } else {
-        this.playAnimation(this.initial, this.whileHover);
+
+      // Check if we should allow this gesture (prevents aggressive rapid triggers)
+      if (!this.gestureService.shouldAllowGesture(this.elementId, 'hover')) {
+        return;
       }
+
+      // Cancel any ongoing gesture animation state tracking
+      this.gestureService.cancelGesture(this.elementId);
+
+      // Don't stop the animation - Motion One will automatically interrupt it
+      // and animate from the current position when we start a new animation
+      // This creates smooth transitions even during rapid hovers
+
+      // Animate to whileHover from current position
+      // Motion One will automatically use current animated values as start
+      this.playAnimationToTarget(this.whileHover, 'hover');
     }
   }
 
   @HostListener('mouseleave')
   onMouseLeave() {
     if (Object.keys(this.whileHover).length > 0) {
+      clearTimeout(this.hoverTimeout);
+
+      // Cancel the hover gesture state tracking
+      this.gestureService.cancelGesture(this.elementId);
+
+      // Animate back to initial/animate state from current position
       this.hoverTimeout = setTimeout(() => {
         if (Object.keys(this.animate).length > 0) {
-          this.playAnimation(this.whileHover, this.animate);
+          this.playAnimationToTarget(this.animate);
         } else {
-          this.playAnimation(this.whileHover, this.initial);
+          this.playAnimationToTarget(this.initial);
         }
       }, 100);
     }
@@ -433,19 +455,28 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   @HostListener('touchstart', ['$event'])
   onPress(event: Event) {
     if (Object.keys(this.whileTap).length > 0) {
-      if (Object.keys(this.animate).length > 0) {
-        this.playAnimation(this.animate, this.whileTap);
-      } else {
-        this.playAnimation(this.initial, this.whileTap);
+      // Check if we should allow this gesture (prevents aggressive rapid triggers)
+      if (!this.gestureService.shouldAllowGesture(this.elementId, 'tap')) {
+        return;
       }
+
+      // Cancel gesture state tracking
+      this.gestureService.cancelGesture(this.elementId);
+
+      // Animate to whileTap from current position
+      this.playAnimationToTarget(this.whileTap, 'tap');
 
       if (isPlatformBrowser(this.platformId)) {
         const endEvent = event.type === 'mousedown' ? 'mouseup' : 'touchend';
         const endListener = () => {
+          // Cancel the tap gesture state
+          this.gestureService.cancelGesture(this.elementId);
+
+          // Animate back from current position
           if (Object.keys(this.animate).length > 0) {
-            this.playAnimation(this.whileTap, this.animate);
+            this.playAnimationToTarget(this.animate);
           } else {
-            this.playAnimation(this.whileTap, this.initial);
+            this.playAnimationToTarget(this.initial);
           }
           window.removeEventListener(endEvent, endListener);
         };
@@ -457,21 +488,30 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   @HostListener('focus')
   onFocus() {
     if (Object.keys(this.whileFocus).length > 0) {
-      if (Object.keys(this.animate).length > 0) {
-        this.playAnimation(this.animate, this.whileFocus);
-      } else {
-        this.playAnimation(this.initial, this.whileFocus);
+      // Check if we should allow this gesture (prevents aggressive rapid triggers)
+      if (!this.gestureService.shouldAllowGesture(this.elementId, 'focus')) {
+        return;
       }
+
+      // Cancel gesture state tracking
+      this.gestureService.cancelGesture(this.elementId);
+
+      // Animate to whileFocus from current position
+      this.playAnimationToTarget(this.whileFocus, 'focus');
     }
   }
 
   @HostListener('blur')
   onBlur() {
     if (Object.keys(this.whileFocus).length > 0) {
+      // Cancel the focus gesture state
+      this.gestureService.cancelGesture(this.elementId);
+
+      // Animate back from current position
       if (Object.keys(this.animate).length > 0) {
-        this.playAnimation(this.whileFocus, this.animate);
+        this.playAnimationToTarget(this.animate);
       } else {
-        this.playAnimation(this.whileFocus, this.initial);
+        this.playAnimationToTarget(this.initial);
       }
     }
   }
@@ -542,7 +582,36 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     );
   }
 
-  private playAnimation(startState: VariantWithTransition | string, targetState: VariantWithTransition | string) {
+  /**
+   * Play animation TO a target state from current position
+   * Motion One will automatically use current animated values as the start
+   */
+  private playAnimationToTarget(
+    targetState: VariantWithTransition | string,
+    gestureType?: 'hover' | 'tap' | 'focus'
+  ) {
+    if (!targetState || !isPlatformBrowser(this.platformId)) return;
+
+    const resolvedTargetState = resolveVariant(targetState, this.variants);
+
+    if (resolvedTargetState.at !== undefined) {
+      setTimeout(() => {
+        this.animateToTarget(resolvedTargetState, gestureType);
+      }, resolvedTargetState.at * 1000);
+      return;
+    }
+
+    this.animateToTarget(resolvedTargetState, gestureType);
+  }
+
+  /**
+   * Original playAnimation method - still used for initial animations and explicit start→end
+   */
+  private playAnimation(
+    startState: VariantWithTransition | string,
+    targetState: VariantWithTransition | string,
+    gestureType?: 'hover' | 'tap' | 'focus'
+  ) {
     if (!targetState || !isPlatformBrowser(this.platformId)) return;
 
     const resolvedStartState = resolveVariant(startState || this.initial, this.variants);
@@ -550,15 +619,64 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
     if (resolvedTargetState.at !== undefined) {
       setTimeout(() => {
-        this.continueAnimation(resolvedTargetState, false);
+        this.continueAnimation(resolvedTargetState, false, gestureType);
       }, resolvedTargetState.at * 1000);
       return;
     }
 
-    this.continueAnimation(resolvedTargetState, false);
+    this.continueAnimation(resolvedTargetState, false, gestureType);
   }
 
-  private continueAnimation(resolvedTargetState: VariantWithTransition, isInitialAnimation: boolean) {
+  /**
+   * Animate to target from current position without explicit start state
+   * Motion One automatically interrupts any conflicting animations and preserves velocity
+   */
+  private animateToTarget(
+    resolvedTargetState: VariantWithTransition,
+    gestureType?: 'hover' | 'tap' | 'focus'
+  ) {
+    // Timeline takes precedence
+    if (this.timeline && this.timeline.length > 0) {
+      this.runTimeline(resolvedTargetState);
+      return;
+    }
+
+    // Per-property transition map
+    const t: any = resolvedTargetState.transition;
+    if (this.timelineService.isPerPropertyTransition(t)) {
+      this.runPerPropertyAnimations(resolvedTargetState);
+      return;
+    }
+
+    // Get animation options
+    const options = this.getAnimationOptions(resolvedTargetState);
+    const targetStyles = extractStyleProperties(resolvedTargetState);
+
+    // Motion One automatically interrupts conflicting animations
+    // By passing individual transform properties (rotate, scale, x, y),
+    // Motion One can smoothly interpolate and preserve spring velocity
+    this.controls = this.motionAnimation.animate(
+      this.el.nativeElement as Target,
+      targetStyles,
+      options
+    );
+
+    // Register gesture animation if this is a gesture
+    if (gestureType) {
+      this.gestureService.startGesture(
+        this.elementId,
+        gestureType,
+        typeof resolvedTargetState === 'string' ? resolvedTargetState : 'custom',
+        this.controls
+      );
+    }
+  }
+
+  private continueAnimation(
+    resolvedTargetState: VariantWithTransition,
+    isInitialAnimation: boolean,
+    gestureType?: 'hover' | 'tap' | 'focus'
+  ) {
     // Timeline takes precedence
     if (this.timeline && this.timeline.length > 0) {
       this.runTimeline(resolvedTargetState);
@@ -593,6 +711,16 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       targetStyles,
       options
     );
+
+    // Register gesture animation if this is a gesture
+    if (gestureType) {
+      this.gestureService.startGesture(
+        this.elementId,
+        gestureType,
+        typeof resolvedTargetState === 'string' ? resolvedTargetState : 'custom',
+        this.controls
+      );
+    }
 
     if (isInitialAnimation) {
       this.initialAnimationPlayed = true;

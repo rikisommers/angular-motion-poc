@@ -1,6 +1,6 @@
 import { VariantWithTransition } from '../types/motion-animation.types';
 import { EXCLUDED_PROPERTIES } from '../constants/motion-defaults.constants';
-import { isTransformProperty, applyTransformProperty, normalizeTransformProperty } from './transform.utils';
+import { isTransformProperty } from './transform.utils';
 import { isColorProperty, normalizeColorValue } from './color.utils';
 
 /**
@@ -15,20 +15,25 @@ export function extractStyleProperties(variant: VariantWithTransition): Record<s
     // Skip meta keys
     if (EXCLUDED_PROPERTIES.includes(key as any)) continue;
 
-    // Allow raw transform strings or keyframe arrays to pass through untouched
+    // Allow raw transform strings to pass through
     if (key === 'transform') {
       result['transform'] = variant[key];
       continue;
     }
 
+    // CRITICAL FIX: Pass transform properties directly to Motion One
+    // Motion One can animate rotate, scale, x, y, etc. as individual properties
+    // This provides much better spring animation interruption and avoids 3D transform issues
     if (isTransformProperty(key)) {
-      applyTransformProperty(result, key, variant[key]);
+      // Pass the value directly - Motion One will handle it
+      result[key] = variant[key];
     } else {
       applyStyleProperty(result, key, variant[key]);
     }
   }
 
-  normalizeTransformProperty(result);
+  // Don't normalize transforms - let Motion One handle them natively
+  // normalizeTransformProperty(result);
 
   return result;
 }
