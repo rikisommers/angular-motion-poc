@@ -1,0 +1,128 @@
+<a
+  #tileRef
+  [routerLink]="routerLinkUrl"
+  [style.backgroundColor]="'var(--surface3)'"
+  [class]="'relative flex flex-col w-full h-full overflow-hidden no-underline rounded-2xl group ' + layoutClass + ' ' + aspectClass"
+>
+  @if (img) {
+    <div motionone class="overflow-hidden flex-grow w-full">
+      <div
+        motionone
+        class="w-full h-full"
+        [animate]="{
+          scale: isInView() ? 1 : 1.3
+        }"
+        [transition]="{
+          duration: 4,
+          ease: [0.16, 1, 0.3, 1]
+        }"
+      >
+        <img
+          [src]="img.url"
+          [alt]="imageAlt"
+          class="object-cover w-full h-full"
+          style="mix-blend-mode: var(--blend-mode, normal);"
+        />
+      </div>
+    </div>
+  }
+
+  <div [class]="'flex flex-col gap-4 justify-start w-full row-span-1 p-4 ' + contentHeightClass">
+    <div
+      class="flex flex-col gap-4 items-start w-full"
+      [style.color]="'var(--text-color-inv)'"
+    >
+      @if (title) {
+        <span
+          class="text-xs"
+          [style.color]="'var(--subtext-color)'"
+        >
+          {{ title }}
+        </span>
+      }
+
+      <div
+        motionone
+        [initial]="{ opacity: 0, x: -20 }"
+        [animate]="{ opacity: 1, x: 0 }"
+        [transition]="{
+          duration: 0.6,
+          ease: 'easeOut',
+          delay: 0.2
+        }"
+        class="inline-flex items-center text-xl leading-normal"
+        [style.color]="'var(--text-color)'"
+      >
+        @if (subtitle) {
+          <span class="font-light">{{ subtitle }}</span>
+        }
+        @if (subtitle && client) {
+          <span class="font-light"> • </span>
+        }
+        @if (client) {
+          <span class="font-light">{{ client }}</span>
+        }
+        <div class="inline-block">
+          <div
+            motionone
+            [initial]="{ x: 0 }"
+            [whileHover]="{
+              x: [0, 30, 0]
+            }"
+            [transition]="{
+              duration: 1,
+              ease: [0, 0.42, 0.58, 1],
+              times: [0, 0.33, 1]
+            }"
+            class="flex overflow-hidden relative justify-center items-center ml-2 w-6 h-6 rounded-full opacity-50"
+            [style.backgroundColor]="'var(--surface2)'"
+            [style.transform]="'translateY(8px)'"
+          >
+            <img
+              motionone
+              [initial]="{ x: 0, opacity: 1 }"
+              [whileHover]="{
+                x: [0, 40, -40, 0],
+                opacity: [1, 0, 0, 1]
+              }"
+              [transition]="{
+                duration: 0.6,
+                times: [0, 0.33, 0.65, 1],
+                ease: 'easeOut'
+              }"
+              src="arrow_forward.svg"
+              alt="arrow"
+              class="z-10 w-6 h-6"
+              [style.color]="'var(--accent-pri)'"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="flex justify-between mt-2 w-full"
+      [style.color]="'var(--subtext-color)'"
+    >
+      @if (displayTags.length > 0) {
+        <div class="flex gap-1">
+          @for (tag of displayTags; track $index) {
+            <div
+              class="px-2 py-1 text-xs rounded-full"
+              [style.backgroundColor]="'var(--body-background-color)'"
+            >
+              {{ tag }}
+            </div>
+          }
+        </div>
+      }
+
+      @if (date) {
+        <span class="text-xs">{{ date }}</span>
+      }
+      @if (!date) {
+        <span class="text-xs">DATE</span>
+      }
+    </div>
+  </div>
+</a>

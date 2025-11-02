@@ -1,0 +1,21 @@
+// Code block styling for Shiki (aurora-x theme)
+:host ::ng-deep {
+  pre {
+    background: transparent !important;
+   
+
+    code {
+    background: transparent !important;
+    font-size: small;
+    }
+  }
+
+  // Shiki generates HTML with class "shiki", so we style that
+  .shiki {
+    background: transparent !important;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+}

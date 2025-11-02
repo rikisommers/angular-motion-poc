@@ -47,9 +47,15 @@ import { textAnimationThemes } from '../../../utils/theme';
         ></app-text-anim-word-x> -->
         <app-text-anim-navigators
           [content]="content"
-          [delay]="2"
+          [delay]="delay || 0"
           [highlight]="highlight"
         ></app-text-anim-navigators>
+        <app-text-anim-line-up
+          [content]="content" 
+          [delay]="delay || 0" 
+        [highlight]="highlight">
+      </app-text-anim-line-up>
+
 
       <ng-container [ngSwitch]="type">
         <!-- <app-text-anim-figma *ngSwitchCase="AnimStyle.FIGMA" [content]="content" [highlight]="highlight2"></app-text-anim-figma>

@@ -3,49 +3,50 @@ import { Component, Input, OnInit} from '@angular/core';
 import { NgIf } from '@angular/common';
 import { AnimatedTextComponent } from '../../motion/text/animated-text.component';
 import { ThemeService } from '../../../services/theme.service';
-
+import { TextAnimLineUpComponent } from '../../motion/text/text-anim-line-up/text-line-up.component';
 @Component({
   selector: 'app-post-intro',
   standalone: true,
-  imports: [NgIf, AnimatedTextComponent],
+  imports: [NgIf, AnimatedTextComponent, TextAnimLineUpComponent],
   template: `
-    <div class="grid relative z-10 flex-grow gap-1 justify-end items-start w-full">
 
-      <div class="flex flex-col items-start justify-center w-[600px]">
+      <div class="flex flex-col justify-center items-center max-w-containerWidth">
 
-     
-          <!-- <ng-container *ngIf="tag">
-        </ng-container> -->
-        <ng-container *ngIf="title">
-          <h1 class="text-8xl leading-normal text-balance">
-            <app-animated-text
-              [content]="title"
-              [type]="currentTheme?.textAnimation"
-              [highlight]="currentTheme?.textHighlight"
-              [delay]="10"
-            ></app-animated-text>
-          </h1>
-        </ng-container>
-      </div>
-      <div class="text-balance flex items-center gap-1 w-[600px]">
-        <div *ngIf="tag"
+      <!-- <div *ngIf="tag"
             class="inline-flex px-2 py-1 text-xs font-medium uppercase rounded-full"
             style="color: var(--textAccent); background-color: var(--bodyBackgroundColor);"
           >
             {{ tag }}
-          </div>
-          <h4 class="text-xl font-normal" style="color: var(--subtext-color);">
-            <ng-container *ngIf="content">
-              <app-animated-text
+          </div> -->
+
+          <h1 *ngIf="title" class="text-6xl leading-normal text-center text-balance">
+            <!-- <app-animated-text
+              [content]="title"
+              [type]="currentTheme?.textAnimation"
+              [highlight]="currentTheme?.textHighlight"
+            ></app-animated-text> -->
+            <app-text-anim-line-up
+          [content]="title" 
+          [delay]="0" 
+        [highlight]="'background'"/>
+          </h1>
+        <h4 *ngIf="content" class="text-xl font-normal text-center" style="color: var(--subtext-color);">
+           
+              <!-- <app-animated-text
                 [type]="currentTheme?.textAnimationSec"
                 [content]="content"
                 [highlight]="currentTheme?.textHighlight"
-                [delay]="4"
+                
               ></app-animated-text>
-            </ng-container>
+               -->
+               <app-text-anim-line-up
+          [content]="content" 
+          [delay]="0" 
+        [highlight]="'background'"/>
+            
           </h4>
       </div>
-    </div>
+
   `,
 })
 export class PostIntroComponent implements OnInit {
