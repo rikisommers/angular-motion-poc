@@ -4,7 +4,8 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, Nav
 import { BlockExampleComponent } from '../../components/blocks/block-example/block-example.component';
 import { MotionOneDirective } from 'ngx-motion';
 import { PageNavComponent, NavItem } from '../../components/navigation/page-nav/page-nav.component';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
+import { TileComponent } from '../../components/base/tile/tile/tile.component';
 
 interface Breadcrumb {
   label: string;
@@ -13,7 +14,7 @@ interface Breadcrumb {
 
 @Component({
   selector: 'app-examples',
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, BlockExampleComponent, MotionOneDirective, PageNavComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, BlockExampleComponent, MotionOneDirective, PageNavComponent, TileComponent],
   templateUrl: './examples.component.html',
   styleUrl: './examples.component.scss'
 })
@@ -21,6 +22,7 @@ export class ExamplesComponent implements OnInit {
   @ViewChildren(MotionOneDirective) motionDirectives!: QueryList<MotionOneDirective>;
 
   breadcrumbs: Breadcrumb[] = [];
+  isLandingPage = true;
 
   private routeLabels: { [key: string]: string } = {
     'basic': 'Basic Animation',
@@ -112,11 +114,18 @@ export class ExamplesComponent implements OnInit {
 
     ngOnInit() {
       this.updateBreadcrumbs();
+      this.checkIfLandingPage();
       this.router.events
         .pipe(filter(event => event instanceof NavigationEnd))
         .subscribe(() => {
           this.updateBreadcrumbs();
+          this.checkIfLandingPage();
         });
+    }
+
+    private checkIfLandingPage(): void {
+      // Check if we're on the root /examples route
+      this.isLandingPage = this.router.url === '/examples' || this.router.url === '/';
     }
 
     private updateBreadcrumbs(): void {

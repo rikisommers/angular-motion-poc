@@ -1,114 +1,131 @@
-<div
-  class="overflow-hidden gap-4 w-screen h-screen bg-gray-800"
->
-<div class="overflow-y-auto h-screen bg-gray-800" id="scrollContainer">
-    <div class="flex flex-col gap-32 pb-80 mx-auto max-w-[1440px]">
+<div class="overflow-hidden gap-4 w-screen h-screen bg-gray-900">
+    <div class="overflow-y-auto h-screen bg-gray-800" id="scrollContainer">
 
 
-        <div 
-class="flex relative p-[8rem] bg-slate-900">
-<app-post-intro 
-[title]="'Motion. A production-grade animation library for the web.'" 
-[content]="'Create stunning web animations with our free and open-source library for React, JavaScript and Vue.'" 
-[tag]="'Animation library'" 
-></app-post-intro>
-</div>
+
+        <div class="flex relative  bg-slate-900 ">
 
 
-<p>features works!</p>
-<header>
-  <h1>Motion. A production-grade animation library for the web.</h1>
-  <p>Create stunning web animations with our free and open-source library for React, JavaScript and Vue.</p>
-  <button>Get Started</button>
-  <ul>
-    <li>Free and</li>
 
-    <li>open-source</li>
 
-    <li>Easy to use</li>
-        
-        <li>Productionready</li>
-        
-    <li>Hybrid engine</li>
-        
-    <li>Robot friendly</li>
-        
-        <li>Tiny footprint</li>
-        
-  </ul>
-</header>
+            <header class="flex flex-col gap-8 items-center justify-between min-h-[600px] max-w-containerWidth mx-auto">
 
-<section class="features">
-<header class="hero">
-    <p class="text-sm text-gray-500">Animation library</p>
+                <div class="spacer"></div>
+                <div class="flex flex-col gap-8 items-center">
 
-        <h1>Animations that move</h1>
-        <h2>Create high-performance web animations with Motion’s easy-to-use API — from simple transforms to advanced interactive gestures.</h2>
-    </header>
-    <div class="grid grid-cols-3 gap-4 features-list">
+                    <a class="c-navbar__logo">
+                        <img src="assets/angularmotion1--light.svg" alt="logo1">
+                    </a>
 
-        <app-block-tile-monks
-        [title]="'Simple API'"
-        [subtitle]="'Motion’s pick-up-and-play API is easy to start and fun to master.'"
-    
-        />
-        <div class="feature">
-            <h3>Simple API</h3>
-            <p>Motion’s pick-up-and-play API is easy to start and fun to master.
+                    <h1 class="text-4xl leading-normal text-center text-balance text-gray-100">
+                        <app-text-anim-line-up [content]="'Motion. A production-grade animation library for the web.'"
+                            [delay]="0" [highlight]="'background'"></app-text-anim-line-up>
+                    </h1>
 
-            </p>
+                    <p class="text-base text-gray-400">
+                        <app-text-anim-line-up
+                            [content]="'Create stunning web animations with our free and open-source library for React, JavaScript and Vue.'"
+                            [delay]="0" [highlight]="'background'"></app-text-anim-line-up>
+                    </p>
+
+                    <app-button [label]="'Get Started'" type="secondary" size="sm"></app-button>
+                </div>
+
+                <ul class="flex flex-wrap items-center gap-32 text-gray-400 pb-16">
+                    <li class="flex flex-col items-center gap-4">
+                        <i class="material-icons">info</i>
+                        <span>Free and</span>
+                    </li>
+
+                    <li class="flex flex-col items-center gap-4">
+                        <i class="material-icons">info</i>
+                        <span>open-source</span>
+                    </li>
+
+                    <li class="flex flex-col items-center gap-4">
+                        <i class="material-icons">info</i>
+                        <span>Easy to use</span>
+                    </li>
+
+                    <li class="flex flex-col items-center gap-4">
+                        <i class="material-icons">info</i>
+                        <span>Productionready</span>ce
+                    </li>
+
+                    <li class="flex flex-col items-center gap-4">
+                        <i class="material-icons">info</i>
+                        <span>Hybrid engine</span>
+                    </li>
+
+                    <li class="flex flex-col items-center gap-4">
+                        <i class="material-icons">info</i>
+                        <span>Robot friendly</span>
+                    </li>
+
+                    <li class="flex flex-col items-center gap-4">
+                        <i class="material-icons">info</i>
+                        <span>Tiny footprint</span>
+                    </li>
+
+                </ul>
+            </header>
+
         </div>
 
-        <div class="feature">
-            <h3>Independent transforms</h3>
-            <p>Animate x, y, rotateZ etc independently, without wrapper elements.</p>
-        </div>
+        <div class="flex flex-col gap-32 pb-80 mx-auto max-w-[1440px]">
+            <section class="features">
 
-        <div class="feature">
-            <h3>Learn more</h3>
-            <p>Learn how to animate with Motion for React</p>
-        </div>
-
-
-        <div class="feature">
-            <h3>Exit animation</h3>
-            <p>Motion's AnimatePresencemakes it easy to animate elements as they exit.</p>
-        </div>
-
-        <div class="feature">
-            <h3>Scroll animation</h3>
-            <p>Smooth, hardware-accelerated scroll animations.</p>
-        </div>
-
-        
-        <div class="feature">
-            <h3>Gestures</h3>
-            <p>Hover, press and drag gestures that feel native, not “webby”.</p>
-        </div>
-   
-
-        <div class="feature">
-            <h3>Timeline sequences</h3>
-            <p>Variants, stagger and timelines make it easy to precisely orchestrate animations.</p>
-        </div>
+                <header class="flex flex-col gap-8 items-center self-center py-40 max-w-[500px]">
+                    <h1 class="text-3xl font-bold text-gray-100">Animations that move</h1>
+                    <h2 class="text-base text-gray-400">Create high-performance web animations with Motion’s easy-to-use
+                        API — from simple transforms to advanced interactive gestures.</h2>
+                </header>
 
 
-        <div class="feature">
-            <h3>Layout animation</h3>
-            <p>Animate between different layouts with Motion’s industry-leading layout animation engine.</p>
-        </div>
+                <div class="grid grid-cols-3 gap-16 features-list">
+
+                    <app-tile [title]="'Simple API'"
+                        [subtitle]="'Motion’s pick-up-and-play API is easy to start and fun to master.'"
+                        [tags]="['Animation', 'React', 'Vue']" />
+                    <app-tile [title]="'Independent transforms'"
+                        [subtitle]="'Animate x, y, rotateZ etc independently, without wrapper elements..'"
+                        [tags]="['Animation', 'React', 'Vue']" />
+
+                    <app-tile [title]="'Exit animation'"
+                        [subtitle]="'Motion’s AnimatePresence makes it easy to animate elements as they exit.'"
+                        [tags]="['Animation', 'React', 'Vue']" />
 
 
-        <div class="feature">
-            <h3>Spring physics</h3>
-            <p>Real spring physics for great-feeling animations.</p>
+
+                    <app-tile [title]="'Scroll animation'"
+                        [subtitle]="'Smooth, hardware-accelerated scroll animations.'"
+                        [tags]="['Animation', 'React', 'Vue']" />
+
+
+                    <app-tile [title]="'Gestures'"
+                        [subtitle]="'Hover, press and drag gestures that feel native, not “webby”.'"
+                        [tags]="['Animation', 'React', 'Vue']" />
+
+
+                    <app-tile [title]="'Timeline sequences'"
+                        [subtitle]="'Variants, stagger and timelines make it easy to precisely orchestrate animations.'"
+                        [tags]="['Animation', 'React', 'Vue']" />
+
+
+                    <app-tile [title]="'Layout animation'"
+                        [subtitle]="'Animate between different layouts with Motion’s industry-leading layout animation engine.'"
+                        [tags]="['Animation', 'React', 'Vue']" />
+
+
+                    <app-tile [title]="'Spring physics'"
+                        [subtitle]="'Real spring physics for great-feeling animations.'"
+                        [tags]="['Animation', 'React', 'Vue']" />
+                </div>
+
+                <button>Get started with React animation</button>
+
+            </section>
+
         </div>
     </div>
-
-    <button>Get started with React animation</button>
-    
-</section>
-
-</div>
-</div>
 </div>
