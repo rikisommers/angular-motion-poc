@@ -9,7 +9,7 @@ import { MotionOneDirective } from 'ngx-motion';
   templateUrl: './basic-animation-example.component.html'
 })
 export class BasicAnimationExampleComponent {
-  prevExample = { path: '/examples/text-animation', title: 'Text Animation' };
+  prevExample = { path: '/examples/delay', title: 'Delay' };
   nextExample = { path: '/examples/hover', title: 'Hover Effects' };
 
   codeExample = `<div

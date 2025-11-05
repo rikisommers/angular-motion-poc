@@ -1,0 +1,36 @@
+<div class="p-8 h-screen">
+  <block-example
+    title="Delay Animation"
+    description="Delay animation with delay property."
+    language="html"
+    [showBreadcrumbs]="true"
+    [exampleTitle]="'Delay'"
+    [prevExample]="prevExample"
+    [nextExample]="nextExample"
+  >
+    <div content class="flex gap-8 justify-center items-center">
+      @for (item of delayItems; track item; let i = $index) {
+        <div class="flex gap-2 items-center">
+          <div
+            motionone
+            [initial]="{ scaleY: 1 }"
+            [animate]="{ scaleY: 2 }"
+            [transition]="{
+              duration: 1,
+              ease: 'easeInOutCirc',
+              delay: i * 0.4,
+              repeat: Infinity,
+              repeatType: 'mirror'
+            }"
+            class="w-4 h-[40px] rounded-lg bg-yellow-300"
+          ></div>
+        </div>
+      }
+    </div>
+
+    <ng-template #code>
+      {{ codeExample }}
+    </ng-template>
+  </block-example>
+</div>
+

@@ -4,22 +4,25 @@ import { BlockExampleComponent } from '../../components/blocks/block-example/blo
 import { MotionOneDirective } from 'ngx-motion';
 
 @Component({
-  selector: 'app-hover-example',
+  selector: 'app-focus-tap-example',
   imports: [CommonModule, BlockExampleComponent, MotionOneDirective],
-  templateUrl: './hover-example.component.html'
+  templateUrl: './focus-tap-example.component.html'
 })
-export class HoverExampleComponent {
-  prevExample = { path: '/examples/basic', title: 'Basic Animation' };
-  nextExample = { path: '/examples/variants', title: 'Variants' };
+export class FocusTapExampleComponent {
+  prevExample = { path: '/examples/repeat', title: 'Repeat' };
+  nextExample = { path: '/examples/delay', title: 'Delay' };
 
   codeExample = `<div
   motionone
+  [tabIndex]="0"
   [initial]="{ scale: 1, rotate: 0 }"
-  [whileHover]="{ scale: 1.2, rotate: 180 }"
+  [whileFocus]="{ scale: 1.2, rotate: 180 }"
+  [whileTap]="{ scale: 1.3, rotate: 180 }"
   [transition]="{
     duration: 0.3,
     ease: { type: 'spring', stiffness: 400, damping: 10 }
   }"
-  class="w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+  class="w-[64px] h-[64px] bg-blue-500 rounded-lg cursor-pointer"
 ></div>`;
 }
+

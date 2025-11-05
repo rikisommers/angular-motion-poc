@@ -1,0 +1,77 @@
+<div class="p-8 h-screen">
+  <block-example
+    title="Repeat Animation"
+    description="Comparison of different repeat functions."
+    language="html"
+    [showBreadcrumbs]="true"
+    [exampleTitle]="'Repeat'"
+    [prevExample]="prevExample"
+    [nextExample]="nextExample"
+  >
+    <div content class="flex gap-8 justify-center items-center">
+      <div class="flex gap-2 items-center">
+        <div
+          motionone
+          [initial]="{ scaleY: 1 }"
+          [animate]="{ scaleY: 2 }"
+          [transition]="{
+            duration: 2,
+            ease: 'easeInOutCirc',
+            repeat: Infinity,
+            repeatType: 'forwards'
+          }"
+          class="w-[64px] h-[64px] rounded-lg bg-yellow-300"
+        ></div>
+      </div>
+      <div class="flex gap-2 items-center">
+        <div
+          motionone
+          [initial]="{ scaleY: 1 }"
+          [animate]="{ scaleY: 2 }"
+          [transition]="{
+            duration: 2,
+            ease: 'easeInOutCirc',
+            repeat: Infinity,
+            repeatType: 'reverse'
+          }"
+          class="w-[64px] h-[64px] bg-yellow-300 rounded-lg"
+        ></div>
+      </div>
+
+      <div class="flex gap-2 items-center">
+        <div
+          motionone
+          [initial]="{ scaleY: 1 }"
+          [animate]="{ scaleY: 2 }"
+          [transition]="{
+            duration: 2,
+            ease: 'easeInOutCirc',
+            repeat: Infinity,
+            repeatType: 'loop'
+          }"
+          class="w-[64px] h-[64px] bg-yellow-300 rounded-lg"
+        ></div>
+      </div>
+
+      <div class="flex gap-2 items-center">
+        <div
+          motionone
+          [initial]="{ scaleY: 1 }"
+          [animate]="{ scaleY: 2 }"
+          [transition]="{
+            duration: 2,
+            ease: 'easeInOutCirc',
+            repeat: Infinity,
+            repeatType: 'mirror'
+          }"
+          class="w-[64px] h-[64px] bg-yellow-300 rounded-lg"
+        ></div>
+      </div>
+    </div>
+
+    <ng-template #code>
+      {{ codeExample }}
+    </ng-template>
+  </block-example>
+</div>
+

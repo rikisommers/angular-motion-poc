@@ -1,0 +1,31 @@
+<div class="p-8 h-screen">
+  <block-example
+    title="Variants Animation"
+    description="Using variants to define multiple animation states with hover interactions."
+    language="html"
+    [showBreadcrumbs]="true"
+    [exampleTitle]="'Variants'"
+    [prevExample]="prevExample"
+    [nextExample]="nextExample"
+  >
+    <div content class="flex justify-center items-center">
+      <div
+        motionone
+        [variants]="squareVariants"
+        [initial]="'idle'"
+        [animate]="'idle'"
+        [whileHover]="squareVariants.hover"
+        [transition]="{
+          duration: 0.3,
+          ease: { type: 'spring', stiffness: 400, damping: 10 }
+        }"
+        class="w-[64px] h-[64px] bg-yellow-400 rounded-lg cursor-pointer"
+      ></div>
+    </div>
+
+    <ng-template #code>
+      {{ codeExample }}
+    </ng-template>
+  </block-example>
+</div>
+

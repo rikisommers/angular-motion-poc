@@ -9,7 +9,7 @@
       <ul class="flex sticky top-24 flex-col gap-2 p-16 text-white">
         <li class="flex flex-col gap-2">
           <h5 class="px-16 py-8 text-xs font-normal text-gray-400 uppercase">Fundamentals</h5>
-          <p class="px-16 py-8 text-xs font-normal text-gray-400">Recreations of incredible interactions from across the web and mobile.</p>
+          <p class="px-16 py-8 text-xs font-normal text-gray-400">Basic animations and interactions.</p>
         </li>
         <li class="flex">
           <a routerLink="/examples/basic" routerLinkActive="active"
@@ -23,6 +23,14 @@
           <a routerLink="/examples/text-animation" routerLinkActive="active"
           class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Text Animation</a>
         </li>
+        <li class="flex">
+          <a routerLink="/examples/variants" routerLinkActive="active"
+          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Variants</a>
+        </li>
+        <li class="flex">
+          <a routerLink="/examples/easings" routerLinkActive="active"
+          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Easings</a>
+        </li>
       </ul>
 
       <ul class="flex sticky top-24 flex-col gap-2 p-16 text-white">
@@ -35,21 +43,27 @@
           class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Timeline</a>
         </li>
         <li class="flex">
+          <a routerLink="/examples/whileinview" routerLinkActive="active"
+          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">WhileInView</a>
+        </li>
+        <li class="flex">
           <a routerLink="/examples/stagger" routerLinkActive="active"
           class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Stagger Children</a>
         </li>
-      </ul>
-
-      <ul class="flex sticky top-24 flex-col gap-2 p-16 text-white">
-        <li class="flex flex-col gap-2">
-          <h5 class="px-16 py-8 text-xs font-normal text-gray-400 uppercase">Premium</h5>
-          <p class="px-16 py-8 text-xs font-normal text-gray-400">Advanced examples for creating beautiful UI microinteractions.</p>
+        <li class="flex">
+          <a routerLink="/examples/repeat" routerLinkActive="active"
+          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Repeat</a>
         </li>
         <li class="flex">
-          <a routerLink="/examples/premium-demo" routerLinkActive="active"
-          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Premium Demo</a>
+          <a routerLink="/examples/focus-tap" routerLinkActive="active"
+          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Focus & Tap</a>
+        </li>
+        <li class="flex">
+          <a routerLink="/examples/delay" routerLinkActive="active"
+          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900">Delay</a>
         </li>
       </ul>
+
 
     </nav>
 <!--    <app-page-nav [content]="navigationContent"></app-page-nav>-->
@@ -84,24 +98,45 @@
 
       <app-tile
       class="grid__item"
-      [title]="'Basic Animation'"
-      [subtitle]="&quot;Learn the fundamentals of motion animations.&quot;"
-      [tags]="['Fundamentals', 'Animation']"
-      [route]="'/examples/basic'" />
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
       <app-tile
       class="grid__item"
-      [title]="'Hover Effects'"
-      [subtitle]="&quot;Create interactive hover animations with ease.&quot;"
-      [tags]="['Fundamentals', 'Interaction']"
-      [route]="'/examples/hover'" />
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
       <app-tile
       class="grid__item"
-      [title]="'Text Animation'"
-      [subtitle]="&quot;Animate text with smooth transitions.&quot;"
-      [tags]="['Fundamentals', 'Typography']"
-      [route]="'/examples/text-animation'" />
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
+
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
+
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
+
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
+
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
     </div>
   </div>

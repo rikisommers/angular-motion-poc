@@ -43,6 +43,38 @@ export const routes: Routes = [
     loadComponent: () => import('./examples/text-animation/text-animation-example.component').then(m => m.TextAnimationExampleComponent)
   },
   {
+    path: 'examples/variants',
+    loadComponent: () => import('./examples/variants/variants-example.component').then(m => m.VariantsExampleComponent)
+  },
+  {
+    path: 'examples/easings',
+    loadComponent: () => import('./examples/easings/easings-example.component').then(m => m.EasingsExampleComponent)
+  },
+  {
+    path: 'examples/timeline',
+    loadComponent: () => import('./examples/timeline/timeline-example.component').then(m => m.TimelineExampleComponent)
+  },
+  {
+    path: 'examples/whileinview',
+    loadComponent: () => import('./examples/whileinview/whileinview-example.component').then(m => m.WhileinviewExampleComponent)
+  },
+  {
+    path: 'examples/stagger',
+    loadComponent: () => import('./examples/stagger/stagger-example.component').then(m => m.StaggerExampleComponent)
+  },
+  {
+    path: 'examples/repeat',
+    loadComponent: () => import('./examples/repeat/repeat-example.component').then(m => m.RepeatExampleComponent)
+  },
+  {
+    path: 'examples/focus-tap',
+    loadComponent: () => import('./examples/focus-tap/focus-tap-example.component').then(m => m.FocusTapExampleComponent)
+  },
+  {
+    path: 'examples/delay',
+    loadComponent: () => import('./examples/delay/delay-example.component').then(m => m.DelayExampleComponent)
+  },
+  {
     path: 'tutorials',
     component: TutorialsComponent
   },

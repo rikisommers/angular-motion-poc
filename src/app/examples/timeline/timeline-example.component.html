@@ -1,0 +1,24 @@
+<div class="p-8 h-screen">
+  <block-example
+    title="Timeline Animation"
+    description="Complex timeline with multiple properties animating at different times."
+    language="html"
+    [showBreadcrumbs]="true"
+    [exampleTitle]="'Timeline'"
+    [prevExample]="prevExample"
+    [nextExample]="nextExample"
+  >
+    <div content class="flex justify-center items-center min-h-[200px] relative">
+      <div
+        motionone
+        [timeline]="timeline"
+        class="h-[64px] w-[64px] bg-yellow-400 rounded-lg"
+      ></div>
+    </div>
+
+    <ng-template #code>
+      {{ codeExample }}
+    </ng-template>
+  </block-example>
+</div>
+

@@ -4,31 +4,32 @@ import { BlockExampleComponent } from '../../components/blocks/block-example/blo
 import { MotionOneDirective } from 'ngx-motion';
 
 @Component({
-  selector: 'app-text-animation-example',
+  selector: 'app-stagger-example',
   imports: [CommonModule, BlockExampleComponent, MotionOneDirective],
-  templateUrl: './text-animation-example.component.html'
+  templateUrl: './stagger-example.component.html'
 })
-export class TextAnimationExampleComponent {
-  prevExample = { path: '/examples/hover', title: 'Hover Effects' };
-  nextExample = { path: '/examples/variants', title: 'Variants' };
+export class StaggerExampleComponent {
+  prevExample = { path: '/examples/whileinview', title: 'WhileInView' };
+  nextExample = { path: '/examples/repeat', title: 'Repeat' };
 
-  staggerWords = ['Staggered', 'Text', 'Animation', 'Example'];
+  staggerWords = ['Staggered', 'text', 'animation', 'example'];
 
   codeExample = `<div
-  class="flex flex-wrap gap-2 justify-center text-2xl font-bold"
   motionone
+  [runInView]="'always'"
   [staggerChildren]="0.1"
   [initial]="{}"
   [animate]="{}"
+  class="flex flex-wrap gap-2 justify-center"
 >
   <div
-    *ngFor="let word of words; let i = index"
     motionone
     [initial]="{ opacity: 0, y: 20 }"
     [animate]="{ opacity: 1, y: 0 }"
     [transition]="{ duration: 0.6, ease: { type: 'spring', stiffness: 400, damping: 10 } }"
   >
-    {{ word }}
+    Item
   </div>
 </div>`;
 }
+

@@ -1,0 +1,26 @@
+<div class="p-8 h-screen">
+  <block-example
+    title="While in view Variants"
+    description="Variant transitions triggered when element enters viewport."
+    language="html"
+    [showBreadcrumbs]="true"
+    [exampleTitle]="'WhileInView'"
+    [prevExample]="prevExample"
+    [nextExample]="nextExample"
+  >
+    <div content class="flex items-center gap-8 min-h-[400px]">
+      <div
+        motionone
+        [initial]="{ opacity: 0, scale: 1, rotate: 0, backgroundColor: '#3b82f6' }"
+        [whileInView]="{ opacity: 1, scale: 2, rotate: 45, backgroundColor: '#ef4444' }"
+        [transition]="{ duration: 0.6, ease: { type: 'spring', stiffness: 400, damping: 10 } }"
+        class="mx-auto w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+      ></div>
+    </div>
+
+    <ng-template #code>
+      {{ codeExample }}
+    </ng-template>
+  </block-example>
+</div>
+

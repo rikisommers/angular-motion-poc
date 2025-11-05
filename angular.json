@@ -34,11 +34,11 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
-            "baseHref": "/angular-motion-poc/"
+            "scripts": []
           },
           "configurations": {
             "production": {
+              "baseHref": "/angular-motion-poc/",
               "budgets": [
                 {
                   "type": "initial",
