@@ -1,5 +1,6 @@
 import { Component, Input, TemplateRef, ViewChild, AfterViewChecked, ElementRef, ChangeDetectorRef, OnInit, OnChanges, SimpleChanges, ContentChild, AfterContentInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../base/button/button.component';
 import { TabsetComponent, Tab } from '../../base/tabset/tabset.component';
 import { TabsetItemComponent } from '../../base/tabset/tabset-item/tabset-item.component';
@@ -10,7 +11,7 @@ import type { Highlighter } from 'shiki';
 
 @Component({
   selector: 'block-example',
-  imports: [ CommonModule, ButtonComponent, TabsetComponent, TabsetItemComponent, TabContentComponent, DialogComponent],
+  imports: [ CommonModule, RouterLink, ButtonComponent, TabsetComponent, TabsetItemComponent, TabContentComponent, DialogComponent],
   standalone:true,
   templateUrl: './block-example.component.html',
   styleUrl: './block-example.component.scss'
@@ -26,6 +27,10 @@ export class BlockExampleComponent implements AfterViewChecked, OnInit, OnChange
   @Input() language: string = 'html';
   @Input() content?: TemplateRef<any>;
   @Input() onRetrigger?: () => void;
+  @Input() showBreadcrumbs: boolean = false;
+  @Input() exampleTitle?: string;
+  @Input() prevExample?: { path: string; title: string };
+  @Input() nextExample?: { path: string; title: string };
 
   private codeHighlighted = false;
   private highlighter: Highlighter | null = null;

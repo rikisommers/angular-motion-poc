@@ -1,1 +1,31 @@
-<p>tile works!</p>
+<div class="relative flex flex-col w-full h-full overflow-hidden no-underline rounded-2xl group bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+
+    <div class="aspect-square">
+
+
+        @if (tags) {
+        <div class="flex flex-wrap gap-2 p-8 absolute top-6 left-6">
+            @for (tag of tags; track tag) {
+            <span class="text-xs text-gray-400 bg-gray-800 rounded-lg px-8 py-2">{{ tag }}</span>
+            }
+        </div>
+        }
+
+        @if (image) {
+        <img [src]="image" alt="Tile" class="w-full h-full object-cover">
+        }
+
+        <ng-content></ng-content>
+    </div>
+
+    <div class="flex flex-col gap-2 p-16 bg-gray-950/40 absolute bottom-0 left-0 w-full">
+        @if (title) {
+        <h3 class="text-lg font-bold text-gray-100">{{ title }}</h3>
+        }
+
+        @if (subtitle) {
+        <p class="text-sm text-gray-400">{{ subtitle }}</p>
+        }
+
+    </div>
+</div>

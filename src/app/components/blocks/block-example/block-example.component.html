@@ -5,9 +5,22 @@
     <ng-content select="header"></ng-content>
   </header> -->
 
-
-
   <div class="flex overflow-hidden relative justify-center items-center w-full rounded-lg bg-slate-700 aspect-video">
+
+    <!-- Breadcrumbs - positioned absolutely at top left -->
+    @if (showBreadcrumbs) {
+      <div class="flex absolute top-0 left-0 z-50 gap-8 p-16">
+        <a
+          routerLink="/examples"
+          class="text-sm text-gray-300 hover:text-white transition-colors">
+          Examples
+        </a>
+        @if (exampleTitle) {
+          <span class="text-gray-500">/</span>
+          <span class="text-sm text-gray-500">{{ exampleTitle }}</span>
+        }
+      </div>
+    }
     
     
     <div class="flex absolute top-0 right-0 gap-2 p-16">
@@ -32,20 +45,26 @@
 
 
         <div class="flex absolute right-0 bottom-0 gap-2 p-16">
-          <app-button
-          label="Previous"
-          type="secondaryText"
-          size="sm"
-          (awClick)="toggleDialog()">
-          <span icon-left class="material-icons">chevron_left</span>
-        </app-button>
-          <app-button
-          label="Next"
-          type="secondaryText"
-          size="sm"
-          (awClick)="toggleDialog()">
-          <span icon-right class="material-icons">chevron_right</span>
-        </app-button>
+          @if (prevExample) {
+            <a [routerLink]="prevExample.path">
+              <app-button
+              [label]="prevExample.title"
+              type="secondaryText"
+              size="sm">
+              <span icon-left class="material-icons">chevron_left</span>
+            </app-button>
+            </a>
+          }
+          @if (nextExample) {
+            <a [routerLink]="nextExample.path">
+              <app-button
+              [label]="nextExample.title"
+              type="secondaryText"
+              size="sm">
+              <span icon-right class="material-icons">chevron_right</span>
+            </app-button>
+            </a>
+          }
         </div>
 
     <ng-content select="[content]"></ng-content>

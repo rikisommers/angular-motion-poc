@@ -28,8 +28,11 @@ export const routes: Routes = [
   },
   {
     path: 'examples',
-    component: ExamplesComponent,
     children: [
+      {
+        path: '',
+        component: ExamplesComponent
+      },
       {
         path: 'basic',
         loadComponent: () => import('./examples/basic-animation/basic-animation-example.component').then(m => m.BasicAnimationExampleComponent)
