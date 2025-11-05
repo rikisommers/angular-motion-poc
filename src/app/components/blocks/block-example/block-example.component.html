@@ -1,18 +1,18 @@
-<section class="flex flex-col gap-8">
+<section class="flex flex-col gap-8 h-full">
   <!-- <header>
     @if(title) { <h3 class="text-2xl font-bold text-gray-200">{{ title }}</h3> }
     @if(description) { <p class="text-sm text-gray-400">{{ description }}</p> }
     <ng-content select="header"></ng-content>
   </header> -->
 
-  <div class="flex overflow-hidden relative justify-center items-center w-full rounded-lg bg-slate-700 aspect-video">
+  <div class="flex overflow-hidden relative justify-center items-center w-full h-full rounded-lg bg-slate-700">
 
     <!-- Breadcrumbs - positioned absolutely at top left -->
     @if (showBreadcrumbs) {
       <div class="flex absolute top-0 left-0 z-50 gap-8 p-16">
         <a
           routerLink="/examples"
-          class="text-sm text-gray-300 hover:text-white transition-colors">
+          class="text-sm text-gray-300 transition-colors hover:text-white">
           Examples
         </a>
         @if (exampleTitle) {
@@ -43,6 +43,7 @@
     </app-button>
     </div>
 
+    @if (showBreadcrumbs) {
 
         <div class="flex absolute right-0 bottom-0 gap-2 p-16">
           @if (prevExample) {
@@ -65,8 +66,12 @@
             </app-button>
             </a>
           }
+          <app-button type="secondaryText" size="sm" routerLink="/examples">
+            <span icon-right class="material-icons">grid_view</span>
+          </app-button>
         </div>
-
+      }
+    
     <ng-content select="[content]"></ng-content>
   </div>
 

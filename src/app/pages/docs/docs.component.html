@@ -93,7 +93,7 @@
         id="hover"
         title="Hover Effects"
         description="Different hover animations and interactions."
-        [onRetrigger]="retriggerHover"
+        class="aspect-video"
       >
         <div content class="flex gap-16 justify-center items-center">
           <div
@@ -139,6 +139,8 @@
         id="focus"
         title="Focus & Tap Animations"
         description="Animations triggered on focus and tap events."
+        class="aspect-video"
+
       >
         <div content class="flex gap-16 justify-center items-center">
           <div
@@ -188,7 +190,8 @@
         id="variants"
         title="Variants Animation"
         description="Using variants to define multiple animation states with hover interactions."
-        [onRetrigger]="retriggerVariants"
+        class="aspect-video"
+
       >
         <div content class="flex gap-4 justify-center items-center">
           <!-- TODO: Support variants in any animation props e.g initial, animate, hwhileHover , whileTap ... -->
@@ -211,6 +214,8 @@
         id="easings"
         title="Different Easings"
         description="Comparison of different easing functions."
+        class="aspect-video"
+
       >
         <div content class="flex gap-8 justify-center items-center">
           <!-- easing options -->
@@ -267,6 +272,8 @@
         id="repeat"
         title="DiffereEasingsnt "
         description="Comparison of different repeat functions."
+        class="aspect-video"
+
       >
         <div content class="flex gap-8 justify-center items-center">
           <!-- TODO: remove loop and mirror if we dont need the these seem to be the same as forwards and backwards  repeatType?: 'loop' | 'mirror' | 'reverse' | 'forwards' | 'pingPong'; -->
@@ -340,6 +347,8 @@
         id="delay"
         title="Delay Animation"
         description="Delay animation with delay property."
+        class="aspect-video"
+
       >
         <div content class="flex gap-8 justify-center items-center">
           <div
@@ -371,6 +380,8 @@
         id="timeline"
         title="Timeline Animation"
         description="Complex timeline with multiple properties animating at different times."
+        class="aspect-video"
+
       >
         <div content class="flex justify-center items-center min-h-[200px] relative">
           <div class="h-[64px] w-[64px] bg-yellow-400 rounded-lg"
@@ -423,6 +434,8 @@
         id="whileInView"
         title="While in view Variants"
         description="Variant transitions triggered when element enters viewport."
+        class="aspect-video"
+
       >
 
       <!-- TODO: Support variants, remove one of whileInview or inview instead use inview with runInview -->
@@ -451,7 +464,9 @@
         id="staggerChildren"
         title="Stagger Children"
         description="Staggered animations triggered when entering viewport with automatic reset on exit."
-      >
+        class="aspect-video"
+
+        >
         <div content class="flex justify-center items-center min-h-[400px]">
 
 

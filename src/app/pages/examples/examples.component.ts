@@ -22,7 +22,6 @@ export class ExamplesComponent implements OnInit {
   @ViewChildren(MotionOneDirective) motionDirectives!: QueryList<MotionOneDirective>;
 
   breadcrumbs: Breadcrumb[] = [];
-  isLandingPage = true;
 
   private routeLabels: { [key: string]: string } = {
     'basic': 'Basic Animation',
@@ -109,23 +108,16 @@ export class ExamplesComponent implements OnInit {
 
     constructor(
       private router: Router,
-      private activatedRoute: ActivatedRoute
+      public activatedRoute: ActivatedRoute
     ) {}
 
     ngOnInit() {
       this.updateBreadcrumbs();
-      this.checkIfLandingPage();
       this.router.events
         .pipe(filter(event => event instanceof NavigationEnd))
         .subscribe(() => {
           this.updateBreadcrumbs();
-          this.checkIfLandingPage();
         });
-    }
-
-    private checkIfLandingPage(): void {
-      // Check if we're on the root /examples route
-      this.isLandingPage = this.router.url === '/examples' || this.router.url === '/';
     }
 
     private updateBreadcrumbs(): void {

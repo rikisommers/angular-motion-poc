@@ -72,65 +72,58 @@
               {{ breadcrumb.label }}
             </a>
             @if (!isLast) {
-              <span class="text-gray-100 mr-8">/</span>
+              <span class="mr-8 text-gray-100">/</span>
             }
           </li>
         }
       </ul>
     </div>
 
-    <!-- Show tiles grid only on landing page -->
-    @if (isLandingPage) {
-      <div class="grid-gallery w-full gap-16 p-16">
+    <!-- Show tiles grid on landing page -->
+    <div class="gap-16 p-16 w-full grid-gallery">
 
-        <app-tile
-        class="grid__item"
-        [title]="'Simple API'"
-        [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
-        [tags]="['Animation', 'React', 'Vue']" />
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
-        <app-tile
-        class="grid__item"
-        [title]="'Simple API'"
-        [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
-        [tags]="['Animation', 'React', 'Vue']" />
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
-        <app-tile
-        class="grid__item"
-        [title]="'Simple API'"
-        [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
-        [tags]="['Animation', 'React', 'Vue']" />
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
-        <app-tile
-        class="grid__item"
-        [title]="'Simple API'"
-        [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
-        [tags]="['Animation', 'React', 'Vue']" />
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
-        <app-tile
-        class="grid__item"
-        [title]="'Simple API'"
-        [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
-        [tags]="['Animation', 'React', 'Vue']" />
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
-        <app-tile
-        class="grid__item"
-        [title]="'Simple API'"
-        [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
-        [tags]="['Animation', 'React', 'Vue']" />
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
-        <app-tile
-        class="grid__item"
-        [title]="'Simple API'"
-        [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
-        [tags]="['Animation', 'React', 'Vue']" />
+      <app-tile
+      class="grid__item"
+      [title]="'Simple API'"
+      [subtitle]="&quot;Motion's pick-up-and-play API is easy to start and fun to master.&quot;"
+      [tags]="['Animation', 'React', 'Vue']" />
 
-      </div>
-    }
-
-    <!-- Child route outlet for individual examples -->
-    @if (!isLandingPage) {
-      <router-outlet></router-outlet>
-    }
+    </div>
   </div>
 </div>

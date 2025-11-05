@@ -60,7 +60,8 @@ h1, h2, h3, h4, h5, h6 {
 /* Add more global styles that use these variables */
 
 
-/*:root {
+/* Disabled view transitions to prevent navigation blocking
+:root {
   --vt-duration: 1600ms;
   --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -87,6 +88,7 @@ html{
   --vt-duration: 600ms;
   --vt-easing: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 
 @keyframes slide-in-from-left {
   from {
@@ -115,15 +117,14 @@ html{
 min-height:100vh;
   overflow: auto;
   box-sizing: border-box;
-//  border:1px solid hotpink;
-  view-transition-name: content;
+
   transition: all 2s cubic-bezier(0.22, 1, 0.36, 1);
   animation-duration: 2s;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}*/
+}
+*/
 
-
-/* Named View Transitions */
+/* Named View Transitions - Disabled */
 .count {
   font-family: sans-serif;
   text-align: center;
@@ -132,7 +133,7 @@ min-height:100vh;
   height: 100vh;
   inset: 50% 0 auto;
   transform: translateY(-50%);
-  view-transition-name: count;
+  /* view-transition-name: count; // Disabled */
 }
 
 /* Full-screen overlay */

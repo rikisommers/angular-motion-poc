@@ -1,5 +1,7 @@
 // Code block styling for Shiki (aurora-x theme)
 :host ::ng-deep {
+
+
   pre {
     background: transparent !important;
    
@@ -18,4 +20,9 @@
     overflow-x: auto;
     margin: 0;
   }
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }

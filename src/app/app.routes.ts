@@ -28,24 +28,19 @@ export const routes: Routes = [
   },
   {
     path: 'examples',
-    children: [
-      {
-        path: '',
-        component: ExamplesComponent
-      },
-      {
-        path: 'basic',
-        loadComponent: () => import('./examples/basic-animation/basic-animation-example.component').then(m => m.BasicAnimationExampleComponent)
-      },
-      {
-        path: 'hover',
-        loadComponent: () => import('./examples/hover/hover-example.component').then(m => m.HoverExampleComponent)
-      },
-      {
-        path: 'text-animation',
-        loadComponent: () => import('./examples/text-animation/text-animation-example.component').then(m => m.TextAnimationExampleComponent)
-      }
-    ]
+    component: ExamplesComponent
+  },
+  {
+    path: 'examples/basic',
+    loadComponent: () => import('./examples/basic-animation/basic-animation-example.component').then(m => m.BasicAnimationExampleComponent)
+  },
+  {
+    path: 'examples/hover',
+    loadComponent: () => import('./examples/hover/hover-example.component').then(m => m.HoverExampleComponent)
+  },
+  {
+    path: 'examples/text-animation',
+    loadComponent: () => import('./examples/text-animation/text-animation-example.component').then(m => m.TextAnimationExampleComponent)
   },
   {
     path: 'tutorials',

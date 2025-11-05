@@ -76,14 +76,16 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     Object.assign(element.style, initialStyles);
     element.offsetHeight;
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       element.style.transition = '';
       if (this.isRunInViewEnabled) {
         // For runInView elements, let inView handle the animation
       } else {
         this.playAnimation(this.initial, this.animate);
       }
+      this.activeTimeouts.delete(timeoutId);
     }, MOTION_DEFAULTS.RESET_TIMEOUT);
+    this.activeTimeouts.add(timeoutId);
   }
 
   @ContentChildren(MotionOneDirective, { descendants: true }) childMotionDirectives!: QueryList<MotionOneDirective>;
@@ -103,6 +105,8 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   private childrenCount = 0;
   private childIndex = 0;
   private isStaggeredChild = false;
+  // Track all setTimeout calls for proper cleanup on destroy
+  private activeTimeouts: Set<any> = new Set();
 
   get scrollProgress() {
     return this.motionService.scrollYProgress();
@@ -173,7 +177,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
   ngAfterContentInit() {
     if (this.childMotionDirectives && this.childMotionDirectives.length > 0) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         const childDirectives = this.childMotionDirectives.filter(child => child !== this);
         this.childrenCount = childDirectives.length;
 
@@ -207,7 +211,9 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
             }
           });
         }
+        this.activeTimeouts.delete(timeoutId);
       });
+      this.activeTimeouts.add(timeoutId);
     }
   }
 
@@ -328,9 +334,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
 
       childDirective.overrideDelay(totalDelay);
 
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         childDirective.playAnimation(childDirective.initial, childDirective.animate);
+        this.activeTimeouts.delete(timeoutId);
       }, totalDelay * 1000);
+      this.activeTimeouts.add(timeoutId);
     });
 
     if (when === 'afterChildren') {
@@ -369,26 +377,90 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
   }
 
   ngOnDestroy() {
+    // Clear all pending setTimeout calls to prevent navigation blocking
+    this.activeTimeouts.forEach(timeoutId => {
+      clearTimeout(timeoutId);
+    });
+    this.activeTimeouts.clear();
+
+    // Clear hover timeout
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = null;
+    }
+
     // Clean up gesture state
     this.gestureService.clearElement(this.elementId);
 
-    if (this.exit && Object.keys(this.exit).length > 0) {
-      this.runExitAnimation();
-    }
-
+    // Stop and clean up intersection observer instance
     if (this.inViewInstance) {
-      this.inViewInstance.stop();
+      try {
+        this.inViewInstance.stop();
+      } catch (e) {
+        // Ignore errors if already stopped
+      }
+      this.inViewInstance = null;
     }
 
+    // Disconnect intersection observer
     this.inViewService.disconnect(this.observer);
+    this.observer = undefined;
 
+    // Stop all animation controls
     if (this.controls) {
-      this.controls.stop();
+      try {
+        this.controls.stop();
+      } catch (e) {
+        // Ignore errors if already stopped
+      }
+      this.controls = null;
     }
 
+    // Stop all children animation controls
     this.childrenControls.forEach(control => {
-      if (control) control.stop();
+      if (control) {
+        try {
+          control.stop();
+        } catch (e) {
+          // Ignore errors if already stopped
+        }
+      }
     });
+    this.childrenControls = [];
+
+    // Clean up child directive observers and controls
+    if (this.childMotionDirectives) {
+      this.childMotionDirectives.forEach(child => {
+        if (child && child !== this) {
+          // Stop child's inView instance
+          if (child.inViewInstance) {
+            try {
+              child.inViewInstance.stop();
+            } catch (e) {
+              // Ignore errors
+            }
+          }
+          // Disconnect child's observer
+          if (child.observer) {
+            this.inViewService.disconnect(child.observer);
+          }
+          // Stop child's controls
+          if (child.controls) {
+            try {
+              child.controls.stop();
+            } catch (e) {
+              // Ignore errors
+            }
+          }
+        }
+      });
+    }
+
+    // Unregister from motion service
+    this.motionService.unregisterMotionElement(this);
+
+    // Skip exit animation on destroy to prevent blocking
+    // Exit animations should be handled by Angular's built-in animation system
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -441,6 +513,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       this.gestureService.cancelGesture(this.elementId);
 
       // Animate back to initial/animate state from current position
+      // Note: hoverTimeout is tracked separately and cleared in ngOnDestroy
       this.hoverTimeout = setTimeout(() => {
         if (Object.keys(this.animate).length > 0) {
           this.playAnimationToTarget(this.animate);
@@ -595,9 +668,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     const resolvedTargetState = resolveVariant(targetState, this.variants);
 
     if (resolvedTargetState.at !== undefined) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         this.animateToTarget(resolvedTargetState, gestureType);
+        this.activeTimeouts.delete(timeoutId);
       }, resolvedTargetState.at * 1000);
+      this.activeTimeouts.add(timeoutId);
       return;
     }
 
@@ -618,9 +693,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
     const resolvedTargetState = resolveVariant(targetState || this.animate, this.variants);
 
     if (resolvedTargetState.at !== undefined) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         this.continueAnimation(resolvedTargetState, false, gestureType);
+        this.activeTimeouts.delete(timeoutId);
       }, resolvedTargetState.at * 1000);
+      this.activeTimeouts.add(timeoutId);
       return;
     }
 
@@ -863,7 +940,7 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
               child.el.nativeElement.style.transition = '';
             });
 
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
               const staggerValue = this.getStaggerValue();
               childDirectives.forEach((child, index) => {
                 const childAnimateStyles = child.extractStyleProperties(child.getVariant(child.animate));
@@ -878,7 +955,9 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
                 const parentOptions = this.getAnimationOptions();
                 this.controls = animate(this.el.nativeElement, parentAnimateStyles, parentOptions);
               }
+              this.activeTimeouts.delete(timeoutId);
             }, MOTION_DEFAULTS.STAGGER_TIMEOUT);
+            this.activeTimeouts.add(timeoutId);
           }
         } else if (this.runInViewRepeat === 'always') {
           if (this.controls) this.controls.stop();
@@ -922,9 +1001,11 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
           this.el.nativeElement.offsetHeight;
           this.el.nativeElement.style.transition = '';
 
-          setTimeout(() => {
+          const timeoutId = setTimeout(() => {
             this.playAnimation(this.initial, this.animate);
+            this.activeTimeouts.delete(timeoutId);
           }, MOTION_DEFAULTS.STAGGER_TIMEOUT);
+          this.activeTimeouts.add(timeoutId);
         } else if (this.runInViewRepeat === 'always') {
           if (this.controls) this.controls.stop();
 
@@ -956,10 +1037,12 @@ export class MotionOneDirective implements OnInit, OnDestroy, OnChanges, AfterCo
       }
       this.el.nativeElement.offsetHeight;
 
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         this.el.nativeElement.style.transition = '';
         this.playAnimation(this.initial, this.animate);
+        this.activeTimeouts.delete(timeoutId);
       }, 5);
+      this.activeTimeouts.add(timeoutId);
 
       this.initialAnimationPlayed = true;
     } else {

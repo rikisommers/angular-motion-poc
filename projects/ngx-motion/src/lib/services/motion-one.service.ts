@@ -57,12 +57,23 @@ import {
       this.enterAnimationsComplete.complete();
     }
   
+    /**
+     * TODO: In a future task, we want to use Angular framework's exit delay function
+     * to handle exit animations properly instead of this custom implementation.
+     * 
+     * DISABLED: Exit duration calculation is disabled to prevent navigation blocking.
+     */
     private updateTotalExitDuration() {
-      if (!isPlatformBrowser(this.platformId)) return;
+      // Always set to 0 to prevent navigation blocking
+      // TODO: Replace with Angular framework's exit delay mechanism in future tasks
+      this.totalExitDuration = 0;
       
-      this.totalExitDuration = this.motionElements.reduce((total, element) => {
-        return total + element.getDuration();
-      }, 0);
+      // DISABLED - Original implementation commented out:
+      // if (!isPlatformBrowser(this.platformId)) return;
+      // 
+      // this.totalExitDuration = this.motionElements.reduce((total, element) => {
+      //   return total + element.getDuration();
+      // }, 0);
     }
   
     private setupScrollListener() {
@@ -322,31 +333,44 @@ import {
       return this.getAllElementsByRoute(route);
     }
     
+    /**
+     * TODO: In a future task, we want to use Angular framework's exit delay function
+     * (e.g., route guards with canDeactivate or route transition animations)
+     * to handle exit animations properly instead of this custom implementation.
+     * 
+     * DISABLED: Exit duration calculation is disabled to prevent navigation blocking.
+     * Navigation should be immediate and not wait for exit animations.
+     */
     getLongestExitDurationForRoute(route: string): number {
-      if (!isPlatformBrowser(this.platformId)) return 0;
+      // Always return 0 to prevent navigation blocking
+      // TODO: Replace with Angular framework's exit delay mechanism in future tasks
+      return 0;
       
-     // console.log(`[MotionOneService] Getting longest exit duration for route ${route}`);
-      
-      if (this.motionElements.length === 0) {
-      //  console.log('[MotionOneService] No motion elements registered');
-        return 0;
-      }
-      
-      const elements = this.getAllElementsByRoute(route);
-      if (elements.length === 0) {
-      //  console.log(`[MotionOneService] No elements found for route ${route}`);
-        return 0;
-      }
-      
-      const durations = elements.map((motion) => {
-        const duration = motion.getDuration();
-     //   console.log(`[MotionOneService] Element ${motion.elementId} has exit duration: ${duration}s`);
-        return duration;
-      });
-      
-      const maxDuration = durations.length > 0 ? Math.max(...durations) : 0;
-     console.log(`[MotionOneService] Longest exit duration for route ${route}: ${maxDuration}s`);
-      return maxDuration;
+      // DISABLED - Original implementation commented out:
+      // if (!isPlatformBrowser(this.platformId)) return 0;
+      // 
+      // // console.log(`[MotionOneService] Getting longest exit duration for route ${route}`);
+      // 
+      // if (this.motionElements.length === 0) {
+      // //  console.log('[MotionOneService] No motion elements registered');
+      //   return 0;
+      // }
+      // 
+      // const elements = this.getAllElementsByRoute(route);
+      // if (elements.length === 0) {
+      // //  console.log(`[MotionOneService] No elements found for route ${route}`);
+      //   return 0;
+      // }
+      // 
+      // const durations = elements.map((motion) => {
+      //   const duration = motion.getDuration();
+      // //   console.log(`[MotionOneService] Element ${motion.elementId} has exit duration: ${duration}s`);
+      //   return duration;
+      // });
+      // 
+      // const maxDuration = durations.length > 0 ? Math.max(...durations) : 0;
+      // console.log(`[MotionOneService] Longest exit duration for route ${route}: ${maxDuration}s`);
+      // return maxDuration;
     }
     
     getLongestEnterDurationForRoute(route: string): number {

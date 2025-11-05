@@ -57,55 +57,30 @@ export class DocsComponent {
       focus: false
     };
 
-    // Retrigger animation - restart all motion directives
-    retriggerAnimation(animationKey: string) {
-      console.log('[Examples] Retriggering animations for:', animationKey);
-
-      // Find and restart all motion directives
-      if (this.motionDirectives) {
-        this.motionDirectives.forEach((directive: MotionOneDirective) => {
-          console.log('[Examples] Restarting directive:', directive.elementId);
-          directive.restartAnimation();
-        });
-      }
-
-      // Also force change detection as fallback
-      this.animationTriggers = { ...this.animationTriggers };
-    }
+   
 
     // Handle inView trigger
     onInView(animationKey: string) {
       this.animationTriggers[animationKey] = true;
     }
 
-    // Individual retrigger methods for each animation
-    retriggerVariants = () => this.retriggerAnimation('variants');
-    retriggerFadeScale = () => this.retriggerAnimation('fadeScale');
-    retriggerTimeline = () => this.retriggerAnimation('timeline');
-    retriggerHover = () => this.retriggerAnimation('hover');
-    retriggerRepeat = () => this.retriggerAnimation('repeat');
-    retriggerStagger = () => this.retriggerAnimation('stagger');
-    retriggerEasings = () => this.retriggerAnimation('easings');
-    retriggerInView = () => this.retriggerAnimation('inView');
-    retriggerFocus = () => this.retriggerAnimation('focus');
-    retriggerInViewOptions = () => this.retriggerAnimation('inViewOptions');
-
+   
     // Handle navigation clicks with smooth scroll
     onNavClick(event: Event, href: string) {
-      event.preventDefault();
-      const container = document.getElementById('scrollContainer');
-      const target = document.querySelector(href);
-      if (container && target) {
-        const containerRect = container.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const scrollTop = container.scrollTop + targetRect.top - containerRect.top;
+      // event.preventDefault();
+      // const container = document.getElementById('scrollContainer');
+      // const target = document.querySelector(href);
+      // if (container && target) {
+      //   const containerRect = container.getBoundingClientRect();
+      //   const targetRect = target.getBoundingClientRect();
+      //   const scrollTop = container.scrollTop + targetRect.top - containerRect.top;
 
-        container.scrollTo({
-          top: scrollTop,
-          behavior: 'smooth'
-        });
-        history.pushState(null, '', href);
-      }
+      //   container.scrollTo({
+      //     top: scrollTop,
+      //     behavior: 'smooth'
+      //   });
+      //   history.pushState(null, '', href);
+      //}
     }
 
 }
