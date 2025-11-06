@@ -2,7 +2,10 @@
 
 This project demonstrates **@hilux/ngx-motion**, a powerful Angular directive library for Motion One animations with a Framer Motion-like API.
 
-## 🚀 Features
+## [ Demo →](https://rikisommers.github.io/angular-motion-poc)
+
+
+## Features
 
 ### Motion One Integration
 - Built on top of the performant Motion One animation library
@@ -27,13 +30,13 @@ This project demonstrates **@hilux/ngx-motion**, a powerful Angular directive li
 - **Responsive Design**: Animation that work across all screen sizes
 - **Performance Optimized**: Leverages Motion One's efficient animation engine
 
-## 📦 Library Installation
+## Library Installation
 
 ```bash
 npm install @hilux/ngx-motion motion
 ```
 
-## 🎯 Basic Usage
+## Basic Usage
 
 Import the directive in your component:
 
@@ -58,7 +61,7 @@ import { MotionOneDirective } from '@hilux/ngx-motion';
 export class ExampleComponent {}
 ```
 
-## 🎨 Animation Examples
+## Animation Examples
 
 ### Hover Animations
 ```html
@@ -137,56 +140,6 @@ export class VariantsExample {
 </div>
 ```
 
-### Exit Animations with Angular Control Flow
-The `exit` property defines animations when elements are removed from the DOM. Works with the `*motionIf` and `*motionPresence` structural directives:
-
-```typescript
-@Component({
-  selector: 'app-example',
-  imports: [MotionOneDirective, MotionIfDirective],
-  template: `
-    <button (click)="show = !show">
-      {{ show ? 'Hide' : 'Show' }}
-    </button>
-    
-    <!-- Using *motionIf directive for exit animations -->
-    <div *motionIf="show">
-      <div
-        motionone
-        [initial]="{ x: -100, opacity: 0 }"
-        [animate]="{ x: 0, opacity: 1 }"
-        [exit]="{ x: 100, opacity: 0 }"
-        [transition]="{ duration: 0.4, ease: { type: 'spring', stiffness: 300 } }"
-      >
-        Slides in from left, slides out to right
-      </div>
-    </div>
-  `
-})
-export class ExitAnimationExample {
-  show = true;
-}
-```
-
-**How it works:**
-- `*motionIf` is a structural directive that manages the element lifecycle
-- When condition becomes `true`, it creates the view and triggers enter animation
-- When condition becomes `false`, it triggers exit animation then removes from DOM
-- Automatically calculates animation duration to ensure smooth exit
-
-**Alternative using `*motionPresence`:**
-```html
-<div *motionPresence="isVisible">
-  <div motionone 
-       [initial]="{ opacity: 0, scale: 0.8 }"
-       [animate]="{ opacity: 1, scale: 1 }"
-       [exit]="{ opacity: 0, scale: 0.8 }">
-    Content
-  </div>
-</div>
-```
-
-Both directives work identically - use whichever naming you prefer!
 
 ### Timeline Animations
 ```typescript
@@ -210,7 +163,94 @@ export class TimelineExample {
 }
 ```
 
-## 🛠️ Development Setup
+## Angular Control Flow Integration
+
+Angular's control flow (`@if`, `@for`, etc.) removes elements immediately from the DOM when conditions change. To support exit animations, `@hilux/ngx-motion` provides structural directives that manage the animation lifecycle.
+
+### Using `*motionIf` Directive
+
+The `*motionIf` structural directive wraps Angular's template logic and manages enter/exit animations:
+
+```typescript
+@Component({
+  selector: 'app-example',
+  imports: [MotionOneDirective, MotionIfDirective],
+  template: `
+    <button (click)="show = !show">
+      {{ show ? 'Hide' : 'Show' }}
+    </button>
+    
+    <div *motionIf="show">
+      <div
+        motionone
+        [initial]="{ x: -100, opacity: 0 }"
+        [animate]="{ x: 0, opacity: 1 }"
+        [exit]="{ x: 100, opacity: 0 }"
+        [transition]="{ duration: 0.4, ease: { type: 'spring', stiffness: 300 } }"
+      >
+        Slides in from left, slides out to right
+      </div>
+    </div>
+  `
+})
+export class ControlFlowExample {
+  show = true;
+}
+```
+
+**How it works:**
+- `*motionIf` uses `ViewContainerRef` to control when views are created/destroyed
+- When condition becomes `true`, it creates the view and triggers enter animation
+- When condition becomes `false`, it triggers exit animation then removes from DOM
+- Automatically calculates the longest animation duration to ensure smooth exit
+- Supports multiple animated elements in a single template
+
+### Using `*motionPresence` Directive
+
+Alternative structural directive with identical functionality, named for developers familiar with Framer Motion's `<AnimatePresence>`:
+
+```html
+<div *motionPresence="isVisible">
+  <div motionone 
+       [initial]="{ opacity: 0, scale: 0.8 }"
+       [animate]="{ opacity: 1, scale: 1 }"
+       [exit]="{ opacity: 0, scale: 0.8 }">
+    Content
+  </div>
+</div>
+```
+
+### Using with Angular's New Control Flow
+
+The directives work seamlessly with Angular's new control flow syntax:
+
+```html
+<!-- With @if -->
+<div *motionIf="condition">
+  <div motionone [animate]="..." [exit]="...">Content</div>
+</div>
+
+<!-- With @for -->
+<div *motionPresence="items.length > 0">
+  @for (item of items; track item.id) {
+    <div motionone [animate]="..." [exit]="...">
+      {{ item.name }}
+    </div>
+  }
+</div>
+```
+
+### Comparison with Framer Motion
+
+| Framer Motion (React) | ngx-motion (Angular) |
+|----------------------|---------------------|
+| `<AnimatePresence>` | `*motionIf` or `*motionPresence` |
+| `initial` prop | `[initial]` input |
+| `animate` prop | `[animate]` input |
+| `exit` prop | `[exit]` input |
+| `<motion.div>` | `<div motionone>` |
+
+## Development Setup
 
 ### Prerequisites
 - Node.js 18+
@@ -241,7 +281,7 @@ yarn build
 yarn publish:lib
 ```
 
-## 📚 API Reference
+## API Reference
 
 ### Inputs
 
@@ -282,7 +322,7 @@ interface TransitionOptions {
 - `[0.4, 0, 0.2, 1]` - Custom cubic bezier
 - `{ type: 'spring', stiffness: 400, damping: 17 }` - Spring physics
 
-## 🎯 Project Structure
+## Project Structure
 
 ```
 ng-motion-demo/
@@ -297,7 +337,7 @@ ng-motion-demo/
 └── dist/ngx-motion/              # Built library output
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -305,11 +345,11 @@ ng-motion-demo/
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+## License
 
 MIT License - see LICENSE file for details
 
-## 🔗 Links
+## Links
 
 - [Motion One Documentation](https://motion.dev/)
 - [Angular Documentation](https://angular.dev/)
@@ -317,4 +357,4 @@ MIT License - see LICENSE file for details
 
 ---
 
-Built with ❤️ using Angular and Motion One
+Built with Angular and Motion One
