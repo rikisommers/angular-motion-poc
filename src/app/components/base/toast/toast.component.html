@@ -1,0 +1,37 @@
+<div class="fixed bottom-16 right-16 z-[9999] flex flex-col gap-8">
+  @for (toast of toasts; track toast.id) {
+    <div *motionIf="isToastVisible(toast.id)">
+      <div 
+        motionone
+        [initial]="{ opacity: 0, x: 100, scale: 0.8 }"
+        [animate]="{ opacity: 1, x: 0, scale: 1 }"
+        [exit]="{ opacity: 0, x: 100, scale: 0.8 }"
+        [transition]="{ duration: 0.3, ease: 'easeOut' }"
+        [ngClass]="getToastClass(toast.type)"
+      >
+        <span class="text-lg material-icons">
+          @switch (toast.type) {
+            @case ('error') {
+              error_outline
+            }
+            @case ('info') {
+              info_outline
+            }
+            @default {
+              check_circle_outline
+            }
+          }
+        </span>
+        <span class="flex-1 text-sm font-medium">{{ toast.message }}</span>
+        <button
+          (click)="removeToast(toast.id)"
+          class="ml-8 transition-colors text-white/80 hover:text-white"
+          aria-label="Close toast"
+        >
+          <span class="text-lg material-icons">close</span>
+        </button>
+      </div>
+    </div>
+  }
+</div>
+

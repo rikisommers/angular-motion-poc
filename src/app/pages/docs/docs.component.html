@@ -1,14 +1,33 @@
 <div
   class="h-screen bg-gray-800 w-screen overflow-hidden grid grid-cols-[300px_1fr] gap-4"
 >
-  <div>
-    <nav class="">
-      <div class="m-32">
+
+    <nav class="overflow-y-auto h-screen">
+      <div class="sticky top-16 p-16 mx-16 my-16 rounded-lg backdrop-blur-lg bg-slate-800/40">
         <img  src="assets/angularmotion1--light.svg" alt="logo1">
       </div>
 
 
-      <ul class="flex sticky top-24 flex-col gap-2 p-16 text-white">
+
+      <ul class="flex flex-col gap-2 p-16 text-white">
+
+        
+        <li class="flex">
+          <h5 class="px-16 py-8 text-xs font-normal text-gray-400 uppercase">Basics</h5>
+        </li>
+
+        <li class="flex">
+          <a href="#getting-started" 
+          class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" 
+          (click)="onNavClick($event, '#getting-started')">Getting Started</a>
+        </li>
+
+
+        </ul>
+
+      <ul class="flex flex-col gap-2 p-16 text-white">
+
+
         <li class="flex">
           <h5 class="px-16 py-8 text-xs font-normal text-gray-400 uppercase">Animation</h5>
         </li>
@@ -90,20 +109,38 @@
             </ul>
     </nav>
 <!--    <app-page-nav [content]="navigationContent"></app-page-nav>-->
-  </div>
   <div class="overflow-y-auto h-screen bg-gray-800" id="scrollContainer">
-    <div class="flex flex-col gap-32 py-80 mx-auto max-w-container">
+    <div class="flex flex-col gap-64 py-80 mx-auto max-w-container">
 
-      <block-code [code]="hoverCode">
+      <article class="flex flex-col gap-32" id="getting-started">
+        <h2 class="text-2xl font-bold text-gray-100">Getting Started</h2>
+        <p class="text-sm text-gray-400">Install the library and add the motion directives to your components.</p>
 
-      </block-code>
+        <article class="flex flex-col gap-12">
+          <h3 class="text-xl font-semibold text-gray-100">Installation (npm)</h3>
+          <p class="text-sm text-gray-400">Install the Angular Motion directives package and its Motion One peer dependency.</p>
+          <block-code [code]="gettingStartedInstallCode" language="bash" />
+        </article>
+
+        <article class="flex flex-col gap-12">
+          <h3 class="text-xl font-semibold text-gray-100">Import and Use in Templates</h3>
+          <p class="text-sm text-gray-400">Import the directives into your standalone component and apply <code class="text-gray-200">motionone</code> in templates.</p>
+          <block-code [code]="gettingStartedImportCode" language="typescript" />
+        </article>
+      </article>
+
+      <article class="flex flex-col gap-16" id="hover">
+      <h2 class="text-2xl font-bold text-gray-100">Hover Effects</h2>
+      <p class="text-sm text-gray-400">Different hover animations and interactions.</p>
+      <block-code [code]="hoverCode" language="html" /> 
       <block-example
-        id="hover"
+   
         title="Hover Effects"
         description="Different hover animations and interactions."
         class="aspect-video"
         [codeString]="hoverCode"
         language="html"
+        layout="inline"
       >
         <div content class="flex gap-16 justify-center items-center">
 
@@ -144,14 +181,20 @@
           ></div>
         </div>
       </block-example>
-
+    </article>
+    
+    
+      <article class="flex flex-col gap-16" id="focus">
+      <h2 class="text-2xl font-bold text-gray-100">Focus & Tap Animations</h2>
+      <p class="text-sm text-gray-400">Animations triggered on focus and tap events.</p>
+      <block-code [code]="focusTapCode" language="html" />
       <block-example
-        id="focus"
         title="Focus & Tap Animations"
         description="Animations triggered on focus and tap events."
         class="aspect-video"
         [codeString]="focusTapCode"
         language="html"
+        layout="inline"
       >
         <div content class="flex gap-16 justify-center items-center">
           <div
@@ -196,12 +239,19 @@
           <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
+      <article class="flex flex-col gap-16" id="variants">
+      <h2 class="text-2xl font-bold text-gray-100">Variants Animation</h2>
+      <p class="text-sm text-gray-400">Using variants to define multiple animation states with hover interactions.</p>
+      <block-code [code]="variantsCode" language="html" /> 
       <block-example
-        id="variants"
         title="Variants Animation"
         description="Using variants to define multiple animation states with hover interactions."
         class="aspect-video"
+        [codeString]="variantsCode"
+        language="html"
+        layout="inline"
 
       >
         <div content class="flex gap-4 justify-center items-center">
@@ -220,12 +270,19 @@
           ></div>
         </div>
       </block-example>
+      </article>
 
+      <article class="flex flex-col gap-16" id="easings">
+      <h2 class="text-2xl font-bold text-gray-100">Different Easings</h2>
+      <p class="text-sm text-gray-400">Comparison of different easing functions.</p>
+      <block-code [code]="easingsCode" language="html" />
       <block-example
-        id="easings"
         title="Different Easings"
         description="Comparison of different easing functions."
         class="aspect-video"
+        [codeString]="easingsCode"
+        language="html"
+        layout="inline"
 
       >
         <div content class="flex gap-8 justify-center items-center">
@@ -278,12 +335,19 @@
           <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
+      <article class="flex flex-col gap-16" id="repeat">
+      <h2 class="text-2xl font-bold text-gray-100">Repeat</h2>
+      <p class="text-sm text-gray-400">Comparison of different repeat functions.</p>
+      <block-code [code]="repeatCode" language="html" />
       <block-example
-        id="repeat"
         title="DiffereEasingsnt "
         description="Comparison of different repeat functions."
         class="aspect-video"
+        [codeString]="repeatCode"
+        language="html"
+        layout="inline"
 
       >
         <div content class="flex gap-8 justify-center items-center">
@@ -353,12 +417,19 @@
           <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
+      <article class="flex flex-col gap-16" id="delay">
+      <h2 class="text-2xl font-bold text-gray-100">Delay Animation</h2>
+      <p class="text-sm text-gray-400">Delay animation with delay property.</p>
+      <block-code [code]="delayCode" language="html" />
       <block-example
-        id="delay"
         title="Delay Animation"
         description="Delay animation with delay property."
         class="aspect-video"
+        [codeString]="delayCode"
+        language="html"
+        layout="inline"
 
       >
         <div content class="flex gap-8 justify-center items-center">
@@ -386,12 +457,19 @@
           <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
+      <article class="flex flex-col gap-16" id="timeline">
+      <h2 class="text-2xl font-bold text-gray-100">Timeline Animation</h2>
+      <p class="text-sm text-gray-400">Complex timeline with multiple properties animating at different times.</p>
+      <block-code [code]="timelineCode" language="html" />
       <block-example
-        id="timeline"
         title="Timeline Animation"
         description="Complex timeline with multiple properties animating at different times."
         class="aspect-video"
+        [codeString]="timelineCode"
+        language="html"
+        layout="inline"
 
       >
         <div content class="flex justify-center items-center min-h-[200px] relative">
@@ -437,15 +515,22 @@
           <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
 
 
 
+      <article class="flex flex-col gap-16" id="whileInView">
+      <h2 class="text-2xl font-bold text-gray-100">While in view Variants</h2>
+      <p class="text-sm text-gray-400">Variant transitions triggered when element enters viewport.</p>
+      <block-code [code]="whileInViewCode" language="html" />
       <block-example
-        id="whileInView"
         title="While in view Variants"
         description="Variant transitions triggered when element enters viewport."
         class="aspect-video"
+        [codeString]="whileInViewCode"
+        language="html"
+        layout="inline"
 
       >
 
@@ -469,14 +554,21 @@
 <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
 
 
+      <article class="flex flex-col gap-16" id="staggerChildren">
+        <h2 class="text-2xl font-bold text-gray-100">Stagger Children</h2>
+        <p class="text-sm text-gray-400">Staggered animations triggered when entering viewport with automatic reset on exit.</p>
+        <block-code [code]="staggerCode" language="html" />
       <block-example
-        id="staggerChildren"
         title="Stagger Children"
         description="Staggered animations triggered when entering viewport with automatic reset on exit."
         class="aspect-video"
+        [codeString]="staggerCode"
+        language="html"
+        layout="inline"
 
         >
         <div content class="flex justify-center items-center min-h-[400px]">
@@ -513,21 +605,28 @@
 <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
+      <article class="flex flex-col gap-16" id="exitAnimations">
+        <h2 class="text-2xl font-bold text-gray-100">Exit Animations</h2>
+        <p class="text-sm text-gray-400">Animated exit transitions using the exit property with control flow. Click buttons to toggle elements in and out of the DOM.</p>
+        <block-code [code]="exitAnimationsCode" language="html" />
       <block-example
-        id="exitAnimations"
         title="Exit Animations"
         description="Animated exit transitions using the exit property with control flow. Click buttons to toggle elements in and out of the DOM."
         class="aspect-video"
+        [codeString]="exitAnimationsCode"
+        language="html"
+        layout="inline"
       >
         <div content class="flex flex-col gap-16 justify-center items-center min-h-[400px] p-16">
 
           <!-- Example 1: Fade & Scale Out with *motionIf -->
           <div class="flex flex-col gap-8 items-center w-full">
-            <h4 class="text-white text-sm font-medium">Using *motionIf directive</h4>
+            <h4 class="text-sm font-medium text-white">Using *motionIf directive</h4>
             <button
               (click)="toggleExitExample(1)"
-              class="px-16 py-8 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+              class="px-16 py-8 text-white bg-blue-600 rounded-lg transition-colors hover:bg-blue-700"
             >
               {{ showExitExample1 ? 'Hide' : 'Show' }} Fade & Scale
             </button>
@@ -547,10 +646,10 @@
 
           <!-- Example 2: Slide Out -->
           <div class="flex flex-col gap-8 items-center w-full">
-            <h4 class="text-white text-sm font-medium">Slide transition</h4>
+            <h4 class="text-sm font-medium text-white">Slide transition</h4>
             <button
               (click)="toggleExitExample(2)"
-              class="px-16 py-8 text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+              class="px-16 py-8 text-white bg-green-600 rounded-lg transition-colors hover:bg-green-700"
             >
               {{ showExitExample2 ? 'Hide' : 'Show' }} Slide
             </button>
@@ -570,10 +669,10 @@
 
           <!-- Example 3: Rotate & Fade Out -->
           <div class="flex flex-col gap-8 items-center w-full">
-            <h4 class="text-white text-sm font-medium">Rotate transition</h4>
+            <h4 class="text-sm font-medium text-white">Rotate transition</h4>
             <button
               (click)="toggleExitExample(3)"
-              class="px-16 py-8 text-white bg-orange-600 rounded-lg hover:bg-orange-700 transition-colors"
+              class="px-16 py-8 text-white bg-orange-600 rounded-lg transition-colors hover:bg-orange-700"
             >
               {{ showExitExample3 ? 'Hide' : 'Show' }} Rotate
             </button>
@@ -593,10 +692,10 @@
 
           <!-- Example 4: Using *motionPresence directive -->
           <div class="flex flex-col gap-8 items-center w-full">
-            <h4 class="text-white text-sm font-medium">Using *motionPresence directive</h4>
+            <h4 class="text-sm font-medium text-white">Using *motionPresence directive</h4>
             <button
               (click)="toggleExitExample(4)"
-              class="px-16 py-8 text-white bg-pink-600 rounded-lg hover:bg-pink-700 transition-colors"
+              class="px-16 py-8 text-white bg-pink-600 rounded-lg transition-colors hover:bg-pink-700"
             >
               {{ showPresenceExample ? 'Hide' : 'Show' }} Presence
             </button>
@@ -620,6 +719,7 @@
 <!-- TODO -->
         </div>
       </block-example>
+      </article>
 
     </div>
   </div>

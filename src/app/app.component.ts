@@ -4,9 +4,10 @@ import { ThemeService } from './services/theme.service';
 import { themes } from './utils/theme';
 import { ModalComponent } from "./components/base/modal/modal.component";
 import { NavbarComponent } from "./components/navigation/navbar.component";
+import { ToastComponent } from "./components/base/toast/toast.component";
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [RouterOutlet, NavbarComponent, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

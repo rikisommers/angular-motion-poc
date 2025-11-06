@@ -19,6 +19,7 @@ export class BlockExampleComponent implements OnInit {
   @Input() description?: string;
   @Input() codeString?: string;
   @Input() language: string = 'html';
+  @Input() layout: 'inline' | 'dialog' = 'dialog';
   @Input() content?: TemplateRef<any>;
   @Input() onRetrigger?: () => void;
   @Input() showBreadcrumbs: boolean = false;

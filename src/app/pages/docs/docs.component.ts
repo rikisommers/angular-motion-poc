@@ -113,7 +113,7 @@ export class DocsComponent {
 
   delayCode = `delayItems = Array.from({ length: 16 }, (_, i) => i);
 
-<div class="gap-8 grid grid-cols-4">
+<div class="grid grid-cols-4 gap-8">
   @for (item of delayItems; track item) {
     <div
       motionone
@@ -149,6 +149,29 @@ export class DocsComponent {
     Fade & Scale Animation
   </div>
 </div>`;
+
+  // Getting started code snippets
+  gettingStartedInstallCode = `npm install @hilux/ngx-motion motion\n\n# or with yarn\nyarn add @hilux/ngx-motion motion`;
+
+  gettingStartedImportCode = `import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MotionOneDirective, MotionIfDirective, MotionPresenceDirective } from '@hilux/ngx-motion';
+
+@Component({
+  selector: 'app-example',
+  standalone: true,
+  imports: [CommonModule, MotionOneDirective, MotionIfDirective, MotionPresenceDirective],
+  template: \`
+    <div
+      motionone
+      [initial]="{ opacity: 0, y: 20 }"
+      [animate]="{ opacity: 1, y: 0 }"
+      [transition]="{ duration: 0.4, ease: 'easeOut' }"
+      class="w-[64px] h-[64px] bg-blue-500 rounded-lg"
+    ></div>
+  \`
+})
+export class ExampleComponent {}`;
 
   // Navigation content array for page-nav component
   navigationContent: NavItem[] = [
@@ -222,20 +245,20 @@ export class DocsComponent {
 
     // Handle navigation clicks with smooth scroll
     onNavClick(event: Event, href: string) {
-      // event.preventDefault();
-      // const container = document.getElementById('scrollContainer');
-      // const target = document.querySelector(href);
-      // if (container && target) {
-      //   const containerRect = container.getBoundingClientRect();
-      //   const targetRect = target.getBoundingClientRect();
-      //   const scrollTop = container.scrollTop + targetRect.top - containerRect.top;
+      event.preventDefault();
+      const container = document.getElementById('scrollContainer');
+      const target = document.querySelector(href);
+      if (container && target) {
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const scrollTop = container.scrollTop + targetRect.top - containerRect.top;
 
-      //   container.scrollTo({
-      //     top: scrollTop,
-      //     behavior: 'smooth'
-      //   });
-      //   history.pushState(null, '', href);
-      //}
+        container.scrollTo({
+          top: scrollTop,
+          behavior: 'smooth'
+        });
+        history.pushState(null, '', href);
+      }
     }
 
 }

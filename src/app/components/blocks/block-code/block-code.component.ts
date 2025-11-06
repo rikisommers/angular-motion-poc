@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import * as shiki from 'shiki';
 import type { Highlighter } from 'shiki';
 import {ButtonComponent} from '../../base/button/button.component';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'block-code',
@@ -20,6 +21,8 @@ export class BlockCodeComponent implements AfterViewInit, OnChanges {
   private highlighter: Highlighter | null = null;
   private highlighterPromise: Promise<Highlighter> | null = null;
   private isHighlighted = false;
+
+  constructor(private toastService: ToastService) {}
 
   ngAfterViewInit(): void {
     this.initHighlighter();
@@ -101,5 +104,41 @@ export class BlockCodeComponent implements AfterViewInit, OnChanges {
 
   get displayCode(): string {
     return this.code || '';
+  }
+
+  async copyToClipboard(): Promise<void> {
+    const codeToCopy = this.displayCode;
+    
+    if (!codeToCopy) {
+      this.toastService.error('No code to copy');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(codeToCopy);
+      this.toastService.success('Code copied to clipboard');
+    } catch (err) {
+      // Fallback for older browsers
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = codeToCopy;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        if (successful) {
+          this.toastService.success('Code copied to clipboard');
+        } else {
+          this.toastService.error('Failed to copy code');
+        }
+      } catch (fallbackErr) {
+        this.toastService.error('Failed to copy code');
+      }
+    }
   }
 }

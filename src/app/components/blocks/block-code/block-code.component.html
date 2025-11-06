@@ -1,16 +1,14 @@
 
 
-<div class="flex flex-col gap-4 p-8 bg-slate-800 w-[700px] rounded-lg overflow-hidden">
-  <div class="flex justify-between items-center pl-8">
-    <span class="flex gap-4 items-center text-xs text-gray-400"><i class="material-icons">code</i> Source code
-    </span>
+<div class="flex overflow-hidden relative flex-col gap-4 p-8 w-full rounded-lg bg-slate-700">
     <app-button
+    class="absolute top-16 right-16"  
       type="secondaryText"
       size="sm"
-    >
-      <span icon-right class="material-icons">close</span>
+      (awClick)="copyToClipboard()">
+    
+      <span class="material-icons">content_copy</span>
     </app-button>
-  </div>
 
   <pre class="overflow-auto max-h-[500px] w-full rounded-lg">
   <code #codeElement>
