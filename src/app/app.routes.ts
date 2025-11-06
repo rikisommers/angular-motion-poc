@@ -11,7 +11,7 @@ import { FeaturesComponent } from './pages/features/features.component';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'examples', // Redirects to the 'home' path
+    redirectTo: 'docs', // Redirects to the 'home' path
     pathMatch: 'full'
   },
   {

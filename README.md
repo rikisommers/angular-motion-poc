@@ -122,6 +122,8 @@ export class VariantsExample {
 
 ### Conditional Animation with motionIf
 ```html
+<button (click)="isVisible = !isVisible">Toggle</button>
+
 <div *motionIf="isVisible">
   <div
     motionone
@@ -134,6 +136,57 @@ export class VariantsExample {
   </div>
 </div>
 ```
+
+### Exit Animations with Angular Control Flow
+The `exit` property defines animations when elements are removed from the DOM. Works with the `*motionIf` and `*motionPresence` structural directives:
+
+```typescript
+@Component({
+  selector: 'app-example',
+  imports: [MotionOneDirective, MotionIfDirective],
+  template: `
+    <button (click)="show = !show">
+      {{ show ? 'Hide' : 'Show' }}
+    </button>
+    
+    <!-- Using *motionIf directive for exit animations -->
+    <div *motionIf="show">
+      <div
+        motionone
+        [initial]="{ x: -100, opacity: 0 }"
+        [animate]="{ x: 0, opacity: 1 }"
+        [exit]="{ x: 100, opacity: 0 }"
+        [transition]="{ duration: 0.4, ease: { type: 'spring', stiffness: 300 } }"
+      >
+        Slides in from left, slides out to right
+      </div>
+    </div>
+  `
+})
+export class ExitAnimationExample {
+  show = true;
+}
+```
+
+**How it works:**
+- `*motionIf` is a structural directive that manages the element lifecycle
+- When condition becomes `true`, it creates the view and triggers enter animation
+- When condition becomes `false`, it triggers exit animation then removes from DOM
+- Automatically calculates animation duration to ensure smooth exit
+
+**Alternative using `*motionPresence`:**
+```html
+<div *motionPresence="isVisible">
+  <div motionone 
+       [initial]="{ opacity: 0, scale: 0.8 }"
+       [animate]="{ opacity: 1, scale: 1 }"
+       [exit]="{ opacity: 0, scale: 0.8 }">
+    Content
+  </div>
+</div>
+```
+
+Both directives work identically - use whichever naming you prefer!
 
 ### Timeline Animations
 ```typescript

@@ -5,6 +5,7 @@
 // Motion One specific exports
 export * from './lib/directives/motion-one.directive';
 export * from './lib/directives/motion-if.directive';
+export * from './lib/directives/motion-presence.directive';
 export * from './lib/services/motion-one.service';
 export * from './lib/services/motion-animation.service';
 

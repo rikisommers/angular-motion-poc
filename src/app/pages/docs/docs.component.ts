@@ -1,12 +1,13 @@
 import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BlockExampleComponent } from '../../components/blocks/block-example/block-example.component';
-import { MotionOneDirective } from 'ngx-motion';
+import { BlockCodeComponent} from '../../components/blocks/block-code/block-code.component';
+import { MotionOneDirective, MotionIfDirective, MotionPresenceDirective } from 'ngx-motion';
 import { PageNavComponent, NavItem } from '../../components/navigation/page-nav/page-nav.component';
 
 @Component({
   selector: 'app-docs',
-  imports: [CommonModule, BlockExampleComponent, MotionOneDirective, PageNavComponent],
+  imports: [CommonModule, BlockExampleComponent, BlockCodeComponent, MotionOneDirective, MotionIfDirective, MotionPresenceDirective, PageNavComponent],
   templateUrl: './docs.component.html',
   styleUrl: './docs.component.scss'
 })
@@ -27,6 +28,7 @@ export class DocsComponent {
     { id: 'whileInView', title: 'whileInView' },
 
     { id: 'staggerChildren', title: 'stagger children' },
+    { id: 'exitAnimations', title: 'exit animations' },
   ];
 
     // Define variants for the interactive square
@@ -57,14 +59,31 @@ export class DocsComponent {
       focus: false
     };
 
-   
+    // Toggle states for exit animations
+    showExitExample1 = true;
+    showExitExample2 = true;
+    showExitExample3 = true;
+    showPresenceExample = true;
+
+
 
     // Handle inView trigger
     onInView(animationKey: string) {
       this.animationTriggers[animationKey] = true;
     }
 
-   
+    toggleExitExample(exampleNumber: number) {
+      if (exampleNumber === 1) {
+        this.showExitExample1 = !this.showExitExample1;
+      } else if (exampleNumber === 2) {
+        this.showExitExample2 = !this.showExitExample2;
+      } else if (exampleNumber === 3) {
+        this.showExitExample3 = !this.showExitExample3;
+      } else if (exampleNumber === 4) {
+        this.showPresenceExample = !this.showPresenceExample;
+      }
+    }
+
     // Handle navigation clicks with smooth scroll
     onNavClick(event: Event, href: string) {
       // event.preventDefault();

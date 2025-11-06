@@ -25,17 +25,17 @@
         <li class="flex">
           <a href="#easings" class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" (click)="onNavClick($event, '#easings')">Easings</a>
         </li>
-  
+
 
         <li class="flex">
           <a href="#timeline" class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" (click)="onNavClick($event, '#timeline')">Timeline</a>
         </li>
 
         <li class="flex">
-            <a class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" 
+            <a class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900"
             href="#animateView" (click)="onNavClick($event, '#animateView')">AnimateView</a>
-          </li> 
-  
+          </li>
+
       </ul>
 
       <ul class="flex sticky top-24 flex-col gap-2 p-16 text-white">
@@ -44,7 +44,7 @@
         </li>
 
         <li class="flex">
-            <a class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" 
+            <a class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900"
             href="#hover" (click)="onNavClick($event, '#hover')">Hover</a>
           </li>
           <li class="flex">
@@ -70,25 +70,31 @@
           </li>
 
           <li class="flex">
+            <a href="#exitAnimations" class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" (click)="onNavClick($event, '#exitAnimations')">Exit Animations</a>
+          </li>
+
+          <li class="flex">
             <a href="#repeat" class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" (click)="onNavClick($event, '#repeat')">Repeat</a>
           </li>
-   
+
         <!-- <li class="flex">
             <a href="#spring" class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" (click)="onNavClick($event, '#spring')">Spring</a>
           </li> -->
 
             <!-- <li class="flex">
-                <a class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900" 
+                <a class="px-16 py-8 w-full text-gray-100 bg-gray-800 rounded-lg transition-colors hover:bg-gray-900"
                 href="#splittext" (click)="onNavClick($event, '#splittext')">Split Text - todo</a>
               </li> -->
-      
-        
+
+
             </ul>
     </nav>
 <!--    <app-page-nav [content]="navigationContent"></app-page-nav>-->
   </div>
   <div class="overflow-y-auto h-screen bg-gray-800" id="scrollContainer">
     <div class="flex flex-col gap-32 py-80 mx-auto max-w-container">
+
+      <block-code></block-code>
       <block-example
         id="hover"
         title="Hover Effects"
@@ -96,6 +102,10 @@
         class="aspect-video"
       >
         <div content class="flex gap-16 justify-center items-center">
+
+
+
+
           <div
             motionone
             [initial]="{ scale: 1, rotate: 0 }"
@@ -460,6 +470,7 @@
       </block-example>
 
 
+
       <block-example
         id="staggerChildren"
         title="Stagger Children"
@@ -493,6 +504,113 @@
               </div>
             </div>
 
+          </div>
+
+        </div>
+
+        <div code>
+<!-- TODO -->
+        </div>
+      </block-example>
+
+      <block-example
+        id="exitAnimations"
+        title="Exit Animations"
+        description="Animated exit transitions using the exit property with control flow. Click buttons to toggle elements in and out of the DOM."
+        class="aspect-video"
+      >
+        <div content class="flex flex-col gap-16 justify-center items-center min-h-[400px] p-16">
+
+          <!-- Example 1: Fade & Scale Out with *motionIf -->
+          <div class="flex flex-col gap-8 items-center w-full">
+            <h4 class="text-white text-sm font-medium">Using *motionIf directive</h4>
+            <button
+              (click)="toggleExitExample(1)"
+              class="px-16 py-8 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              {{ showExitExample1 ? 'Hide' : 'Show' }} Fade & Scale
+            </button>
+            <div *motionIf="showExitExample1">
+              <div
+                motionone
+                [initial]="{ opacity: 0, scale: 0.5 }"
+                [animate]="{ opacity: 1, scale: 1 }"
+                [exit]="{ opacity: 0, scale: 0.5 }"
+                [transition]="{ duration: 0.3, ease: 'easeOut' }"
+                class="px-24 py-16 text-white bg-purple-500 rounded-lg"
+              >
+                Fade & Scale Animation
+              </div>
+            </div>
+          </div>
+
+          <!-- Example 2: Slide Out -->
+          <div class="flex flex-col gap-8 items-center w-full">
+            <h4 class="text-white text-sm font-medium">Slide transition</h4>
+            <button
+              (click)="toggleExitExample(2)"
+              class="px-16 py-8 text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              {{ showExitExample2 ? 'Hide' : 'Show' }} Slide
+            </button>
+            <div *motionIf="showExitExample2">
+              <div
+                motionone
+                [initial]="{ x: -100, opacity: 0 }"
+                [animate]="{ x: 0, opacity: 1 }"
+                [exit]="{ x: 100, opacity: 0 }"
+                [transition]="{ duration: 0.4, ease: { type: 'spring', stiffness: 300, damping: 20 } }"
+                class="px-24 py-16 text-white bg-green-500 rounded-lg"
+              >
+                Slide Animation
+              </div>
+            </div>
+          </div>
+
+          <!-- Example 3: Rotate & Fade Out -->
+          <div class="flex flex-col gap-8 items-center w-full">
+            <h4 class="text-white text-sm font-medium">Rotate transition</h4>
+            <button
+              (click)="toggleExitExample(3)"
+              class="px-16 py-8 text-white bg-orange-600 rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              {{ showExitExample3 ? 'Hide' : 'Show' }} Rotate
+            </button>
+            <div *motionIf="showExitExample3">
+              <div
+                motionone
+                [initial]="{ opacity: 0, rotate: -180, scale: 0 }"
+                [animate]="{ opacity: 1, rotate: 0, scale: 1 }"
+                [exit]="{ opacity: 0, rotate: 180, scale: 0 }"
+                [transition]="{ duration: 0.5, ease: 'easeInOut' }"
+                class="px-24 py-16 text-white bg-orange-500 rounded-lg"
+              >
+                Rotate & Fade Animation
+              </div>
+            </div>
+          </div>
+
+          <!-- Example 4: Using *motionPresence directive -->
+          <div class="flex flex-col gap-8 items-center w-full">
+            <h4 class="text-white text-sm font-medium">Using *motionPresence directive</h4>
+            <button
+              (click)="toggleExitExample(4)"
+              class="px-16 py-8 text-white bg-pink-600 rounded-lg hover:bg-pink-700 transition-colors"
+            >
+              {{ showPresenceExample ? 'Hide' : 'Show' }} Presence
+            </button>
+            <div *motionPresence="showPresenceExample">
+              <div
+                motionone
+                [initial]="{ y: -50, opacity: 0, scale: 0.8 }"
+                [animate]="{ y: 0, opacity: 1, scale: 1 }"
+                [exit]="{ y: 50, opacity: 0, scale: 0.8 }"
+                [transition]="{ duration: 0.4, ease: { type: 'spring', stiffness: 250, damping: 20 } }"
+                class="px-24 py-16 text-white bg-pink-500 rounded-lg"
+              >
+                Motion Presence Animation
+              </div>
+            </div>
           </div>
 
         </div>
