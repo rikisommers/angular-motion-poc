@@ -2,20 +2,21 @@ import { Component, Input, ViewChild, ElementRef, AfterViewInit, OnChanges, Simp
 import { CommonModule } from '@angular/common';
 import * as shiki from 'shiki';
 import type { Highlighter } from 'shiki';
+import {ButtonComponent} from '../../base/button/button.component';
 
 @Component({
   selector: 'block-code',
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   standalone: true,
   templateUrl: './block-code.component.html',
   styleUrl: './block-code.component.scss'
 })
 export class BlockCodeComponent implements AfterViewInit, OnChanges {
   @ViewChild('codeElement', { static: false }) codeElement!: ElementRef<HTMLElement>;
-  
+
   @Input() code?: string;
-  @Input() language: string = 'typescript';
-  
+  @Input() language: string = 'html';
+
   private highlighter: Highlighter | null = null;
   private highlighterPromise: Promise<Highlighter> | null = null;
   private isHighlighted = false;
@@ -43,7 +44,7 @@ export class BlockCodeComponent implements AfterViewInit, OnChanges {
         return hl;
       });
     }
-    
+
     await this.highlighterPromise;
     await this.highlightCode();
   }
@@ -55,7 +56,7 @@ export class BlockCodeComponent implements AfterViewInit, OnChanges {
 
     const codeEl = this.codeElement.nativeElement;
     let textContent = this.code;
-    
+
     // If no code prop, get from ng-content
     if (!textContent) {
       textContent = codeEl.textContent?.trim();

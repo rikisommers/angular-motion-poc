@@ -94,12 +94,16 @@
   <div class="overflow-y-auto h-screen bg-gray-800" id="scrollContainer">
     <div class="flex flex-col gap-32 py-80 mx-auto max-w-container">
 
-      <block-code></block-code>
+      <block-code [code]="hoverCode">
+
+      </block-code>
       <block-example
         id="hover"
         title="Hover Effects"
         description="Different hover animations and interactions."
         class="aspect-video"
+        [codeString]="hoverCode"
+        language="html"
       >
         <div content class="flex gap-16 justify-center items-center">
 
@@ -139,10 +143,6 @@
             class="w-[64px] h-[64px] rounded-lg cursor-pointer"
           ></div>
         </div>
-
-        <div code>
-          <!-- TODO -->
-        </div>
       </block-example>
 
       <block-example
@@ -150,7 +150,8 @@
         title="Focus & Tap Animations"
         description="Animations triggered on focus and tap events."
         class="aspect-video"
-
+        [codeString]="focusTapCode"
+        language="html"
       >
         <div content class="flex gap-16 justify-center items-center">
           <div

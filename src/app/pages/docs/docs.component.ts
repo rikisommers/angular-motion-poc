@@ -14,6 +14,142 @@ import { PageNavComponent, NavItem } from '../../components/navigation/page-nav/
 export class DocsComponent {
   @ViewChildren(MotionOneDirective) motionDirectives!: QueryList<MotionOneDirective>;
 
+  // Code examples
+  hoverCode = `<div
+  motionone
+  [initial]="{ scale: 1, rotate: 0 }"
+  [whileHover]="{ scale: 1.2, rotate: 180 }"
+  [transition]="{
+    duration: 0.3,
+    ease: { type: 'spring', stiffness: 400, damping: 10 }
+  }"
+  class="w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+></div>`;
+
+  focusTapCode = `<div
+  motionone
+  [tabIndex]="0"
+  [initial]="{ scale: 1, rotate: 0 }"
+  [whileFocus]="{ scale: 1.2, rotate: 180 }"
+  [transition]="{
+    duration: 0.3,
+    ease: { type: 'spring', stiffness: 400, damping: 10 }
+  }"
+  class="w-[64px] h-[64px] bg-purple-500 rounded-lg cursor-pointer"
+></div>`;
+
+  variantsCode = `squareVariants = {
+  idle: { scale: 1, rotate: 0, backgroundColor: '#3b82f6' },
+  hover: { scale: 2, rotate: 45, backgroundColor: '#ef4444' },
+};
+
+<div
+  motionone
+  [variants]="squareVariants"
+  [initial]="'idle'"
+  [whileHover]="'hover'"
+  class="w-[64px] h-[64px] cursor-pointer"
+></div>`;
+
+  easingsCode = `<div
+  motionone
+  [initial]="{ x: -100 }"
+  [animate]="{ x: 100 }"
+  [transition]="{ 
+    duration: 2, 
+    ease: 'easeInOut',
+    repeat: Infinity,
+    repeatType: 'reverse'
+  }"
+  class="w-[64px] h-[64px] bg-blue-500 rounded-lg"
+></div>`;
+
+  timelineCode = `<div
+  motionone
+  [initial]="{ opacity: 0, y: 50 }"
+  [animate]="{ 
+    opacity: [0, 1, 1],
+    y: [50, 0, 0],
+    scale: [1, 1.2, 1]
+  }"
+  [transition]="{ 
+    duration: 1,
+    times: [0, 0.5, 1],
+    ease: 'easeOut'
+  }"
+  class="px-24 py-16 text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg"
+>
+  Timeline Animation
+</div>`;
+
+  whileInViewCode = `<div
+  motionone
+  [initial]="{ opacity: 0, scale: 0.5 }"
+  [whileInView]="{ opacity: 1, scale: 1 }"
+  [transition]="{ duration: 0.5, ease: 'easeOut' }"
+  class="w-[64px] h-[64px] bg-green-500 rounded-lg"
+></div>`;
+
+  staggerCode = `staggerWords = ['Staggered', 'text', 'animation', 'example'];
+
+<div
+  motionone
+  [initial]="{ opacity: 0 }"
+  [animate]="{ opacity: 1 }"
+  [transition]="{ staggerChildren: 0.1 }"
+  class="flex gap-8"
+>
+  @for (word of staggerWords; track word) {
+    <span
+      motionone
+      [initial]="{ opacity: 0, y: 20 }"
+      [animate]="{ opacity: 1, y: 0 }"
+      class="text-2xl font-bold text-white"
+    >
+      {{ word }}
+    </span>
+  }
+</div>`;
+
+  delayCode = `delayItems = Array.from({ length: 16 }, (_, i) => i);
+
+<div class="gap-8 grid grid-cols-4">
+  @for (item of delayItems; track item) {
+    <div
+      motionone
+      [initial]="{ opacity: 0, scale: 0 }"
+      [animate]="{ opacity: 1, scale: 1 }"
+      [transition]="{ delay: item * 0.05, duration: 0.3 }"
+      class="w-[64px] h-[64px] bg-blue-500 rounded-lg"
+    ></div>
+  }
+</div>`;
+
+  repeatCode = `<div
+  motionone
+  [initial]="{ rotate: 0 }"
+  [animate]="{ rotate: 360 }"
+  [transition]="{ 
+    duration: 2,
+    repeat: Infinity,
+    ease: 'linear'
+  }"
+  class="w-[64px] h-[64px] bg-purple-500 rounded-lg"
+></div>`;
+
+  exitAnimationsCode = `<div *motionIf="showExitExample1">
+  <div
+    motionone
+    [initial]="{ opacity: 0, scale: 0.5 }"
+    [animate]="{ opacity: 1, scale: 1 }"
+    [exit]="{ opacity: 0, scale: 0.5 }"
+    [transition]="{ duration: 0.3, ease: 'easeOut' }"
+    class="px-24 py-16 text-white bg-purple-500 rounded-lg"
+  >
+    Fade & Scale Animation
+  </div>
+</div>`;
+
   // Navigation content array for page-nav component
   navigationContent: NavItem[] = [
     { id: 'hover', title: 'hover' },
