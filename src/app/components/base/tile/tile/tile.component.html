@@ -1,22 +1,22 @@
 @if (route) {
-  <a [routerLink]="route" class="relative flex flex-col w-full h-full overflow-hidden no-underline rounded-2xl group bg-gray-900 border border-gray-800 rounded-xl overflow-hidden cursor-pointer hover:border-gray-700 transition-colors">
+  <a [routerLink]="route" class="flex overflow-hidden relative flex-col w-full h-full no-underline bg-gray-900 rounded-xl rounded-2xl border border-gray-800 transition-colors cursor-pointer group hover:border-gray-700">
     <div class="aspect-square">
       @if (tags) {
-      <div class="flex flex-wrap gap-2 p-8 absolute top-6 left-6 z-10">
+      <div class="flex absolute top-6 left-6 z-10 flex-wrap gap-2 p-8">
           @for (tag of tags; track tag) {
-          <span class="text-xs text-gray-400 bg-gray-800 rounded-lg px-8 py-2">{{ tag }}</span>
+          <span class="px-8 py-2 text-xs text-gray-400 bg-gray-800 rounded-lg">{{ tag }}</span>
           }
       </div>
       }
 
       @if (image) {
-      <img [src]="image" alt="Tile" class="w-full h-full object-cover">
+      <img [src]="image" alt="Tile" class="object-cover w-full h-full">
       }
 
       <ng-content></ng-content>
     </div>
 
-    <div class="flex flex-col gap-2 p-16 bg-gray-950/40 absolute bottom-0 left-0 w-full">
+    <div class="flex absolute bottom-0 left-0 flex-col gap-2 p-16 w-full bg-gray-950/40">
       @if (title) {
       <h3 class="text-lg font-bold text-gray-100">{{ title }}</h3>
       }
@@ -27,24 +27,24 @@
     </div>
   </a>
 } @else {
-  <div class="relative flex flex-col w-full h-full overflow-hidden no-underline rounded-2xl group bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+  <div class="flex overflow-hidden relative flex-col w-full h-full no-underline bg-gray-900 rounded-xl rounded-2xl border border-gray-800 group">
     <div class="aspect-square">
       @if (tags) {
-      <div class="flex flex-wrap gap-2 p-8 absolute top-6 left-6">
+      <div class="flex absolute top-6 left-6 flex-wrap gap-2 p-8">
           @for (tag of tags; track tag) {
-          <span class="text-xs text-gray-400 bg-gray-800 rounded-lg px-8 py-2">{{ tag }}</span>
+          <span class="px-8 py-2 text-xs text-gray-400 bg-gray-800 rounded-lg">{{ tag }}</span>
           }
       </div>
       }
 
       @if (image) {
-      <img [src]="image" alt="Tile" class="w-full h-full object-cover">
+      <img [src]="image" alt="Tile" class="object-cover w-full h-full">
       }
 
       <ng-content></ng-content>
     </div>
 
-    <div class="flex flex-col gap-2 p-16 bg-gray-950/40 absolute bottom-0 left-0 w-full">
+    <div class="flex absolute bottom-0 left-0 flex-col gap-2 p-16 w-full bg-gray-950/40">
       @if (title) {
       <h3 class="text-lg font-bold text-gray-100">{{ title }}</h3>
       }
